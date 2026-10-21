@@ -1,0 +1,626 @@
+import React, { useState, useEffect, useContext } from 'react';
+import api from '../services/api';
+import { AuthContext } from '../context/AuthContext';
+import { 
+  ShoppingCart, 
+  Search, 
+  User, 
+  Plus, 
+  Trash2, 
+  CheckCircle2, 
+  AlertCircle, 
+  DollarSign, 
+  CreditCard, 
+  QrCode, 
+  Banknote,
+  Percent,
+  TrendingUp,
+  FileCheck
+} from 'lucide-react';
+
+export default function SalesPOS() {
+  const { user } = useContext(AuthContext);
+
+  const [products, setProducts] = useState([]);
+  const [customers, setCustomers] = useState([]);
+  const [searchProduct, setSearchProduct] = useState('');
+  
+  // Sale Form State
+  const [selectedCustomerId, setSelectedCustomerId] = useState('');
+  const [cart, setCart] = useState([]);
+  const [paymentType, setPaymentType] = useState('CASH_ON_HAND'); // CASH_ON_HAND or CREDIT_ACCOUNT
+  const [paymentMethod, setPaymentMethod] = useState('CASH'); // CASH, TRANSFER, QR, CREDIT_ACCOUNT
+  const [discount, setDiscount] = useState(0);
+  const [dueDays, setDueDays] = useState(30);
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  
+  // Inline Customer Creation
+  const [showCustomerModal, setShowCustomerModal] = useState(false);
+  const [newCustomer, setNewCustomer] = useState({ name: '', phone: '', email: '', size: '', document_number: '' });
+  const [lastCompletedSale, setLastCompletedSale] = useState(null);
+
+  useEffect(() => {
+    loadProducts();
+    loadCustomers();
+  }, []);
+
+  const loadProducts = async () => {
+    try {
+      const res = await api.get('/products');
+      setProducts(res.data);
+    } catch (err) {
+      console.error('Error cargando productos:', err);
+    }
+  };
+
+  const loadCustomers = async () => {
+    try {
+      const res = await api.get('/customers');
+      setCustomers(res.data);
+    } catch (err) {
+      console.error('Error cargando clientes:', err);
+    }
+  };
+
+  const addToCart = (product) => {
+    if (product.stock <= 0) {
+      alert(`El producto "${product.name}" no tiene stock disponible.`);
+      return;
+    }
+
+    const existingIndex = cart.findIndex(item => item.product_id === product.id);
+    if (existingIndex > -1) {
+      const updated = [...cart];
+      if (updated[existingIndex].quantity + 1 > product.stock) {
+        alert(`No puedes agregar más unidades que el stock disponible (${product.stock}).`);
+        return;
+      }
+      updated[existingIndex].quantity += 1;
+      setCart(updated);
+    } else {
+      setCart([...cart, {
+        product_id: product.id,
+        code: product.code,
+        name: product.name,
+        unit_sale_price: Number(product.sale_price),
+        unit_cost_price: Number(product.cost_price),
+        quantity: 1,
+        max_stock: product.stock
+      }]);
+    }
+  };
+
+  const updateQuantity = (productId, newQty) => {
+    const qty = parseInt(newQty, 10);
+    if (isNaN(qty) || qty <= 0) return;
+
+    setCart(cart.map(item => {
+      if (item.product_id === productId) {
+        if (qty > item.max_stock) {
+          alert(`Stock máximo disponible: ${item.max_stock}`);
+          return item;
+        }
+        return { ...item, quantity: qty };
+      }
+      return item;
+    }));
+  };
+
+  const removeFromCart = (productId) => {
+    setCart(cart.filter(item => item.product_id !== productId));
+  };
+
+  // Live Math Calculations
+  const subtotal = cart.reduce((acc, item) => acc + (item.unit_sale_price * item.quantity), 0);
+  const totalReplacementCost = cart.reduce((acc, item) => acc + (item.unit_cost_price * item.quantity), 0);
+  const totalSale = Math.max(0, subtotal - (Number(discount) || 0));
+
+  let calculatedCommission = 0;
+  if (user) {
+    if (user.commission_type === 'PERCENTAGE') {
+      calculatedCommission = (totalSale * Number(user.commission_value || 0)) / 100;
+    } else {
+      calculatedCommission = Number(user.commission_value || 0);
+    }
+  }
+
+  const estimatedNetProfit = totalSale - totalReplacementCost - calculatedCommission;
+
+  const handleCompleteSale = async () => {
+    setError('');
+    if (cart.length === 0) {
+      setError('Debes agregar al menos un producto al carrito.');
+      return;
+    }
+
+    if (paymentType === 'CREDIT_ACCOUNT' && !selectedCustomerId) {
+      setError('Para ventas a Cuenta Corriente debes seleccionar obligatoriamente un cliente.');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await api.post('/sales', {
+        customer_id: selectedCustomerId || null,
+        items: cart.map(item => ({
+          product_id: item.product_id,
+          quantity: item.quantity,
+          unit_sale_price: item.unit_sale_price
+        })),
+        payment_type: paymentType,
+        payment_method: paymentType === 'CREDIT_ACCOUNT' ? 'CREDIT_ACCOUNT' : paymentMethod,
+        discount: Number(discount) || 0,
+        due_days: Number(dueDays) || 30
+      });
+
+      setLastCompletedSale(res.data.sale);
+      setCart([]);
+      setSelectedCustomerId('');
+      setDiscount(0);
+      loadProducts();
+    } catch (err) {
+      setError(err.response?.data?.error || 'Error al procesar la venta.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filteredProducts = products.filter(p => 
+    p.name.toLowerCase().includes(searchProduct.toLowerCase()) ||
+    p.code.toLowerCase().includes(searchProduct.toLowerCase()) ||
+    (p.sizes && p.sizes.toLowerCase().includes(searchProduct.toLowerCase())) ||
+    (p.description && p.description.toLowerCase().includes(searchProduct.toLowerCase()))
+  );
+
+  const handleSaveCustomer = async (e) => {
+    e.preventDefault();
+    if (!newCustomer.name || !newCustomer.phone) return;
+    try {
+      const res = await api.post('/customers', newCustomer);
+      const createdId = res.data.id;
+      await loadCustomers();
+      setSelectedCustomerId(createdId);
+      setShowCustomerModal(false);
+      setNewCustomer({ name: '', phone: '', email: '', document_number: '' });
+    } catch (err) {
+      alert('Error al crear cliente: ' + (err.response?.data?.error || err.message));
+    }
+  };
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-4">
+      
+      {/* Minimal Title Bar */}
+      <div className="flex items-center justify-between bg-gradient-to-r from-brand-100 to-white p-3 md:p-4 rounded-xl border border-brand-200 shadow-sm relative overflow-hidden">
+        <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-brand-300 rounded-full blur-3xl opacity-20 pointer-events-none"></div>
+        <div className="flex items-center relative z-10">
+          <div className="p-2 bg-white text-brand-600 rounded-lg mr-3 shadow-sm border border-brand-100">
+            <ShoppingCart className="w-5 h-5" />
+          </div>
+          <div>
+            <h1 className="text-lg font-extrabold text-brand-950 leading-none">Punto de Venta</h1>
+            <p className="text-[10px] text-brand-700 font-medium mt-1 uppercase tracking-wider">Módulo de Facturación</p>
+          </div>
+        </div>
+
+        {user && (
+          <div className="flex items-center space-x-2 text-right relative z-10">
+            <div className="hidden sm:block">
+              <span className="text-[10px] uppercase font-bold text-brand-600 block leading-tight">Vendedor en Caja</span>
+              <span className="text-xs font-extrabold text-brand-900">{user.name}</span>
+            </div>
+            <div className="bg-white border border-brand-200 px-2 py-1 rounded-lg shadow-sm">
+              <span className="text-[9px] text-brand-500 block leading-none font-bold">COMISIÓN</span>
+              <span className="text-xs text-brand-800 font-bold">{user.commission_type === 'PERCENTAGE' ? `${user.commission_value}%` : `$${user.commission_value}`}</span>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {lastCompletedSale && (
+        <div className="bg-emerald-50 border border-emerald-200 p-4 rounded-2xl flex items-center justify-between shadow-sm">
+          <div className="flex items-center space-x-3">
+            <CheckCircle2 className="w-6 h-6 text-emerald-600 flex-shrink-0" />
+            <div>
+              <h4 className="text-sm font-bold text-emerald-900">¡Venta Registrada Exitosamente! #{lastCompletedSale.sale_number}</h4>
+              <p className="text-xs text-emerald-700">
+                Total: <strong>${lastCompletedSale.total.toLocaleString('es-AR')}</strong> | 
+                Comisión: <strong>${lastCompletedSale.seller_commission.toLocaleString('es-AR')}</strong> | 
+                Costo Reposición: <strong>${lastCompletedSale.replacement_cost.toLocaleString('es-AR')}</strong>
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center space-x-4">
+            <a 
+              href={`/api/sales/${lastCompletedSale.id}/pdf?token=${localStorage.getItem('amoremio_token')}`}
+              target="_blank"
+              rel="noreferrer"
+              className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg transition shadow-sm"
+            >
+              Descargar Ticket
+            </a>
+            <button 
+              onClick={() => setLastCompletedSale(null)}
+              className="text-xs font-semibold text-emerald-700 hover:text-emerald-900"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      )}
+
+      {error && (
+        <div className="bg-rose-50 border border-rose-200 p-4 rounded-2xl text-rose-700 text-xs flex items-center space-x-2 shadow-sm">
+          <AlertCircle className="w-4 h-4 flex-shrink-0" />
+          <span>{error}</span>
+        </div>
+      )}
+
+      {/* POS Main Content: Single Column Invoice Style */}
+      <div className="bg-white/90 backdrop-blur-sm p-6 rounded-3xl border-2 border-brand-100 shadow-xl shadow-brand-100/40 flex flex-col relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-brand-100/40 to-transparent rounded-bl-full pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-brand-50/50 to-transparent rounded-tr-full pointer-events-none"></div>
+
+        <div className="relative z-10">
+          {/* Top Controls: Search & Select Customer */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 p-5 bg-brand-50/80 border border-brand-200 rounded-2xl shadow-inner">
+            
+            {/* Customer Picker */}
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-xs font-bold text-brand-900 flex items-center">
+                  <User className="w-4 h-4 mr-1 text-brand-600" />
+                  Cliente de la Venta
+                </label>
+                <button 
+                  type="button" 
+                  onClick={() => setShowCustomerModal(true)}
+                  className="text-[10px] text-white bg-brand-600 font-bold hover:bg-brand-700 flex items-center px-2.5 py-1 rounded-lg transition shadow-sm"
+                >
+                  <Plus className="w-3 h-3 mr-0.5" /> Nuevo
+                </button>
+              </div>
+              <select
+                value={selectedCustomerId}
+                onChange={(e) => setSelectedCustomerId(e.target.value)}
+                className="w-full border border-brand-200 rounded-xl px-4 py-2.5 text-sm text-slate-800 bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none font-semibold shadow-sm"
+              >
+                <option value="">-- Consumidor Final (Venta Anónima) --</option>
+                {customers.map(c => (
+                  <option key={c.id} value={c.id}>
+                    {c.name} {c.size ? `[Talle: ${c.size}]` : ''} {c.credit_balance > 0 ? `(Deuda Cta.Cte: $${c.credit_balance.toLocaleString('es-AR')})` : ''}
+                  </option>
+                ))}
+              </select>
+
+              {selectedCustomerId && (() => {
+                const c = customers.find(item => item.id.toString() === selectedCustomerId.toString());
+                if (!c) return null;
+                return (
+                  <div className="mt-2 flex items-center justify-between p-2 bg-white rounded-xl border border-brand-200 text-xs">
+                    <span className="text-slate-600 flex items-center">
+                      <span className="mr-1">Talle del cliente:</span>
+                      <strong className="text-brand-700 bg-brand-50 px-2 py-0.5 rounded border border-brand-200">
+                        {c.size || 'Sin talle registrado'}
+                      </strong>
+                    </span>
+                    {c.phone && <span className="text-slate-400 font-mono text-[11px]">{c.phone}</span>}
+                  </div>
+                );
+              })()}
+            </div>
+
+            {/* Product Search Add */}
+            <div className="relative">
+              <label className="block text-xs font-bold text-brand-900 mb-1.5 flex items-center">
+                <Search className="w-4 h-4 mr-1 text-brand-600" />
+                Buscar o Seleccionar Producto (Nombre, Código o Talle)
+              </label>
+              <div 
+                className="relative"
+                onBlur={(e) => {
+                  if (!e.currentTarget.contains(e.relatedTarget)) {
+                    setTimeout(() => setShowDropdown(false), 200);
+                  }
+                }}
+              >
+                <input
+                  type="text"
+                  placeholder="Busca por nombre, código o talle (ej: 95, XL)..."
+                  value={searchProduct}
+                  onFocus={() => setShowDropdown(true)}
+                  onChange={(e) => {
+                    setSearchProduct(e.target.value);
+                    setShowDropdown(true);
+                  }}
+                  className="w-full pl-4 pr-10 py-2.5 text-sm border border-brand-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none bg-white shadow-sm font-semibold placeholder-slate-400"
+                />
+                {(showDropdown || searchProduct) && (
+                  <div className="absolute z-30 w-full mt-2 bg-white border border-brand-300 rounded-xl shadow-2xl max-h-72 overflow-y-auto">
+                    {filteredProducts.length === 0 ? (
+                      <div className="p-4 text-sm text-slate-500 text-center font-bold">No se encontraron productos</div>
+                    ) : (
+                      filteredProducts.map(prod => {
+                        const inStock = prod.stock > 0;
+                        return (
+                          <div 
+                            key={prod.id}
+                            onClick={() => {
+                              if (inStock) {
+                                addToCart(prod);
+                                setSearchProduct('');
+                                setShowDropdown(false);
+                              }
+                            }}
+                            className={`flex items-center justify-between p-3 border-b border-slate-100 hover:bg-brand-50 cursor-pointer transition ${!inStock ? 'opacity-50 bg-slate-50' : ''}`}
+                          >
+                            <div>
+                              <div className="text-sm font-bold text-slate-800">{prod.name}</div>
+                              <div className="flex items-center space-x-1.5 mt-0.5">
+                                <span className="text-[10px] font-bold text-brand-600 bg-brand-100 px-1.5 py-0.5 rounded">ART: {prod.code}</span>
+                                {prod.sizes && (
+                                  <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded">
+                                    Talles: {prod.sizes}
+                                  </span>
+                                )}
+                                <span className="text-[10px] text-slate-500">Stock: {prod.stock}</span>
+                              </div>
+                            </div>
+                            <div className="text-brand-600 font-extrabold text-sm">
+                              ${prod.sale_price.toLocaleString('es-AR')}
+                            </div>
+                          </div>
+                        )
+                      })
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+          
+          <div className="space-y-4 flex-1 pr-1">
+            
+            {/* Cart Items Table */}
+            <div>
+              <h4 className="text-xs font-bold text-slate-900 mb-2 uppercase tracking-wider">Detalle del Carrito</h4>
+              {cart.length === 0 ? (
+                <div className="text-center py-8 border-2 border-dashed border-slate-200 rounded-xl text-slate-400">
+                  <ShoppingCart className="w-8 h-8 mx-auto mb-1 text-slate-300" />
+                  <span className="text-xs">Haz clic en un producto para agregarlo</span>
+                </div>
+              ) : (
+                <div className="space-y-0 border border-slate-200 rounded-xl overflow-hidden">
+                  <div className="bg-slate-100 flex items-center px-4 py-2 text-xs font-bold text-slate-500 border-b border-slate-200">
+                    <div className="flex-1">Producto</div>
+                    <div className="w-24 text-center">Precio Unit.</div>
+                    <div className="w-20 text-center">Cantidad</div>
+                    <div className="w-24 text-right">Subtotal</div>
+                    <div className="w-10"></div>
+                  </div>
+                  {cart.map((item, index) => (
+                    <div key={item.product_id} className={`flex items-center px-4 py-3 text-sm ${index !== cart.length - 1 ? 'border-b border-slate-100' : ''} bg-white hover:bg-slate-50 transition`}>
+                      <div className="flex-1 pr-4">
+                        <span className="font-bold text-slate-900 block">{item.name}</span>
+                        <span className="text-xs text-slate-500 font-mono">ART: {item.code}</span>
+                      </div>
+                      <div className="w-24 text-center text-slate-600">
+                        ${item.unit_sale_price.toLocaleString('es-AR')}
+                      </div>
+                      <div className="w-20 text-center">
+                        <input
+                          type="number"
+                          min="1"
+                          max={item.max_stock}
+                          value={item.quantity}
+                          onChange={(e) => updateQuantity(item.product_id, e.target.value)}
+                          className="w-16 text-center border border-slate-200 rounded-lg py-1 font-bold text-slate-800 bg-white focus:ring-2 focus:ring-brand-500 outline-none"
+                        />
+                      </div>
+                      <div className="w-24 text-right font-extrabold text-brand-600">
+                        ${(item.unit_sale_price * item.quantity).toLocaleString('es-AR')}
+                      </div>
+                      <div className="w-10 text-right">
+                        <button
+                          onClick={() => removeFromCart(item.product_id)}
+                          className="text-slate-300 hover:text-rose-600 p-1.5 transition"
+                          title="Quitar"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Payment Modality & Method Picker */}
+            <div className="pt-2 border-t border-slate-100 space-y-3">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Modalidad de Pago</label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPaymentType('CASH_ON_HAND');
+                      setPaymentMethod('CASH');
+                    }}
+                    className={`py-2 text-xs font-bold rounded-xl border transition ${
+                      paymentType === 'CASH_ON_HAND'
+                        ? 'bg-brand-600 text-white border-brand-600 shadow-sm'
+                        : 'bg-slate-50 text-slate-700 border-slate-200'
+                    }`}
+                  >
+                    CONTADO (Impacta Caja)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPaymentType('CREDIT_ACCOUNT');
+                      setPaymentMethod('CREDIT_ACCOUNT');
+                    }}
+                    className={`py-2 text-xs font-bold rounded-xl border transition ${
+                      paymentType === 'CREDIT_ACCOUNT'
+                        ? 'bg-brand-600 text-white border-brand-600 shadow-sm'
+                        : 'bg-slate-50 text-slate-700 border-slate-200'
+                    }`}
+                  >
+                    CUENTA CORRIENTE
+                  </button>
+                </div>
+              </div>
+
+              {paymentType === 'CASH_ON_HAND' && (
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Medio de Pago</label>
+                  <div className="grid grid-cols-3 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setPaymentMethod('CASH')}
+                      className={`py-1.5 px-2 text-xs font-bold rounded-xl border flex items-center justify-center space-x-1 ${
+                        paymentMethod === 'CASH' ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-slate-50 text-slate-700 border-slate-200'
+                      }`}
+                    >
+                      <Banknote className="w-3.5 h-3.5" />
+                      <span>Efectivo</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPaymentMethod('TRANSFER')}
+                      className={`py-1.5 px-2 text-xs font-bold rounded-xl border flex items-center justify-center space-x-1 ${
+                        paymentMethod === 'TRANSFER' ? 'bg-blue-600 text-white border-blue-600' : 'bg-slate-50 text-slate-700 border-slate-200'
+                      }`}
+                    >
+                      <CreditCard className="w-3.5 h-3.5" />
+                      <span>Transfer.</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPaymentMethod('QR')}
+                      className={`py-1.5 px-2 text-xs font-bold rounded-xl border flex items-center justify-center space-x-1 ${
+                        paymentMethod === 'QR' ? 'bg-purple-600 text-white border-purple-600' : 'bg-slate-50 text-slate-700 border-slate-200'
+                      }`}
+                    >
+                      <QrCode className="w-3.5 h-3.5" />
+                      <span>Mercado QR</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+          </div>
+
+          {/* Financial Totals & Confirm Sale */}
+          <div className="pt-3 border-t border-slate-200 space-y-2 mt-2 bg-slate-50 p-3 rounded-xl">
+            <div className="flex justify-between text-xs text-slate-600">
+              <span>Subtotal:</span>
+              <span className="font-bold">${subtotal.toLocaleString('es-AR')}</span>
+            </div>
+
+            <div className="flex justify-between items-center text-xs text-slate-600">
+              <span>Descuento ($):</span>
+              <input
+                type="number"
+                min="0"
+                value={discount}
+                onChange={(e) => setDiscount(e.target.value)}
+                className="w-20 text-right border border-slate-200 rounded px-1.5 py-0.5 text-xs font-bold text-slate-800 bg-white"
+              />
+            </div>
+
+            {/* Financial Breakdown Preview */}
+            <div className="pt-2 border-t border-slate-200/80 text-[11px] space-y-1">
+              <div className="flex justify-between text-amber-700">
+                <span>Costo Reposición (Futura Inversión):</span>
+                <span className="font-semibold">${totalReplacementCost.toLocaleString('es-AR')}</span>
+              </div>
+              <div className="flex justify-between text-purple-700">
+                <span>Comisión Vendedor:</span>
+                <span className="font-semibold">${calculatedCommission.toLocaleString('es-AR')}</span>
+              </div>
+              <div className="flex justify-between text-emerald-700 font-bold">
+                <span>Ganancia Real Neta:</span>
+                <span>${estimatedNetProfit.toLocaleString('es-AR')}</span>
+              </div>
+            </div>
+
+            <div className="flex justify-between text-base font-extrabold text-slate-900 pt-2 border-t border-slate-300">
+              <span>Total a Cobrar:</span>
+              <span className="text-brand-600 text-lg">${totalSale.toLocaleString('es-AR')}</span>
+            </div>
+
+            <button
+              onClick={handleCompleteSale}
+              disabled={loading || cart.length === 0}
+              className="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-lg shadow-brand-600/30 flex items-center justify-center space-x-2 disabled:opacity-50 mt-4"
+            >
+              <FileCheck className="w-4 h-4" />
+              <span>{loading ? 'Procesando Venta...' : 'REGISTRAR VENTA Y COBRAR'}</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      {/* Inline Customer Modal */}
+      {showCustomerModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl">
+            <h3 className="text-lg font-bold text-slate-900 mb-4">Nuevo Cliente</h3>
+            <form onSubmit={handleSaveCustomer} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Nombre Completo *</label>
+                <input
+                  type="text"
+                  required
+                  value={newCustomer.name}
+                  onChange={e => setNewCustomer({...newCustomer, name: e.target.value})}
+                  className="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-brand-500 outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Teléfono / WhatsApp *</label>
+                <input
+                  type="text"
+                  required
+                  value={newCustomer.phone}
+                  onChange={e => setNewCustomer({...newCustomer, phone: e.target.value})}
+                  className="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-brand-500 outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Talle Habitual (Opcional)</label>
+                <input
+                  type="text"
+                  placeholder="Ej: 95 / M"
+                  value={newCustomer.size}
+                  onChange={e => setNewCustomer({...newCustomer, size: e.target.value})}
+                  className="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-brand-500 outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Email (Opcional)</label>
+                <input
+                  type="email"
+                  value={newCustomer.email}
+                  onChange={e => setNewCustomer({...newCustomer, email: e.target.value})}
+                  className="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-brand-500 outline-none"
+                />
+              </div>
+              <div className="flex justify-end space-x-2 pt-2">
+                <button type="button" onClick={() => setShowCustomerModal(false)} className="px-4 py-2 text-xs text-slate-600 font-bold">Cancelar</button>
+                <button type="submit" className="px-4 py-2 text-xs bg-brand-600 text-white font-bold rounded-xl">Crear Cliente</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+    </div>
+  );
+}
