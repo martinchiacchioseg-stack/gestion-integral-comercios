@@ -33,7 +33,8 @@ import {
   Layers, 
   TrendingUp, 
   HelpCircle,
-  ExternalLink 
+  ExternalLink,
+  QrCode 
 } from 'lucide-react';
 import FloatingWhatsApp from '../components/FloatingWhatsApp';
 
