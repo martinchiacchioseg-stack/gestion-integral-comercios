@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   ShoppingCart, 
@@ -18,6 +18,9 @@ import {
   Laptop, 
   Zap, 
   ChevronRight, 
+  ChevronDown,
+  ChevronUp,
+  X,
   Truck, 
   Printer, 
   Boxes, 
@@ -41,22 +44,14 @@ import {
   DollarSign,
   Clock,
   Award,
-  UserPlus,
-  BookOpen,
-  Receipt,
-  Eye,
-  Percent,
-  Sliders,
-  Database,
-  Lock,
-  UserCheck
+  BookOpen
 } from 'lucide-react';
 import FloatingWhatsApp from '../components/FloatingWhatsApp';
 
 export default function LandingDemo() {
   const phoneNumber = '5492241527357';
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
-    '¡Hola ROLΦ! Estuve viendo en detalle el programa de gestión en la web y me interesa para mi comercio o consultar por un desarrollo a medida.'
+    '¡Hola ROLΦ! Estuve viendo en detalle las cualidades del programa de gestión en la web y me interesa para mi comercio o consultar por un desarrollo a medida.'
   )}`;
 
   // Store Sector Switcher (Regalería, Indumentaria, Bazar)
@@ -98,47 +93,85 @@ export default function LandingDemo() {
     }
   };
 
-  // 9 Modules of the Software
+  // 9 Modules of the Software - ALL CLOSED BY DEFAULT
+  const [activeModuleId, setActiveModuleId] = useState(null);
+
   const modules = [
     {
       id: 'pos',
       number: '01',
-      name: 'Mostrador POS',
+      name: 'Mostrador POS & Ventas',
       subtitle: 'Cobro de alta velocidad',
       color: 'blue',
-      badge: 'bg-blue-950 text-blue-300 border-blue-700',
-      activeBorder: 'border-blue-500 bg-blue-950/40 text-blue-300',
-      icon: ShoppingCart
+      badgeClass: 'bg-blue-950 text-blue-300 border-blue-700',
+      borderClass: 'border-blue-800 hover:border-blue-500',
+      buttonClass: 'bg-blue-600 hover:bg-blue-500 text-white',
+      accentColor: 'text-blue-400',
+      icon: ShoppingCart,
+      qualities: [
+        'Búsqueda veloz por código de barras o texto predictivo',
+        'Múltiples formas de cobro (Efectivo, QR / Transferencia, Cta Cte)',
+        'Asignación obligatoria u optativa de vendedor para comisiones',
+        'Emisión automática de ticket / remito no fiscal con logo',
+        'Descuento instantáneo de stock físico en mostrador'
+      ]
     },
     {
       id: 'stock',
       number: '02',
-      name: 'Control de Stock',
-      subtitle: 'Inventario & Rentabilidad',
+      name: 'Stock & Control de Inventario',
+      subtitle: 'Rentabilidad & Alertas',
       color: 'amber',
-      badge: 'bg-amber-950 text-amber-300 border-amber-700',
-      activeBorder: 'border-amber-500 bg-amber-950/40 text-amber-300',
-      icon: Package
+      badgeClass: 'bg-amber-950 text-amber-300 border-amber-700',
+      borderClass: 'border-amber-800/80 hover:border-amber-500',
+      buttonClass: 'bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold',
+      accentColor: 'text-amber-400',
+      icon: Package,
+      qualities: [
+        'Alertas visuales de artículos con stock bajo o agotado',
+        'Cálculo exacto de costo, precio de venta y margen bruto',
+        'Categorías y subcategorías flexibles (Novedades, Ofertas)',
+        'Interruptor para publicar u ocultar en el catálogo web en 1 clic',
+        'Impresión de etiquetas con código de barras y precios'
+      ]
     },
     {
       id: 'supplier',
       number: '03',
-      name: 'Proveedores & Compras',
-      subtitle: 'Costo & Ingreso de Stock',
+      name: 'Compras a Proveedores',
+      subtitle: 'Ingreso directo al inventario',
       color: 'purple',
-      badge: 'bg-purple-950 text-purple-300 border-purple-700',
-      activeBorder: 'border-purple-500 bg-purple-950/40 text-purple-300',
-      icon: Truck
+      badgeClass: 'bg-purple-950 text-purple-300 border-purple-700',
+      borderClass: 'border-purple-800/80 hover:border-purple-500',
+      buttonClass: 'bg-purple-600 hover:bg-purple-500 text-white',
+      accentColor: 'text-purple-400',
+      icon: Truck,
+      qualities: [
+        'Agenda y seguimiento de órdenes de compra mayoristas',
+        'Control del costo de reposición y valor total de la inversión',
+        'Acreditación masiva al inventario físico en 1 solo clic',
+        'Directorio completo de proveedores con contactos y teléfonos',
+        'Historial de compras para auditar fluctuación de precios'
+      ]
     },
     {
       id: 'employees',
       number: '04',
-      name: 'Empleados & Roles',
+      name: 'Creación de Empleados & Roles',
       subtitle: 'Vendedores & Comisiones',
       color: 'cyan',
-      badge: 'bg-cyan-950 text-cyan-300 border-cyan-700',
-      activeBorder: 'border-cyan-500 bg-cyan-950/40 text-cyan-300',
-      icon: Users
+      badgeClass: 'bg-cyan-950 text-cyan-300 border-cyan-700',
+      borderClass: 'border-cyan-800/80 hover:border-cyan-500',
+      buttonClass: 'bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold',
+      accentColor: 'text-cyan-400',
+      icon: Users,
+      qualities: [
+        'Creación ilimitada de empleados con claves de acceso propias',
+        'Roles jerárquicos: Vendedor, Encargado de Turno y Administrador',
+        'Porcentaje de comisión personalizado por vendedor',
+        'Acumulador automático de ventas para liquidación mensual',
+        'Botón para liquidar y pagar comisiones directo desde caja'
+      ]
     },
     {
       id: 'cash',
@@ -146,54 +179,96 @@ export default function LandingDemo() {
       name: 'Arqueo & Cierre de Caja',
       subtitle: 'Turnos mañana y tarde',
       color: 'emerald',
-      badge: 'bg-emerald-950 text-emerald-300 border-emerald-700',
-      activeBorder: 'border-emerald-500 bg-emerald-950/40 text-emerald-300',
-      icon: Wallet
+      badgeClass: 'bg-emerald-950 text-emerald-300 border-emerald-700',
+      borderClass: 'border-emerald-800/80 hover:border-emerald-500',
+      buttonClass: 'bg-emerald-600 hover:bg-emerald-500 text-white',
+      accentColor: 'text-emerald-400',
+      icon: Wallet,
+      qualities: [
+        'Arqueo ciego para evitar diferencias entre turnos de personal',
+        'Discriminación de cobros en efectivo, QR, transferencias y tarjetas',
+        'Registro de gastos y retiros de caja con comprobante y motivo',
+        'Rendición ordenada de turnos de mañana y tarde',
+        'Cierre definitivo diario con balance neto y auditoría horaria'
+      ]
     },
     {
       id: 'reports',
       number: '06',
       name: 'Informes & Ganancia Real',
-      subtitle: 'Estadísticas ejecutivas',
+      subtitle: 'Rentabilidad neta limpia',
       color: 'indigo',
-      badge: 'bg-indigo-950 text-indigo-300 border-indigo-700',
-      activeBorder: 'border-indigo-500 bg-indigo-950/40 text-indigo-300',
-      icon: BarChart3
+      badgeClass: 'bg-indigo-950 text-indigo-300 border-indigo-700',
+      borderClass: 'border-indigo-800/80 hover:border-indigo-500',
+      buttonClass: 'bg-indigo-600 hover:bg-indigo-500 text-white',
+      accentColor: 'text-indigo-400',
+      icon: BarChart3,
+      qualities: [
+        'Cálculo de ganancia neta real descontando el costo del proveedor',
+        'Ranking de los artículos más vendidos por volumen y rentabilidad',
+        'Filtro instantáneo de métricas por día, semana o mes',
+        'Historial de ventas por empleado para premiar mejores rendimientos',
+        'Informes claros para tomar decisiones comerciales estratégicas'
+      ]
     },
     {
       id: 'customers',
       number: '07',
-      name: 'Clientes & Cta. Corriente',
+      name: 'Clientes & Cuenta Corriente',
       subtitle: 'Libreta de fiados & pagos',
       color: 'teal',
-      badge: 'bg-teal-950 text-teal-300 border-teal-700',
-      activeBorder: 'border-teal-500 bg-teal-950/40 text-teal-300',
-      icon: BookOpen
+      badgeClass: 'bg-teal-950 text-teal-300 border-teal-700',
+      borderClass: 'border-teal-800/80 hover:border-teal-500',
+      buttonClass: 'bg-teal-600 hover:bg-teal-500 text-white',
+      accentColor: 'text-teal-400',
+      icon: BookOpen,
+      qualities: [
+        'Ficha individual de clientes con teléfono, dirección y notas',
+        'Control estricto de libreta de fiados (cuentas corrientes)',
+        'Registro de entregas de dinero a cuenta y saldos pendientes',
+        'Envío de estado de cuenta por WhatsApp con 1 solo clic',
+        'Historial completo de compras por cliente'
+      ]
     },
     {
       id: 'catalog',
       number: '08',
       name: 'Catálogo Web Conectado',
-      subtitle: 'Pedidos a WhatsApp',
+      subtitle: 'Pedidos directos a WhatsApp',
       color: 'rose',
-      badge: 'bg-rose-950 text-rose-300 border-rose-700',
-      activeBorder: 'border-rose-500 bg-rose-950/40 text-rose-300',
-      icon: Store
+      badgeClass: 'bg-rose-950 text-rose-300 border-rose-700',
+      borderClass: 'border-rose-800/80 hover:border-rose-500',
+      buttonClass: 'bg-rose-600 hover:bg-rose-500 text-white',
+      accentColor: 'text-rose-400',
+      icon: Store,
+      qualities: [
+        'Vidriera digital pública optimizada para teléfonos celulares',
+        'Sincronización automática con el inventario del mostrador',
+        'Los productos sin stock se ocultan solos de la web',
+        'Botón directo para encargar el pedido formateado por WhatsApp',
+        'Cero comisiones ni costos extra por transacciones online'
+      ]
     },
     {
       id: 'admin',
       number: '09',
       name: 'SuperAdmin & Identidad',
-      subtitle: 'Logo & Nombre de Tienda',
+      subtitle: 'Tu logo y nombre de tienda',
       color: 'slate',
-      badge: 'bg-slate-800 text-slate-300 border-slate-600',
-      activeBorder: 'border-slate-400 bg-slate-800/60 text-slate-200',
-      icon: Settings
+      badgeClass: 'bg-slate-800 text-slate-300 border-slate-600',
+      borderClass: 'border-slate-700 hover:border-slate-400',
+      buttonClass: 'bg-slate-700 hover:bg-slate-600 text-white',
+      accentColor: 'text-slate-300',
+      icon: Settings,
+      qualities: [
+        'Carga directa del archivo de logotipo de tu negocio (PNG/JPG)',
+        'Nombre comercial y eslogan editables en toda la plataforma',
+        'Panel maestro de seguridad y gestión de altas jerarquías',
+        'Sin ataduras a marcas externas ni plataformas ajenas',
+        'Respaldos de base de datos seguros en la nube'
+      ]
     }
   ];
-
-  const [activeModuleIndex, setActiveModuleIndex] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(false);
 
   // Screen 1: POS state
   const [posProducts, setPosProducts] = useState(sectorPresets.regaleria.products);
@@ -253,25 +328,25 @@ export default function LandingDemo() {
   const [calcDailySales, setCalcDailySales] = useState(25);
   const [calcAverageTicket, setCalcAverageTicket] = useState(14000);
 
-  // Auto-tour timer
-  useEffect(() => {
-    let interval = null;
-    if (isAutoPlaying) {
-      interval = setInterval(() => {
-        setActiveModuleIndex(prev => (prev + 1) % modules.length);
-      }, 6000);
-    }
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [isAutoPlaying, modules.length]);
-
   const handleSelectSector = (sectorKey) => {
     setSelectedSector(sectorKey);
     setPosProducts(sectorPresets[sectorKey].products);
     setStockList(sectorPresets[sectorKey].products);
     setPosSaleSuccess(false);
     setSearchTerm('');
+  };
+
+  const handleToggleModule = (modId) => {
+    if (activeModuleId === modId) {
+      setActiveModuleId(null); // Close if already open
+    } else {
+      setActiveModuleId(modId); // Open selected module
+      // Smooth scroll to the monitor container
+      setTimeout(() => {
+        const el = document.getElementById('visor-modulo');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 50);
+    }
   };
 
   const filteredPosProducts = posProducts.filter(p => 
@@ -345,7 +420,7 @@ export default function LandingDemo() {
   const hoursSavedEst = Math.round(calcDailySales * 0.08 * 26);
   const recoveredSalesEst = Math.round(monthlyBillingEst * 0.06);
 
-  const currentMod = modules[activeModuleIndex];
+  const activeModObj = modules.find(m => m.id === activeModuleId);
 
   return (
     <div className="min-h-screen bg-[#070b14] text-slate-200 flex flex-col font-sans selection:bg-slate-700 selection:text-white">
@@ -406,8 +481,8 @@ export default function LandingDemo() {
         </div>
       </header>
 
-      {/* 2. HERO SECTION BASADA EN EL PROGRAMA DE GESTIÓN CON FOTOS DE FONDO */}
-      <section className="relative pt-10 pb-16 sm:pt-14 sm:pb-20 overflow-hidden border-b border-slate-800/80">
+      {/* 2. HERO PRINCIPAL: CENTRADO EN EL PROGRAMA DE GESTIÓN */}
+      <section className="relative pt-10 pb-14 sm:pt-14 sm:pb-16 overflow-hidden border-b border-slate-800/80">
         
         {/* Realistic Workplace Photo Background with Executive Dark Overlay */}
         <div className="absolute inset-0 z-0">
@@ -422,24 +497,22 @@ export default function LandingDemo() {
 
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           
-          {/* Executive Tag */}
-          <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-slate-900/90 border border-slate-700/80 text-slate-300 text-[11px] font-semibold mb-5 backdrop-blur-md shadow-sm">
+          <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-slate-900/90 border border-slate-700/80 text-slate-300 text-[11px] font-semibold mb-4 backdrop-blur-md shadow-sm">
             <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
-            <span>SISTEMA DE GESTIÓN COMERCIAL INTEGRAL • CERO PLANILLAS MANUALES</span>
+            <span>SISTEMA DE GESTIÓN COMERCIAL INTEGRAL • ARQUITECTURA MODULAR</span>
           </div>
 
-          {/* Main Focused Title */}
-          <h1 className="text-2xl sm:text-4xl lg:text-4xl font-extrabold text-white tracking-tight leading-snug max-w-4xl mx-auto">
-            El programa que centraliza la administración completa de tu comercio en una sola plataforma.
+          <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-snug max-w-4xl mx-auto">
+            El programa de gestión integral para controlar el 100% de tu comercio.
           </h1>
 
-          <p className="mt-3.5 text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            Punto de Venta veloz, stock exacto, compras a proveedores, comisiones de empleados, arqueo ciego de caja, cuentas corrientes de clientes y catálogo web sincronizado en tiempo real.
+          <p className="mt-3 text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto leading-relaxed">
+            Revisá a continuación todas las cualidades del sistema. Los módulos se encuentran cerrados por defecto; podés abrir opcionalmente el que desees para probar su demostración interactiva en vivo.
           </p>
 
           {/* Sector Switcher */}
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
-            <span className="text-[11px] text-slate-400 font-semibold mr-1">Rubro de prueba:</span>
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+            <span className="text-[11px] text-slate-400 font-semibold mr-1">Rubro del local:</span>
             {Object.keys(sectorPresets).map(secKey => {
               const active = selectedSector === secKey;
               return (
@@ -459,1026 +532,822 @@ export default function LandingDemo() {
             })}
           </div>
 
-          {/* Quick CTAs */}
-          <div className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-2.5">
-            <a
-              href="#modulos"
-              className="w-full sm:w-auto px-6 py-2.5 bg-slate-850 hover:bg-slate-800 text-white text-xs font-bold rounded-xl transition border border-slate-700 flex items-center justify-center shadow"
-            >
-              <Play className="w-3.5 h-3.5 mr-1.5 text-cyan-400 fill-current" />
-              <span>Ver los 9 Módulos Demostrados en Vivo</span>
-            </a>
-
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="w-full sm:w-auto px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl transition shadow-lg shadow-emerald-950/50 flex items-center justify-center border border-emerald-500/60"
-            >
-              <MessageCircle className="w-4 h-4 mr-2 fill-current" />
-              <span>Coordinar Demostración (2241-527357)</span>
-            </a>
-          </div>
-
         </div>
       </section>
 
-      {/* 3. EL NÚCLEO DEL PROGRAMA: SOLAPAS DIFERENCIADAS POR COLOR CON DEMOSTRACIÓN EN VIVO */}
-      <section id="modulos" className="py-12 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full border-b border-slate-800/80">
+      {/* 3. PRIMERO: TODAS LAS CUALIDADES Y MÓDULOS (NINGUNO ABIERTO POR DEFECTO, APERTURA OPCIONAL) */}
+      <section className="py-12 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full border-b border-slate-800/80">
         
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 mb-6">
-          <div>
-            <span className="text-[10.5px] font-mono font-bold text-cyan-400 uppercase tracking-widest block mb-0.5">
-              RECORRIDO COMPLETO MÓDULO POR MÓDULO
-            </span>
-            <h2 className="text-xl sm:text-2xl font-bold text-white">
-              Todas las solapas y funciones del sistema en vivo
-            </h2>
-            <p className="text-xs text-slate-400 mt-0.5">
-              Cada solapa está identificada por su propio color corporativo y cuenta con una simulación interactiva real.
-            </p>
-          </div>
-
-          {/* Auto tour button */}
-          <button
-            type="button"
-            onClick={() => setIsAutoPlaying(!isAutoPlaying)}
-            className={`flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold transition border ${
-              isAutoPlaying 
-                ? 'bg-slate-850 text-white border-cyan-400 shadow-sm' 
-                : 'bg-slate-900 hover:bg-slate-850 text-slate-300 border-slate-700'
-            }`}
-          >
-            {isAutoPlaying ? <Pause className="w-3.5 h-3.5 mr-1.5 fill-current text-cyan-400" /> : <Play className="w-3.5 h-3.5 mr-1.5 fill-current text-slate-400" />}
-            <span>{isAutoPlaying ? 'Pausar Tour Automático' : 'Recorrido Automático (9 Módulos)'}</span>
-          </button>
+        <div className="text-center max-w-3xl mx-auto mb-10">
+          <span className="text-[10.5px] font-mono font-bold text-cyan-400 uppercase tracking-widest block mb-1">
+            ESTRUCTURA GENERAL DEL SISTEMA
+          </span>
+          <h2 className="text-xl sm:text-3xl font-extrabold text-white">
+            Cualidades y Módulos del Programa de Gestión
+          </h2>
+          <p className="mt-1.5 text-xs sm:text-sm text-slate-400">
+            Cada módulo está diferenciado por su color y detalla todas sus funciones. Hacé clic en <strong>"Abrir demostración interactiva"</strong> para desplegar la pantalla en vivo de cualquiera de ellos.
+          </p>
         </div>
 
-        {/* 9 Tabs Grid with distinctive Colors */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-4">
-          {modules.map((mod, idx) => {
-            const isCurrent = activeModuleIndex === idx;
+        {/* CONTENEDOR VISOR INTERACTIVO EN VIVO (SOLO SE MUESTRA SI HAY UN MÓDULO ABIERTO) */}
+        {activeModuleId && activeModObj && (
+          <div id="visor-modulo" className="mb-10 animate-fade-in">
+            <div className="bg-[#0a0f1d] border-2 border-slate-700 rounded-2xl shadow-2xl overflow-hidden relative">
+              
+              {/* Top Window Bar with Close Button */}
+              <div className="h-10 bg-[#070b14] border-b border-slate-800 flex items-center justify-between px-4 text-xs font-mono text-slate-300">
+                <div className="flex items-center space-x-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block"></span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block"></span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block"></span>
+                  <span className="ml-2 text-[11px] text-white font-bold hidden sm:inline">
+                    Demostración Abierta: Módulo {activeModObj.number} • {activeModObj.name}
+                  </span>
+                </div>
+                
+                <div className="flex items-center space-x-3">
+                  <span className={`text-[10.5px] font-bold px-2 py-0.5 rounded border ${activeModObj.badgeClass}`}>
+                    ● VISTA INTERACTIVA EN VIVO
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setActiveModuleId(null)}
+                    className="p-1 rounded bg-slate-850 hover:bg-slate-750 text-slate-400 hover:text-white border border-slate-700 flex items-center text-[10px] font-sans font-bold transition"
+                  >
+                    <X className="w-3.5 h-3.5 mr-1" />
+                    <span>Cerrar Módulo</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* LIVE MODULE DEMONSTRATION CONTENT */}
+              <div className="p-4 sm:p-6 min-h-[420px] flex flex-col justify-center">
+
+                {/* MOD 1: POS MOSTRADOR */}
+                {activeModuleId === 'pos' && (
+                  <div className="space-y-4 animate-fade-in">
+                    <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-slate-800/80 pb-2.5">
+                      <div>
+                        <h3 className="text-sm sm:text-base font-bold text-white flex items-center">
+                          <ShoppingCart className="w-4 h-4 mr-1.5 text-blue-400" />
+                          Punto de Venta de Alta Velocidad (Mostrador)
+                        </h3>
+                        <p className="text-[11px] text-slate-400">
+                          Buscá por nombre o código de barras, asigná al vendedor para su comisión y emití el ticket en segundos.
+                        </p>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <button
+                          type="button"
+                          onClick={handlePosReset}
+                          className="px-2 py-1 text-[10.5px] bg-slate-850 hover:bg-slate-800 text-slate-300 rounded border border-slate-700 flex items-center transition"
+                        >
+                          <RotateCcw className="w-3 h-3 mr-1" />
+                          Reiniciar
+                        </button>
+                        <span className="px-2 py-0.5 text-[10.5px] bg-blue-950 text-blue-300 border border-blue-700 rounded font-semibold">
+                          Caja #01 Operativa
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-12 gap-2">
+                      <div className="sm:col-span-8 relative">
+                        <Search className="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-400" />
+                        <input
+                          type="text"
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          placeholder="Buscar por artículo o código de barras..."
+                          className="w-full bg-slate-900 border border-slate-800 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500"
+                        />
+                      </div>
+                      <div className="sm:col-span-4 flex items-center bg-slate-900 border border-slate-800 rounded-lg px-2 text-xs">
+                        <span className="text-[10px] text-slate-400 mr-2 font-mono">Vendedor:</span>
+                        <select
+                          value={posSeller}
+                          onChange={(e) => setPosSeller(e.target.value)}
+                          className="bg-transparent text-white text-xs focus:outline-none w-full font-semibold"
+                        >
+                          <option value="Romina" className="bg-slate-900 text-white">Romina V. (Comisión 4%)</option>
+                          <option value="Matías" className="bg-slate-900 text-white">Matías L. (Comisión 5%)</option>
+                          <option value="Laura" className="bg-slate-900 text-white">Laura G. (Encargada 2%)</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                      <div className="lg:col-span-7 space-y-2">
+                        {filteredPosProducts.map(p => (
+                          <div key={p.id} className="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800/90 flex items-center justify-between text-xs">
+                            <div>
+                              <span className="font-semibold text-white block">{p.name}</span>
+                              <span className="text-[10px] text-slate-400 font-mono">
+                                Cód: {p.code} • Stock disponible: <strong className={p.stock < 10 ? 'text-amber-400' : 'text-slate-300'}>{p.stock} u.</strong>
+                              </span>
+                            </div>
+                            <div className="flex items-center space-x-3">
+                              <span className="font-bold text-slate-200">${p.price.toLocaleString('es-AR')}</span>
+                              <div className="flex items-center bg-slate-950 border border-slate-800 rounded-lg p-0.5">
+                                <button
+                                  type="button"
+                                  onClick={() => handlePosRemove(p.id)}
+                                  className="w-5 h-5 flex items-center justify-center text-slate-400 hover:text-white rounded"
+                                >
+                                  <Minus className="w-2.5 h-2.5" />
+                                </button>
+                                <span className="w-5 text-center font-bold text-white text-xs">{p.inCart}</span>
+                                <button
+                                  type="button"
+                                  onClick={() => handlePosAdd(p.id)}
+                                  className="w-5 h-5 flex items-center justify-center text-slate-400 hover:text-white rounded"
+                                >
+                                  <Plus className="w-2.5 h-2.5" />
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="lg:col-span-5 bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex flex-col justify-between">
+                        <div className="space-y-2.5">
+                          <span className="text-[11px] uppercase font-mono text-blue-400 font-bold block pb-1 border-b border-slate-800">
+                            Liquidación de Venta
+                          </span>
+                          <div className="grid grid-cols-3 gap-1 text-[10px] font-semibold">
+                            {['EFECTIVO', 'QR / TRANSF', 'CTA CTE'].map(m => (
+                              <button
+                                key={m}
+                                type="button"
+                                onClick={() => setPosPaymentMethod(m)}
+                                className={`py-1.5 rounded border transition ${
+                                  posPaymentMethod === m 
+                                    ? 'bg-blue-600 text-white border-blue-500 font-bold' 
+                                    : 'bg-slate-900 text-slate-400 border-slate-800'
+                                }`}
+                              >
+                                {m}
+                              </button>
+                            ))}
+                          </div>
+                          <div className="flex justify-between items-baseline pt-2 border-t border-slate-800">
+                            <span className="text-xs text-slate-400">Total a Cobrar:</span>
+                            <span className="text-xl font-extrabold text-blue-400">${posTotal.toLocaleString('es-AR')}</span>
+                          </div>
+                          {posSaleSuccess ? (
+                            <div className="p-2.5 bg-blue-950/80 border border-blue-500/60 rounded-lg text-center space-y-1 animate-fade-in">
+                              <Check className="w-4 h-4 text-blue-400 mx-auto" />
+                              <span className="text-xs font-bold text-blue-200 block">Venta Asentada Correctamente</span>
+                              <span className="text-[10px] text-slate-400 block">Stock descontado y comisión asignada a {posSeller}.</span>
+                            </div>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={handlePosCheckout}
+                              disabled={posTotal === 0}
+                              className="w-full py-2.5 bg-blue-600 hover:bg-blue-500 border border-blue-400 text-white font-bold rounded-lg text-xs uppercase tracking-wider transition shadow disabled:opacity-40"
+                            >
+                              Confirmar Cobro en Mostrador
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* MOD 2: STOCK */}
+                {activeModuleId === 'stock' && (
+                  <div className="space-y-4 animate-fade-in">
+                    <div className="flex justify-between items-center border-b border-slate-800/80 pb-2.5">
+                      <div>
+                        <h3 className="text-sm sm:text-base font-bold text-white flex items-center">
+                          <Package className="w-4 h-4 mr-1.5 text-amber-400" />
+                          Inventario Físico, Costo de Reposición &amp; Margen
+                        </h3>
+                        <p className="text-[11px] text-slate-400">
+                          Controlá el margen de cada artículo, alertas de stock mínimo y visibilidad web.
+                        </p>
+                      </div>
+                      <span className="px-2 py-0.5 text-[10.5px] bg-amber-950 text-amber-300 border border-amber-700 rounded font-semibold">
+                        {stockList.length} Artículos Registrados
+                      </span>
+                    </div>
+
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left text-xs">
+                        <thead>
+                          <tr className="border-b border-slate-800 text-[10px] font-mono uppercase text-slate-400">
+                            <th className="pb-2">Artículo</th>
+                            <th className="pb-2">Costo Proveedor</th>
+                            <th className="pb-2">PVP Venta</th>
+                            <th className="pb-2">Margen</th>
+                            <th className="pb-2">Stock Actual</th>
+                            <th className="pb-2 text-right">Acción</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-800/60">
+                          {stockList.map(item => {
+                            const marginPercent = Math.round(((item.price - item.cost) / item.price) * 100);
+                            return (
+                              <tr key={item.id} className="hover:bg-slate-900/60 transition">
+                                <td className="py-2.5">
+                                  <span className="font-semibold text-white block">{item.name}</span>
+                                  <span className="text-[10px] text-amber-400/80 font-mono">{item.code}</span>
+                                </td>
+                                <td className="py-2.5 font-mono text-slate-300">${item.cost.toLocaleString('es-AR')}</td>
+                                <td className="py-2.5 font-mono font-bold text-white">${item.price.toLocaleString('es-AR')}</td>
+                                <td className="py-2.5">
+                                  <span className="px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 text-[10px] font-bold">
+                                    +{marginPercent}%
+                                  </span>
+                                </td>
+                                <td className="py-2.5">
+                                  <span className={`px-2 py-0.5 rounded text-[10.5px] font-bold font-mono ${
+                                    item.stock < 12 
+                                      ? 'bg-amber-950 text-amber-300 border border-amber-700' 
+                                      : 'bg-slate-900 text-slate-300 border border-slate-700'
+                                  }`}>
+                                    {item.stock} u.
+                                  </span>
+                                </td>
+                                <td className="py-2.5 text-right">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleRestockItem(item.id)}
+                                    className="px-2 py-1 bg-amber-900/40 hover:bg-amber-800/60 text-amber-300 border border-amber-700/60 text-[10px] font-bold rounded transition"
+                                  >
+                                    +10 u. Stock
+                                  </button>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {/* MOD 3: COMPRAS A PROVEEDORES */}
+                {activeModuleId === 'supplier' && (
+                  <div className="space-y-4 animate-fade-in">
+                    <div className="flex justify-between items-center border-b border-slate-800/80 pb-2.5">
+                      <div>
+                        <h3 className="text-sm sm:text-base font-bold text-white flex items-center">
+                          <Truck className="w-4 h-4 mr-1.5 text-purple-400" />
+                          Compras a Proveedores &amp; Acreditación de Stock
+                        </h3>
+                        <p className="text-[11px] text-slate-400">
+                          Agendá pedidos mayoristas, calculá la inversión y acreditá la mercadería en 1 clic.
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleResetPurchase}
+                        className="px-2 py-1 text-[10.5px] bg-slate-850 hover:bg-slate-800 text-slate-300 rounded border border-slate-700 flex items-center transition"
+                      >
+                        <RotateCcw className="w-3 h-3 mr-1" />
+                        Restablecer
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+                      <div className="md:col-span-7 bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 space-y-2.5">
+                        <div className="flex justify-between items-center pb-2 border-b border-slate-800 text-xs">
+                          <div>
+                            <span className="font-semibold text-white block">Orden de Compra: #COM-00912</span>
+                            <span className="text-[10px] text-purple-300 font-mono">Proveedor: Mayorista Central Textil &amp; Deco</span>
+                          </div>
+                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                            purchaseReceived ? 'bg-purple-950 text-purple-300 border border-purple-600' : 'bg-amber-950 text-amber-400 border border-amber-700'
+                          }`}>
+                            {purchaseReceived ? 'RECIBIDO EN STOCK' : 'PENDIENTE DE ENTREGA'}
+                          </span>
+                        </div>
+                        <div className="bg-slate-850 p-2 rounded-lg border border-slate-700/80 flex justify-between items-center text-xs">
+                          <div>
+                            <span className="font-semibold text-white block">Mercadería Mayorista Surtida</span>
+                            <span className="text-[10px] text-slate-400 font-mono">50 unidades compradas • Costo pactado: $5.200 c/u</span>
+                          </div>
+                          <span className="font-bold text-slate-200">$260.000</span>
+                        </div>
+                        <div className="bg-slate-950 p-2.5 rounded-lg border border-slate-800 flex justify-between items-center text-xs">
+                          <span className="font-semibold text-slate-400">Total de Factura a Pagar:</span>
+                          <span className="text-sm font-bold text-purple-300">$260.000</span>
+                        </div>
+                        {!purchaseReceived ? (
+                          <button
+                            type="button"
+                            onClick={handleReceivePurchase}
+                            className="w-full py-2 bg-purple-700 hover:bg-purple-600 border border-purple-500 text-white font-bold rounded-lg text-xs uppercase tracking-wider transition"
+                          >
+                            Confirmar Recepción e Ingresar al Stock Físico
+                          </button>
+                        ) : (
+                          <div className="p-2 bg-purple-950/80 border border-purple-600 rounded-lg text-center text-purple-200 text-xs font-semibold">
+                            ✓ Compra asentada. Se sumaron 50 unidades al stock disponible.
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="md:col-span-5 bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex flex-col justify-center text-center space-y-2">
+                        <span className="text-[10.5px] uppercase font-mono text-purple-400 font-bold">
+                          Impacto Automático en Inventario
+                        </span>
+                        <div className="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                          <span className="text-xs text-slate-400 block mb-0.5">Stock de "Artículos Recibidos"</span>
+                          <span className="text-3xl font-extrabold text-white font-mono">{stockCount} u.</span>
+                          {purchaseReceived && (
+                            <span className="inline-block mt-1 text-[10px] bg-purple-950 text-purple-300 font-bold px-2 py-0.5 rounded border border-purple-700">
+                              +50 unidades acreditadas recién
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* MOD 4: EMPLEADOS & ROLES */}
+                {activeModuleId === 'employees' && (
+                  <div className="space-y-4 animate-fade-in">
+                    <div className="flex justify-between items-center border-b border-slate-800/80 pb-2.5">
+                      <div>
+                        <h3 className="text-sm sm:text-base font-bold text-white flex items-center">
+                          <Users className="w-4 h-4 mr-1.5 text-cyan-400" />
+                          Creación de Empleados, Roles &amp; Liquidación de Comisiones
+                        </h3>
+                        <p className="text-[11px] text-slate-400">
+                          Asigná claves individuales, roles de acceso y comisiones porcentuales automáticas.
+                        </p>
+                      </div>
+                      <span className="px-2 py-0.5 text-[10.5px] bg-cyan-950 text-cyan-300 border border-cyan-700 rounded font-semibold">
+                        {employees.length} Empleados Activos
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+                      <div className="md:col-span-7 space-y-2">
+                        {employees.map(emp => {
+                          const isSel = selectedEmployee.id === emp.id;
+                          return (
+                            <div
+                              key={emp.id}
+                              onClick={() => { setSelectedEmployee(emp); setCashCommissionPaid(false); }}
+                              className={`p-3 rounded-xl border cursor-pointer transition flex items-center justify-between ${
+                                isSel ? 'bg-cyan-950/40 border-cyan-500 text-white' : 'bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-700'
+                              }`}
+                            >
+                              <div>
+                                <span className="font-bold text-xs block">{emp.name}</span>
+                                <span className="text-[10px] text-slate-400 font-mono">
+                                  Rol: <strong className="text-cyan-300">{emp.role}</strong> • Comisión: {emp.commission}%
+                                </span>
+                              </div>
+                              <div className="text-right">
+                                <span className="text-xs font-bold text-emerald-400 block font-mono">
+                                  ${emp.accumulatedCommission.toLocaleString('es-AR')}
+                                </span>
+                                <span className="text-[9.5px] text-slate-400">{emp.salesCount} ventas liquidadas</span>
+                              </div>
+                            </div>
+                          );
+                        })}
+
+                        <form onSubmit={handleAddEmployee} className="pt-2 flex gap-2">
+                          <input
+                            type="text"
+                            value={newEmployeeName}
+                            onChange={(e) => setNewEmployeeName(e.target.value)}
+                            placeholder="Nombre de nuevo empleado..."
+                            className="flex-1 bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500"
+                          />
+                          <select
+                            value={newEmployeeRole}
+                            onChange={(e) => setNewEmployeeRole(e.target.value)}
+                            className="bg-slate-900 border border-slate-800 rounded-lg px-2 text-xs text-slate-300 focus:outline-none"
+                          >
+                            <option value="VENDEDOR">Vendedor</option>
+                            <option value="ENCARGADO">Encargado</option>
+                            <option value="ADMIN">Administrador</option>
+                          </select>
+                          <button
+                            type="submit"
+                            className="px-3 py-1.5 bg-cyan-700 hover:bg-cyan-600 text-white text-xs font-bold rounded-lg transition"
+                          >
+                            + Crear
+                          </button>
+                        </form>
+                      </div>
+
+                      <div className="md:col-span-5 bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2.5 flex flex-col justify-between">
+                        <div className="space-y-2 text-xs">
+                          <span className="text-[11px] uppercase font-mono text-cyan-400 font-bold block border-b border-slate-800 pb-1">
+                            Ficha de Rendimiento Individual
+                          </span>
+                          <div className="flex justify-between"><span className="text-slate-400">Personal:</span> <strong className="text-white">{selectedEmployee.name}</strong></div>
+                          <div className="flex justify-between"><span className="text-slate-400">Jerarquía:</span> <strong className="text-cyan-300 font-mono">{selectedEmployee.role}</strong></div>
+                          <div className="flex justify-between"><span className="text-slate-400">Comisión pactada:</span> <strong className="text-slate-200 font-mono">{selectedEmployee.commission}% por venta</strong></div>
+                          <div className="flex justify-between items-baseline pt-2 border-t border-slate-800">
+                            <span className="text-slate-300">Comisión Acumulada:</span>
+                            <span className="text-lg font-bold text-emerald-400 font-mono">${selectedEmployee.accumulatedCommission.toLocaleString('es-AR')}</span>
+                          </div>
+                        </div>
+
+                        {!cashCommissionPaid ? (
+                          <button
+                            type="button"
+                            onClick={handlePayCommission}
+                            className="w-full py-2 bg-emerald-700 hover:bg-emerald-600 border border-emerald-500 text-white font-bold rounded-lg text-xs uppercase transition shadow"
+                          >
+                            Pagar Comisión desde Caja
+                          </button>
+                        ) : (
+                          <div className="p-2 bg-emerald-950/80 border border-emerald-500/60 rounded-lg text-center text-emerald-300 text-xs font-semibold">
+                            ✓ Comisión liquidada y descontada de la caja en turno.
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* MOD 5: CAJA Y TURNOS */}
+                {activeModuleId === 'cash' && (
+                  <div className="space-y-4 animate-fade-in">
+                    <div className="flex justify-between items-center border-b border-slate-800/80 pb-2.5">
+                      <div>
+                        <h3 className="text-sm sm:text-base font-bold text-white flex items-center">
+                          <Wallet className="w-4 h-4 mr-1.5 text-emerald-400" />
+                          Arqueo de Turnos &amp; Cierre de Caja Ciego
+                        </h3>
+                        <p className="text-[11px] text-slate-400">
+                          Control de efectivo, transferencias, comprobantes y retiros de gastos.
+                        </p>
+                      </div>
+                      <span className="px-2 py-0.5 text-[10.5px] bg-emerald-950 text-emerald-300 border border-emerald-700 rounded font-semibold">
+                        Turno Tarde Activo
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-xs">
+                      <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800 space-y-1">
+                        <span className="text-slate-400 text-[10.5px]">Efectivo Físico en Cajón:</span>
+                        <span className="text-xl font-bold text-white block">${cashBalance.toLocaleString('es-AR')}</span>
+                        <span className="text-[10px] text-emerald-400">● Cuadrado al centavo con tickets</span>
+                      </div>
+                      <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800 space-y-1">
+                        <span className="text-slate-400 text-[10.5px]">Cobros Virtuales / QR:</span>
+                        <span className="text-xl font-bold text-slate-200 block">$98.600</span>
+                        <span className="text-[10px] text-slate-400">14 transferencias verificadas</span>
+                      </div>
+                      <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800 space-y-1">
+                        <span className="text-slate-400 text-[10.5px]">Gastos / Retiros Asentados:</span>
+                        <span className="text-xl font-bold text-rose-400 block">-${cashWithdrawn.toLocaleString('es-AR')}</span>
+                        <span className="text-[10px] text-slate-400">Pago flete y bolsas con comprobante</span>
+                      </div>
+                    </div>
+
+                    <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between items-center text-xs">
+                      <div>
+                        <span className="text-xs font-bold text-white block">Balance Neto Consolidado del Turno</span>
+                        <span className="text-[10px] text-slate-400">Auditoría con firma del encargado y registro horario</span>
+                      </div>
+                      <span className="text-xl font-extrabold text-emerald-400">
+                        ${(cashBalance + 98600 - cashWithdrawn).toLocaleString('es-AR')}
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {/* MOD 6: INFORMES */}
+                {activeModuleId === 'reports' && (
+                  <div className="space-y-4 animate-fade-in">
+                    <div className="flex justify-between items-center border-b border-slate-800/80 pb-2.5">
+                      <div>
+                        <h3 className="text-sm sm:text-base font-bold text-white flex items-center">
+                          <BarChart3 className="w-4 h-4 mr-1.5 text-indigo-400" />
+                          Métricas Financieras &amp; Ganancia Real
+                        </h3>
+                        <p className="text-[11px] text-slate-400">
+                          Ganancia neta limpia descontando el costo del proveedor.
+                        </p>
+                      </div>
+                      <div className="flex bg-slate-900 p-0.5 rounded-lg border border-slate-800 text-[10.5px] font-semibold">
+                        {['hoy', 'semana', 'mes'].map(p => (
+                          <button
+                            key={p}
+                            type="button"
+                            onClick={() => setMetricsPeriod(p)}
+                            className={`px-2.5 py-1 rounded uppercase transition ${
+                              metricsPeriod === p ? 'bg-indigo-600 text-white font-bold' : 'text-slate-400'
+                            }`}
+                          >
+                            {p}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                      <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800 space-y-1">
+                        <span className="text-slate-400 text-[10.5px]">Ventas Totales Brutas:</span>
+                        <span className="text-lg font-bold text-white block">
+                          {metricsPeriod === 'hoy' ? '$185.000' : metricsPeriod === 'semana' ? '$1.420.000' : '$5.850.000'}
+                        </span>
+                      </div>
+                      <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800 space-y-1">
+                        <span className="text-slate-400 text-[10.5px]">Costo Mayorista Reposición:</span>
+                        <span className="text-lg font-mono text-slate-400 block">
+                          {metricsPeriod === 'hoy' ? '-$92.000' : metricsPeriod === 'semana' ? '-$710.000' : '-$2.920.000'}
+                        </span>
+                      </div>
+                      <div className="bg-indigo-950/70 p-3 rounded-xl border border-indigo-700/80 space-y-1">
+                        <span className="text-indigo-300 font-bold text-[10.5px]">Ganancia Neta Limpia:</span>
+                        <span className="text-lg font-bold text-indigo-300 block">
+                          {metricsPeriod === 'hoy' ? '+$93.000' : metricsPeriod === 'semana' ? '+$710.000' : '+$2.930.000'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* MOD 7: CLIENTES */}
+                {activeModuleId === 'customers' && (
+                  <div className="space-y-4 animate-fade-in">
+                    <div className="flex justify-between items-center border-b border-slate-800/80 pb-2.5">
+                      <div>
+                        <h3 className="text-sm sm:text-base font-bold text-white flex items-center">
+                          <BookOpen className="w-4 h-4 mr-1.5 text-teal-400" />
+                          Directorio de Clientes &amp; Libreta de Fiados
+                        </h3>
+                        <p className="text-[11px] text-slate-400">
+                          Control de cuenta corriente y saldos pendientes sin cuadernos en papel.
+                        </p>
+                      </div>
+                      <span className="px-2 py-0.5 text-[10.5px] bg-teal-950 text-teal-300 border border-teal-700 rounded font-semibold">
+                        {customers.length} Clientes con Ficha
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                      {customers.map(c => (
+                        <div key={c.id} className="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 space-y-2">
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <span className="font-bold text-white block">{c.name}</span>
+                              <span className="text-[10px] text-slate-400 font-mono">Tel: {c.phone}</span>
+                            </div>
+                            <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
+                              c.balance > 0 ? 'bg-amber-950 text-amber-300 border border-amber-700' : 'bg-emerald-950 text-emerald-300 border border-emerald-700'
+                            }`}>
+                              {c.balance > 0 ? 'CON SALDO' : 'AL DÍA'}
+                            </span>
+                          </div>
+                          <div className="pt-1 border-t border-slate-800 flex justify-between items-baseline">
+                            <span className="text-slate-400 text-[10.5px]">Saldo Deudor:</span>
+                            <span className={`text-sm font-bold font-mono ${c.balance > 0 ? 'text-amber-400' : 'text-emerald-400'}`}>
+                              ${c.balance.toLocaleString('es-AR')}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* MOD 8: CATÁLOGO WEB */}
+                {activeModuleId === 'catalog' && (
+                  <div className="space-y-4 animate-fade-in">
+                    <div className="flex justify-between items-center border-b border-slate-800/80 pb-2.5">
+                      <div>
+                        <h3 className="text-sm sm:text-base font-bold text-white flex items-center">
+                          <Store className="w-4 h-4 mr-1.5 text-rose-400" />
+                          Catálogo Web Móvil con Pedidos a WhatsApp
+                        </h3>
+                        <p className="text-[11px] text-slate-400">
+                          Tus clientes eligen productos y te llega el pedido detallado sin errores.
+                        </p>
+                      </div>
+                      <Link
+                        to="/catalogo"
+                        target="_blank"
+                        className="px-2.5 py-1 bg-rose-950 hover:bg-rose-900 text-rose-300 border border-rose-800 text-[11px] font-semibold rounded-lg flex items-center transition"
+                      >
+                        <span>Abrir Catálogo Web Real</span>
+                        <ExternalLink className="w-3 h-3 ml-1" />
+                      </Link>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                      <div className="max-w-[260px] mx-auto bg-black border-2 border-slate-800 rounded-[28px] p-2.5 shadow-xl space-y-2">
+                        <div className="w-16 h-3 bg-slate-800 rounded-full mx-auto"></div>
+                        <div className="bg-slate-900 rounded-xl p-2.5 border border-slate-800 space-y-2">
+                          <div className="h-28 bg-slate-800 rounded-lg flex items-center justify-center text-slate-400 text-xs font-semibold relative overflow-hidden">
+                            <ShoppingBag className="w-8 h-8 opacity-40 text-rose-400" />
+                            <span className="absolute bottom-1.5 right-1.5 bg-rose-950 text-rose-300 text-[9px] font-bold px-1.5 py-0.5 rounded border border-rose-700">
+                              EN STOCK
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-[10px] text-slate-400 font-mono block">{catalogSelectedProduct.code}</span>
+                            <span className="text-xs font-semibold text-white block">{catalogSelectedProduct.name}</span>
+                            <span className="text-xs font-extrabold text-rose-400">${catalogSelectedProduct.price.toLocaleString('es-AR')}</span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setCatalogSentMessage(true)}
+                            className="w-full py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-[11px] font-semibold flex items-center justify-center shadow transition"
+                          >
+                            <MessageCircle className="w-3 h-3 mr-1" />
+                            Enviar Pedido a WhatsApp
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2.5">
+                        <span className="text-[11px] uppercase font-mono text-rose-400 font-bold block">
+                          Mensaje recibido listo para preparar
+                        </span>
+                        <div className="bg-slate-900 border border-slate-800 p-3 rounded-lg text-xs text-slate-300 leading-relaxed font-mono">
+                          "¡Hola! Quiero encargar <strong className="text-white">"{catalogSelectedProduct.name}"</strong> (Cód: {catalogSelectedProduct.code}) de ${catalogSelectedProduct.price.toLocaleString('es-AR')}. ¿Cómo coordinamos el pago y retiro?"
+                        </div>
+                        {catalogSentMessage && (
+                          <div className="p-2 bg-slate-900 border border-slate-700 text-slate-300 rounded-lg text-[11px] font-semibold text-center">
+                            ✓ Venta cerrada sin intermediarios ni comisiones por operación.
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* MOD 9: SUPERADMIN */}
+                {activeModuleId === 'admin' && (
+                  <div className="space-y-4 animate-fade-in">
+                    <div className="flex justify-between items-center border-b border-slate-800/80 pb-2.5">
+                      <div>
+                        <h3 className="text-sm sm:text-base font-bold text-white flex items-center">
+                          <Settings className="w-4 h-4 mr-1.5 text-slate-400" />
+                          Personalización de Identidad de Marca &amp; Logo
+                        </h3>
+                        <p className="text-[11px] text-slate-400">
+                          Cargá el logo de tu comercio y cambiá el nombre de fantasía en toda la plataforma.
+                        </p>
+                      </div>
+                      <span className="px-2 py-0.5 text-[10.5px] bg-slate-800 text-slate-300 border border-slate-600 rounded font-semibold">
+                        Acceso Jerárquico Seguro
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-3 text-xs">
+                        <div>
+                          <label className="text-slate-400 text-[10.5px] block mb-1">Nombre Comercial de la Tienda:</label>
+                          <input
+                            type="text"
+                            value={storeIdentity.name}
+                            onChange={(e) => setStoreIdentity(prev => ({ ...prev, name: e.target.value }))}
+                            className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-slate-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-slate-400 text-[10.5px] block mb-1">Eslogan o Subtítulo del Comercio:</label>
+                          <input
+                            type="text"
+                            value={storeIdentity.slogan}
+                            onChange={(e) => setStoreIdentity(prev => ({ ...prev, slogan: e.target.value }))}
+                            className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-slate-500"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col justify-center items-center text-center space-y-2">
+                        <div className="w-16 h-16 rounded-2xl bg-slate-900 border-2 border-slate-700 flex items-center justify-center text-slate-400 font-bold text-xl shadow">
+                          {storeIdentity.name.charAt(0)}
+                        </div>
+                        <div>
+                          <span className="text-sm font-bold text-white block">{storeIdentity.name}</span>
+                          <span className="text-xs text-slate-400">{storeIdentity.slogan}</span>
+                        </div>
+                        <span className="text-[10px] text-emerald-400 font-mono font-bold">
+                          ● VISTA PREVIA EN TIEMPO REAL
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+              </div>
+
+              {/* Visor Footer */}
+              <div className="h-10 bg-[#070b14] border-t border-slate-800 flex items-center justify-between px-4 text-xs text-slate-400">
+                <span>Demostración oficial ROLΦ Studio</span>
+                <button
+                  type="button"
+                  onClick={() => setActiveModuleId(null)}
+                  className="text-[11px] text-cyan-400 hover:text-cyan-300 font-semibold"
+                >
+                  Cerrar demostración ▲
+                </button>
+              </div>
+
+            </div>
+          </div>
+        )}
+
+        {/* 9 MODULE CARDS WITH ENUMERATED QUALITIES (ALL CLOSED BY DEFAULT) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {modules.map((mod) => {
             const Icon = mod.icon;
+            const isOpen = activeModuleId === mod.id;
             return (
-              <button
+              <div
                 key={mod.id}
-                type="button"
-                onClick={() => {
-                  setActiveModuleIndex(idx);
-                  setIsAutoPlaying(false);
-                }}
-                className={`p-2.5 rounded-xl text-left border transition-all duration-150 relative overflow-hidden ${
-                  isCurrent 
-                    ? `${mod.activeBorder} shadow-lg scale-[1.01]` 
-                    : 'bg-slate-900/90 border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200'
+                className={`bg-[#0a0f1d] border rounded-2xl p-5 flex flex-col justify-between transition-all duration-200 shadow-md ${
+                  isOpen ? 'border-cyan-500 ring-2 ring-cyan-500/30' : mod.borderClass
                 }`}
               >
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-[10px] font-mono font-bold opacity-60">
-                    {mod.number}
-                  </span>
-                  <Icon className={`w-3.5 h-3.5 ${isCurrent ? 'text-white' : 'text-slate-500'}`} />
+                <div>
+                  {/* Top card header */}
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center space-x-2.5">
+                      <div className="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center">
+                        <Icon className={`w-4 h-4 ${mod.accentColor}`} />
+                      </div>
+                      <div>
+                        <span className="text-[10px] font-mono text-slate-500 block">MÓDULO {mod.number}</span>
+                        <h3 className="text-sm font-bold text-white">{mod.name}</h3>
+                      </div>
+                    </div>
+                    <span className={`text-[9.5px] font-bold px-2 py-0.5 rounded-full border ${mod.badgeClass}`}>
+                      {mod.subtitle}
+                    </span>
+                  </div>
+
+                  {/* Enumerated Qualities Checklist */}
+                  <div className="pt-2 pb-4 border-t border-slate-800/80">
+                    <span className="text-[10px] font-mono uppercase text-slate-400 font-bold block mb-2">
+                      Cualidades que posee:
+                    </span>
+                    <ul className="space-y-1.5 text-[11px] text-slate-300">
+                      {mod.qualities.map((qual, qIdx) => (
+                        <li key={qIdx} className="flex items-start space-x-2">
+                          <Check className={`w-3.5 h-3.5 mt-0.5 flex-shrink-0 ${mod.accentColor}`} />
+                          <span className="leading-tight">{qual}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
-                <span className={`text-xs font-bold block truncate ${isCurrent ? 'text-white' : 'text-slate-300'}`}>
-                  {mod.name}
-                </span>
-                <span className="text-[10px] text-slate-400 block truncate mt-0.5">
-                  {mod.subtitle}
-                </span>
-              </button>
+
+                {/* Action button to open demo optionally */}
+                <div className="pt-3 border-t border-slate-800/80">
+                  <button
+                    type="button"
+                    onClick={() => handleToggleModule(mod.id)}
+                    className={`w-full py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center shadow ${
+                      isOpen
+                        ? 'bg-slate-800 text-slate-200 border border-slate-600'
+                        : `${mod.buttonClass}`
+                    }`}
+                  >
+                    {isOpen ? (
+                      <>
+                        <ChevronUp className="w-3.5 h-3.5 mr-1.5" />
+                        <span>Cerrar demostración</span>
+                      </>
+                    ) : (
+                      <>
+                        <Play className="w-3 h-3 mr-1.5 fill-current" />
+                        <span>Abrir demostración en vivo</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
             );
           })}
         </div>
 
-        {/* MONITOR PRINCIPAL DE EJECUCIÓN DEL MÓDULO */}
-        <div className="bg-[#0a0f1d] border border-slate-800 rounded-2xl shadow-2xl overflow-hidden relative">
-          
-          {/* Top Window Bar */}
-          <div className="h-9 bg-[#070b14] border-b border-slate-800 flex items-center justify-between px-4 text-xs font-mono text-slate-400">
-            <div className="flex items-center space-x-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block"></span>
-              <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block"></span>
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block"></span>
-              <span className="ml-2 text-[10.5px] text-slate-400 hidden sm:inline">
-                ROLΦ Studio • Módulo {currentMod.number}: {currentMod.name}
-              </span>
-            </div>
-            <div className="bg-slate-900 border border-slate-800 px-2.5 py-0.5 rounded text-[10px] text-slate-400 hidden sm:block">
-              app.comercio.local/sistema/{currentMod.id}
-            </div>
-            <span className={`text-[10px] font-bold px-2 py-0.5 rounded border ${currentMod.badge}`}>
-              ● MÓDULO EN VIVO
-            </span>
-          </div>
-
-          {/* SCREEN CONTENT AREA */}
-          <div className="p-4 sm:p-6 min-h-[440px] flex flex-col justify-center">
-
-            {/* TAB 1: MOSTRADOR POS (AZUL) */}
-            {activeModuleIndex === 0 && (
-              <div className="space-y-4 animate-fade-in">
-                <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-slate-800/80 pb-2.5">
-                  <div>
-                    <h3 className="text-sm sm:text-base font-bold text-white flex items-center">
-                      <ShoppingCart className="w-4 h-4 mr-1.5 text-blue-400" />
-                      Punto de Venta de Alta Velocidad (Mostrador)
-                    </h3>
-                    <p className="text-[11px] text-slate-400">
-                      Buscá por nombre o código de barras, asigná al vendedor para su comisión y emití el ticket en segundos.
-                    </p>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <button
-                      type="button"
-                      onClick={handlePosReset}
-                      className="px-2 py-1 text-[10.5px] bg-slate-850 hover:bg-slate-800 text-slate-300 rounded border border-slate-700 flex items-center transition"
-                    >
-                      <RotateCcw className="w-3 h-3 mr-1" />
-                      Reiniciar
-                    </button>
-                    <span className="px-2 py-0.5 text-[10.5px] bg-blue-950 text-blue-300 border border-blue-700 rounded font-semibold">
-                      Caja #01 Operativa
-                    </span>
-                  </div>
-                </div>
-
-                {/* Filter and Seller Selector */}
-                <div className="grid grid-cols-1 sm:grid-cols-12 gap-2">
-                  <div className="sm:col-span-8 relative">
-                    <Search className="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-400" />
-                    <input
-                      type="text"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      placeholder="Buscar por artículo o código de barras..."
-                      className="w-full bg-slate-900 border border-slate-800 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500"
-                    />
-                  </div>
-                  <div className="sm:col-span-4 flex items-center bg-slate-900 border border-slate-800 rounded-lg px-2 text-xs">
-                    <span className="text-[10px] text-slate-400 mr-2 font-mono">Vendedor:</span>
-                    <select
-                      value={posSeller}
-                      onChange={(e) => setPosSeller(e.target.value)}
-                      className="bg-transparent text-white text-xs focus:outline-none w-full font-semibold"
-                    >
-                      <option value="Romina" className="bg-slate-900 text-white">Romina V. (Comisión 4%)</option>
-                      <option value="Matías" className="bg-slate-900 text-white">Matías L. (Comisión 5%)</option>
-                      <option value="Laura" className="bg-slate-900 text-white">Laura G. (Encargada 2%)</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-                  {/* Product list */}
-                  <div className="lg:col-span-7 space-y-2">
-                    {filteredPosProducts.map(p => (
-                      <div key={p.id} className="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800/90 flex items-center justify-between text-xs">
-                        <div>
-                          <span className="font-semibold text-white block">{p.name}</span>
-                          <span className="text-[10px] text-slate-400 font-mono">
-                            Cód: {p.code} • Stock disponible: <strong className={p.stock < 10 ? 'text-amber-400' : 'text-slate-300'}>{p.stock} u.</strong>
-                          </span>
-                        </div>
-                        <div className="flex items-center space-x-3">
-                          <span className="font-bold text-slate-200">${p.price.toLocaleString('es-AR')}</span>
-                          <div className="flex items-center bg-slate-950 border border-slate-800 rounded-lg p-0.5">
-                            <button
-                              type="button"
-                              onClick={() => handlePosRemove(p.id)}
-                              className="w-5 h-5 flex items-center justify-center text-slate-400 hover:text-white rounded"
-                            >
-                              <Minus className="w-2.5 h-2.5" />
-                            </button>
-                            <span className="w-5 text-center font-bold text-white text-xs">{p.inCart}</span>
-                            <button
-                              type="button"
-                              onClick={() => handlePosAdd(p.id)}
-                              className="w-5 h-5 flex items-center justify-center text-slate-400 hover:text-white rounded"
-                            >
-                              <Plus className="w-2.5 h-2.5" />
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Summary & Checkout */}
-                  <div className="lg:col-span-5 bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex flex-col justify-between">
-                    <div className="space-y-2.5">
-                      <span className="text-[11px] uppercase font-mono text-blue-400 font-bold block pb-1 border-b border-slate-800">
-                        Liquidación de Venta
-                      </span>
-
-                      {/* Payment buttons */}
-                      <div className="grid grid-cols-3 gap-1 text-[10px] font-semibold">
-                        {['EFECTIVO', 'QR / TRANSF', 'CTA CTE'].map(m => (
-                          <button
-                            key={m}
-                            type="button"
-                            onClick={() => setPosPaymentMethod(m)}
-                            className={`py-1.5 rounded border transition ${
-                              posPaymentMethod === m 
-                                ? 'bg-blue-600 text-white border-blue-500 font-bold' 
-                                : 'bg-slate-900 text-slate-400 border-slate-800'
-                            }`}
-                          >
-                            {m}
-                          </button>
-                        ))}
-                      </div>
-
-                      <div className="flex justify-between items-baseline pt-2 border-t border-slate-800">
-                        <span className="text-xs text-slate-400">Total a Cobrar:</span>
-                        <span className="text-xl font-extrabold text-blue-400">${posTotal.toLocaleString('es-AR')}</span>
-                      </div>
-
-                      {posSaleSuccess ? (
-                        <div className="p-2.5 bg-blue-950/80 border border-blue-500/60 rounded-lg text-center space-y-1 animate-fade-in">
-                          <Check className="w-4 h-4 text-blue-400 mx-auto" />
-                          <span className="text-xs font-bold text-blue-200 block">Venta Asentada Correctamente</span>
-                          <span className="text-[10px] text-slate-400 block">
-                            Stock descontado y comisión acreditada a {posSeller}.
-                          </span>
-                        </div>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={handlePosCheckout}
-                          disabled={posTotal === 0}
-                          className="w-full py-2.5 bg-blue-600 hover:bg-blue-500 border border-blue-400 text-white font-bold rounded-lg text-xs uppercase tracking-wider transition shadow disabled:opacity-40"
-                        >
-                          Confirmar Cobro en Mostrador
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* TAB 2: INVENTARIO & CONTROL DE STOCK (ÁMBAR) */}
-            {activeModuleIndex === 1 && (
-              <div className="space-y-4 animate-fade-in">
-                <div className="flex justify-between items-center border-b border-slate-800/80 pb-2.5">
-                  <div>
-                    <h3 className="text-sm sm:text-base font-bold text-white flex items-center">
-                      <Package className="w-4 h-4 mr-1.5 text-amber-400" />
-                      Inventario Físico, Costo de Reposición &amp; Rentabilidad Bruta
-                    </h3>
-                    <p className="text-[11px] text-slate-400">
-                      Controlá el margen de ganancia de cada artículo, alertas de stock mínimo y visibilidad en catálogo online.
-                    </p>
-                  </div>
-                  <span className="px-2 py-0.5 text-[10.5px] bg-amber-950 text-amber-300 border border-amber-700 rounded font-semibold">
-                    {stockList.length} Artículos Registrados
-                  </span>
-                </div>
-
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs">
-                    <thead>
-                      <tr className="border-b border-slate-800 text-[10px] font-mono uppercase text-slate-400">
-                        <th className="pb-2">Artículo &amp; Código</th>
-                        <th className="pb-2">Costo Proveedor</th>
-                        <th className="pb-2">PVP Venta</th>
-                        <th className="pb-2">Margen</th>
-                        <th className="pb-2">Stock Actual</th>
-                        <th className="pb-2 text-right">Acción Rápida</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-800/60">
-                      {stockList.map(item => {
-                        const marginPercent = Math.round(((item.price - item.cost) / item.price) * 100);
-                        return (
-                          <tr key={item.id} className="hover:bg-slate-900/60 transition">
-                            <td className="py-2.5">
-                              <span className="font-semibold text-white block">{item.name}</span>
-                              <span className="text-[10px] text-amber-400/80 font-mono">{item.code}</span>
-                            </td>
-                            <td className="py-2.5 font-mono text-slate-300">${item.cost.toLocaleString('es-AR')}</td>
-                            <td className="py-2.5 font-mono font-bold text-white">${item.price.toLocaleString('es-AR')}</td>
-                            <td className="py-2.5">
-                              <span className="px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 text-[10px] font-bold">
-                                +{marginPercent}%
-                              </span>
-                            </td>
-                            <td className="py-2.5">
-                              <span className={`px-2 py-0.5 rounded text-[10.5px] font-bold font-mono ${
-                                item.stock < 12 
-                                  ? 'bg-amber-950 text-amber-300 border border-amber-700' 
-                                  : 'bg-slate-900 text-slate-300 border border-slate-700'
-                              }`}>
-                                {item.stock} u.
-                              </span>
-                            </td>
-                            <td className="py-2.5 text-right">
-                              <button
-                                type="button"
-                                onClick={() => handleRestockItem(item.id)}
-                                className="px-2 py-1 bg-amber-900/40 hover:bg-amber-800/60 text-amber-300 border border-amber-700/60 text-[10px] font-bold rounded transition"
-                              >
-                                +10 u. Stock
-                              </button>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-
-                <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-2 text-xs">
-                  <span className="text-slate-400">
-                    💡 Si un producto llega a 0 unidades, podés configurarlo para que se oculte automáticamente del catálogo web.
-                  </span>
-                  <span className="text-[11px] font-mono text-amber-400 font-bold">● SIN FALTANTES NI QUIEBRES</span>
-                </div>
-              </div>
-            )}
-
-            {/* TAB 3: PROVEEDORES & COMPRAS (PÚRPURA / VIOLETA) */}
-            {activeModuleIndex === 2 && (
-              <div className="space-y-4 animate-fade-in">
-                <div className="flex justify-between items-center border-b border-slate-800/80 pb-2.5">
-                  <div>
-                    <h3 className="text-sm sm:text-base font-bold text-white flex items-center">
-                      <Truck className="w-4 h-4 mr-1.5 text-purple-400" />
-                      Compras a Proveedores, Inversión &amp; Acreditación de Mercadería
-                    </h3>
-                    <p className="text-[11px] text-slate-400">
-                      Planificá pedidos mayoristas, calculá el costo de la compra y cargá las unidades al inventario en 1 clic.
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={handleResetPurchase}
-                    className="px-2 py-1 text-[10.5px] bg-slate-850 hover:bg-slate-800 text-slate-300 rounded border border-slate-700 flex items-center transition"
-                  >
-                    <RotateCcw className="w-3 h-3 mr-1" />
-                    Restablecer
-                  </button>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-                  {/* Purchase order */}
-                  <div className="md:col-span-7 bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 space-y-2.5">
-                    <div className="flex justify-between items-center pb-2 border-b border-slate-800 text-xs">
-                      <div>
-                        <span className="font-semibold text-white block">Orden de Compra: #COM-00912</span>
-                        <span className="text-[10px] text-purple-300 font-mono">Proveedor: Mayorista Central Textil &amp; Deco</span>
-                      </div>
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                        purchaseReceived 
-                          ? 'bg-purple-950 text-purple-300 border border-purple-600' 
-                          : 'bg-amber-950 text-amber-400 border border-amber-700'
-                      }`}>
-                        {purchaseReceived ? 'RECIBIDO EN STOCK' : 'PENDIENTE DE ENTREGA'}
-                      </span>
-                    </div>
-
-                    <div className="space-y-1.5 text-xs">
-                      <div className="bg-slate-850 p-2 rounded-lg border border-slate-700/80 flex justify-between items-center">
-                        <div>
-                          <span className="font-semibold text-white block">Mercadería Mayorista Surtida</span>
-                          <span className="text-[10px] text-slate-400 font-mono">50 unidades compradas • Costo pactado: $5.200 c/u</span>
-                        </div>
-                        <span className="font-bold text-slate-200">$260.000</span>
-                      </div>
-                    </div>
-
-                    <div className="bg-slate-950 p-2.5 rounded-lg border border-slate-800 flex justify-between items-center text-xs">
-                      <span className="font-semibold text-slate-400">Total de Factura a Pagar:</span>
-                      <span className="text-sm font-bold text-purple-300">$260.000</span>
-                    </div>
-
-                    {!purchaseReceived ? (
-                      <button
-                        type="button"
-                        onClick={handleReceivePurchase}
-                        className="w-full py-2 bg-purple-700 hover:bg-purple-600 border border-purple-500 text-white font-bold rounded-lg text-xs uppercase tracking-wider transition"
-                      >
-                        Confirmar Recepción e Ingresar al Stock Físico
-                      </button>
-                    ) : (
-                      <div className="p-2 bg-purple-950/80 border border-purple-600 rounded-lg text-center text-purple-200 text-xs font-semibold">
-                        ✓ Compra asentada. Se sumaron 50 unidades al stock disponible sin cargarlas una a una.
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Stock impact widget */}
-                  <div className="md:col-span-5 bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex flex-col justify-center text-center space-y-2">
-                    <span className="text-[10.5px] uppercase font-mono text-purple-400 font-bold">
-                      Impacto Automático en Inventario
-                    </span>
-                    <div className="p-3 bg-slate-900 rounded-xl border border-slate-800">
-                      <span className="text-xs text-slate-400 block mb-0.5">Stock de "Artículos Recibidos"</span>
-                      <span className="text-3xl sm:text-4xl font-extrabold text-white font-mono tracking-tight transition-all duration-300">
-                        {stockCount} <span className="text-xs text-slate-400 font-sans">u.</span>
-                      </span>
-                      {purchaseReceived && (
-                        <span className="inline-block mt-1 text-[10px] bg-purple-950 text-purple-300 font-bold px-2 py-0.5 rounded border border-purple-700">
-                          +50 unidades acreditadas recién
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-[10.5px] text-slate-400">
-                      Mantenés actualizado el precio de reposición para que el sistema calcule siempre tu rentabilidad real.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* TAB 4: EMPLEADOS, VENDEDORES & COMISIONES (CIAN / CELESTE) */}
-            {activeModuleIndex === 3 && (
-              <div className="space-y-4 animate-fade-in">
-                <div className="flex justify-between items-center border-b border-slate-800/80 pb-2.5">
-                  <div>
-                    <h3 className="text-sm sm:text-base font-bold text-white flex items-center">
-                      <Users className="w-4 h-4 mr-1.5 text-cyan-400" />
-                      Creación de Empleados, Roles &amp; Liquidación de Comisiones
-                    </h3>
-                    <p className="text-[11px] text-slate-400">
-                      Asigná claves individuales, definí roles de acceso (Vendedor, Encargado, Administrador) y comisiones automáticas.
-                    </p>
-                  </div>
-                  <span className="px-2 py-0.5 text-[10.5px] bg-cyan-950 text-cyan-300 border border-cyan-700 rounded font-semibold">
-                    {employees.length} Empleados Activos
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-                  {/* Employee list */}
-                  <div className="md:col-span-7 space-y-2">
-                    <span className="text-[10px] font-mono text-slate-400 uppercase font-bold block">
-                      Equipo de Trabajo del Comercio:
-                    </span>
-                    {employees.map(emp => {
-                      const isSel = selectedEmployee.id === emp.id;
-                      return (
-                        <div
-                          key={emp.id}
-                          onClick={() => { setSelectedEmployee(emp); setCashCommissionPaid(false); }}
-                          className={`p-3 rounded-xl border cursor-pointer transition flex items-center justify-between ${
-                            isSel 
-                              ? 'bg-cyan-950/40 border-cyan-500 text-white' 
-                              : 'bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-700'
-                          }`}
-                        >
-                          <div>
-                            <span className="font-bold text-xs block">{emp.name}</span>
-                            <span className="text-[10px] text-slate-400 font-mono">
-                              Rol: <strong className="text-cyan-300">{emp.role}</strong> • Comisión: {emp.commission}%
-                            </span>
-                          </div>
-                          <div className="text-right">
-                            <span className="text-xs font-bold text-emerald-400 block font-mono">
-                              ${emp.accumulatedCommission.toLocaleString('es-AR')}
-                            </span>
-                            <span className="text-[9.5px] text-slate-400">{emp.salesCount} ventas liquidadas</span>
-                          </div>
-                        </div>
-                      );
-                    })}
-
-                    {/* New employee form */}
-                    <form onSubmit={handleAddEmployee} className="pt-2 flex gap-2">
-                      <input
-                        type="text"
-                        value={newEmployeeName}
-                        onChange={(e) => setNewEmployeeName(e.target.value)}
-                        placeholder="Nombre de nuevo empleado..."
-                        className="flex-1 bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500"
-                      />
-                      <select
-                        value={newEmployeeRole}
-                        onChange={(e) => setNewEmployeeRole(e.target.value)}
-                        className="bg-slate-900 border border-slate-800 rounded-lg px-2 text-xs text-slate-300 focus:outline-none"
-                      >
-                        <option value="VENDEDOR">Vendedor</option>
-                        <option value="ENCARGADO">Encargado</option>
-                        <option value="ADMIN">Administrador</option>
-                      </select>
-                      <button
-                        type="submit"
-                        className="px-3 py-1.5 bg-cyan-700 hover:bg-cyan-600 text-white text-xs font-bold rounded-lg transition"
-                      >
-                        + Crear
-                      </button>
-                    </form>
-                  </div>
-
-                  {/* Selected employee card & payout */}
-                  <div className="md:col-span-5 bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2.5 flex flex-col justify-between">
-                    <div className="space-y-2">
-                      <span className="text-[11px] uppercase font-mono text-cyan-400 font-bold block border-b border-slate-800 pb-1">
-                        Ficha de Rendimiento Individual
-                      </span>
-                      <div className="text-xs space-y-1">
-                        <div className="flex justify-between"><span className="text-slate-400">Personal:</span> <strong className="text-white">{selectedEmployee.name}</strong></div>
-                        <div className="flex justify-between"><span className="text-slate-400">Jerarquía:</span> <strong className="text-cyan-300 font-mono">{selectedEmployee.role}</strong></div>
-                        <div className="flex justify-between"><span className="text-slate-400">Porcentaje pactado:</span> <strong className="text-slate-200 font-mono">{selectedEmployee.commission}% por venta</strong></div>
-                        <div className="flex justify-between items-baseline pt-2 border-t border-slate-800">
-                          <span className="text-slate-300">Comisión Acumulada:</span>
-                          <span className="text-lg font-bold text-emerald-400 font-mono">${selectedEmployee.accumulatedCommission.toLocaleString('es-AR')}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {!cashCommissionPaid ? (
-                      <button
-                        type="button"
-                        onClick={handlePayCommission}
-                        className="w-full py-2 bg-emerald-700 hover:bg-emerald-600 border border-emerald-500 text-white font-bold rounded-lg text-xs uppercase transition shadow"
-                      >
-                        Pagar Comisión desde Caja
-                      </button>
-                    ) : (
-                      <div className="p-2 bg-emerald-950/80 border border-emerald-500/60 rounded-lg text-center text-emerald-300 text-xs font-semibold">
-                        ✓ Comisión liquidada y descontada de la caja en turno.
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* TAB 5: ARQUEO & CIERRE DE CAJA (VERDE ESMERALDA) */}
-            {activeModuleIndex === 4 && (
-              <div className="space-y-4 animate-fade-in">
-                <div className="flex justify-between items-center border-b border-slate-800/80 pb-2.5">
-                  <div>
-                    <h3 className="text-sm sm:text-base font-bold text-white flex items-center">
-                      <Wallet className="w-4 h-4 mr-1.5 text-emerald-400" />
-                      Arqueo de Turnos, Retiros de Gastos &amp; Cierre de Caja Ciego
-                    </h3>
-                    <p className="text-[11px] text-slate-400">
-                      Evitá diferencias entre turnos mañana y tarde. Control exacto de efectivo, transferencias y comprobantes.
-                    </p>
-                  </div>
-                  <span className="px-2 py-0.5 text-[10.5px] bg-emerald-950 text-emerald-300 border border-emerald-700 rounded font-semibold">
-                    Turno Tarde Activo
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-xs">
-                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800 space-y-1">
-                    <span className="text-slate-400 text-[10.5px]">Efectivo Físico en Cajón:</span>
-                    <span className="text-xl font-bold text-white block">${cashBalance.toLocaleString('es-AR')}</span>
-                    <span className="text-[10px] text-emerald-400">● Cuadrado al centavo con tickets</span>
-                  </div>
-                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800 space-y-1">
-                    <span className="text-slate-400 text-[10.5px]">Cobros Virtuales / QR:</span>
-                    <span className="text-xl font-bold text-slate-200 block">$98.600</span>
-                    <span className="text-[10px] text-slate-400">14 transferencias verificadas</span>
-                  </div>
-                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800 space-y-1">
-                    <span className="text-slate-400 text-[10.5px]">Gastos / Retiros Asentados:</span>
-                    <span className="text-xl font-bold text-rose-400 block">-${cashWithdrawn.toLocaleString('es-AR')}</span>
-                    <span className="text-[10px] text-slate-400">Pago flete y bolsas con comprobante</span>
-                  </div>
-                </div>
-
-                <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between items-center text-xs">
-                  <div>
-                    <span className="text-xs font-bold text-white block">Balance Neto Consolidado del Turno</span>
-                    <span className="text-[10px] text-slate-400">Auditoría con firma del encargado y registro horario</span>
-                  </div>
-                  <span className="text-xl font-extrabold text-emerald-400">
-                    ${(cashBalance + 98600 - cashWithdrawn).toLocaleString('es-AR')}
-                  </span>
-                </div>
-              </div>
-            )}
-
-            {/* TAB 6: INFORMES & GANANCIA REAL (ÍNDIGO) */}
-            {activeModuleIndex === 5 && (
-              <div className="space-y-4 animate-fade-in">
-                <div className="flex justify-between items-center border-b border-slate-800/80 pb-2.5">
-                  <div>
-                    <h3 className="text-sm sm:text-base font-bold text-white flex items-center">
-                      <BarChart3 className="w-4 h-4 mr-1.5 text-indigo-400" />
-                      Métricas Financieras, Ranking de Artículos &amp; Ganancia Real
-                    </h3>
-                    <p className="text-[11px] text-slate-400">
-                      Conocé cuánto dinero queda libre en tu bolsillo una vez descontado el costo mayorista de los proveedores.
-                    </p>
-                  </div>
-                  <div className="flex bg-slate-900 p-0.5 rounded-lg border border-slate-800 text-[10.5px] font-semibold">
-                    {['hoy', 'semana', 'mes'].map(p => (
-                      <button
-                        key={p}
-                        type="button"
-                        onClick={() => setMetricsPeriod(p)}
-                        className={`px-2.5 py-1 rounded uppercase transition ${
-                          metricsPeriod === p ? 'bg-indigo-600 text-white font-bold' : 'text-slate-400'
-                        }`}
-                      >
-                        {p}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800 space-y-1">
-                    <span className="text-slate-400 text-[10.5px]">Ventas Totales Brutas:</span>
-                    <span className="text-lg font-bold text-white block">
-                      {metricsPeriod === 'hoy' ? '$185.000' : metricsPeriod === 'semana' ? '$1.420.000' : '$5.850.000'}
-                    </span>
-                  </div>
-                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800 space-y-1">
-                    <span className="text-slate-400 text-[10.5px]">Costo Mayorista Reposición:</span>
-                    <span className="text-lg font-mono text-slate-400 block">
-                      {metricsPeriod === 'hoy' ? '-$92.000' : metricsPeriod === 'semana' ? '-$710.000' : '-$2.920.000'}
-                    </span>
-                  </div>
-                  <div className="bg-indigo-950/70 p-3 rounded-xl border border-indigo-700/80 space-y-1">
-                    <span className="text-indigo-300 font-bold text-[10.5px]">Ganancia Neta Limpia:</span>
-                    <span className="text-lg font-bold text-indigo-300 block">
-                      {metricsPeriod === 'hoy' ? '+$93.000' : metricsPeriod === 'semana' ? '+$710.000' : '+$2.930.000'}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 text-xs text-slate-400 flex justify-between items-center">
-                  <span>📊 Artículos más vendidos del período: 1) Difusores (142 u.) • 2) Velas de soja (98 u.) • 3) Sets de regalo (45 u.)</span>
-                  <span className="font-mono text-indigo-400 font-bold hidden sm:inline">REPORTES AUDITABLES</span>
-                </div>
-              </div>
-            )}
-
-            {/* TAB 7: CLIENTES & CUENTAS CORRIENTES (TEAL) */}
-            {activeModuleIndex === 6 && (
-              <div className="space-y-4 animate-fade-in">
-                <div className="flex justify-between items-center border-b border-slate-800/80 pb-2.5">
-                  <div>
-                    <h3 className="text-sm sm:text-base font-bold text-white flex items-center">
-                      <BookOpen className="w-4 h-4 mr-1.5 text-teal-400" />
-                      Directorio de Clientes, Libreta de Fiados &amp; Pagos a Cuenta
-                    </h3>
-                    <p className="text-[11px] text-slate-400">
-                      Llevá la cuenta corriente de tus clientes habituales sin cuadernos que se pierden o confunden.
-                    </p>
-                  </div>
-                  <span className="px-2 py-0.5 text-[10.5px] bg-teal-950 text-teal-300 border border-teal-700 rounded font-semibold">
-                    {customers.length} Clientes con Ficha
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-                  {customers.map(c => (
-                    <div key={c.id} className="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 space-y-2">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <span className="font-bold text-white block">{c.name}</span>
-                          <span className="text-[10px] text-slate-400 font-mono">Tel: {c.phone}</span>
-                        </div>
-                        <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
-                          c.balance > 0 ? 'bg-amber-950 text-amber-300 border border-amber-700' : 'bg-emerald-950 text-emerald-300 border border-emerald-700'
-                        }`}>
-                          {c.balance > 0 ? 'CON SALDO' : 'AL DÍA'}
-                        </span>
-                      </div>
-                      <div className="pt-1 border-t border-slate-800 flex justify-between items-baseline">
-                        <span className="text-slate-400 text-[10.5px]">Saldo Deudor:</span>
-                        <span className={`text-sm font-bold font-mono ${c.balance > 0 ? 'text-amber-400' : 'text-emerald-400'}`}>
-                          ${c.balance.toLocaleString('es-AR')}
-                        </span>
-                      </div>
-                      <div className="text-[9.5px] text-slate-500">Último movimiento registrado: {c.lastPayment}</div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 text-xs text-slate-400 flex flex-col sm:flex-row justify-between items-center gap-2">
-                  <span>📱 Podés enviarle a tu cliente el estado de su cuenta corriente directamente por WhatsApp con 1 solo clic.</span>
-                  <span className="text-teal-400 font-mono font-bold">● CERO COBROS OLVIDADOS</span>
-                </div>
-              </div>
-            )}
-
-            {/* TAB 8: CATÁLOGO WEB SINCRONIZADO (ROSA / MAGENTA) */}
-            {activeModuleIndex === 7 && (
-              <div className="space-y-4 animate-fade-in">
-                <div className="flex justify-between items-center border-b border-slate-800/80 pb-2.5">
-                  <div>
-                    <h3 className="text-sm sm:text-base font-bold text-white flex items-center">
-                      <Store className="w-4 h-4 mr-1.5 text-rose-400" />
-                      Catálogo Online Público para Clientes con Pedidos a WhatsApp
-                    </h3>
-                    <p className="text-[11px] text-slate-400">
-                      Tus clientes ven la vidriera web desde su celular. Al comprar, te llega el pedido ordenado y listo para cobrar.
-                    </p>
-                  </div>
-                  <Link
-                    to="/catalogo"
-                    target="_blank"
-                    className="px-2.5 py-1 bg-rose-950 hover:bg-rose-900 text-rose-300 border border-rose-800 text-[11px] font-semibold rounded-lg flex items-center transition"
-                  >
-                    <span>Abrir Catálogo Web Real</span>
-                    <ExternalLink className="w-3 h-3 ml-1" />
-                  </Link>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-                  {/* Smartphone View Mockup */}
-                  <div className="max-w-[260px] mx-auto bg-black border-2 border-slate-800 rounded-[28px] p-2.5 shadow-xl space-y-2">
-                    <div className="w-16 h-3 bg-slate-800 rounded-full mx-auto"></div>
-                    
-                    <div className="bg-slate-900 rounded-xl p-2.5 border border-slate-800 space-y-2">
-                      <div className="h-28 bg-slate-800 rounded-lg flex items-center justify-center text-slate-400 text-xs font-semibold relative overflow-hidden">
-                        <ShoppingBag className="w-8 h-8 opacity-40 text-rose-400" />
-                        <span className="absolute bottom-1.5 right-1.5 bg-rose-950 text-rose-300 text-[9px] font-bold px-1.5 py-0.5 rounded border border-rose-700">
-                          EN STOCK
-                        </span>
-                      </div>
-                      <div>
-                        <span className="text-[10px] text-slate-400 font-mono block">{catalogSelectedProduct.code}</span>
-                        <span className="text-xs font-semibold text-white block">{catalogSelectedProduct.name}</span>
-                        <span className="text-xs font-extrabold text-rose-400">${catalogSelectedProduct.price.toLocaleString('es-AR')}</span>
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={() => setCatalogSentMessage(true)}
-                        className="w-full py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-[11px] font-semibold flex items-center justify-center shadow transition"
-                      >
-                        <MessageCircle className="w-3 h-3 mr-1" />
-                        Enviar Pedido a WhatsApp
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* WhatsApp Message Preview */}
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2.5">
-                    <span className="text-[11px] uppercase font-mono text-rose-400 font-bold block">
-                      Mensaje recibido listo para preparar
-                    </span>
-                    <div className="bg-slate-900 border border-slate-800 p-3 rounded-lg text-xs text-slate-300 leading-relaxed font-mono">
-                      "¡Hola! Quiero encargar <strong className="text-white">"{catalogSelectedProduct.name}"</strong> (Cód: {catalogSelectedProduct.code}) de ${catalogSelectedProduct.price.toLocaleString('es-AR')}. ¿Cómo coordinamos el pago y retiro?"
-                    </div>
-                    {catalogSentMessage && (
-                      <div className="p-2 bg-slate-900 border border-slate-700 text-slate-300 rounded-lg text-[11px] font-semibold text-center">
-                        ✓ Venta cerrada sin intermediarios ni comisiones abusivas por cada operación.
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* TAB 9: SUPERADMIN & IDENTIDAD DE MARCA (SLATE / PLATINO) */}
-            {activeModuleIndex === 8 && (
-              <div className="space-y-4 animate-fade-in">
-                <div className="flex justify-between items-center border-b border-slate-800/80 pb-2.5">
-                  <div>
-                    <h3 className="text-sm sm:text-base font-bold text-white flex items-center">
-                      <Settings className="w-4 h-4 mr-1.5 text-slate-400" />
-                      Panel SuperAdmin &amp; Personalización de Identidad de Marca
-                    </h3>
-                    <p className="text-[11px] text-slate-400">
-                      Cargá el logo de tu comercio, cambiá el nombre de fantasía y gestioná claves maestras sin tocar código.
-                    </p>
-                  </div>
-                  <span className="px-2 py-0.5 text-[10.5px] bg-slate-800 text-slate-300 border border-slate-600 rounded font-semibold">
-                    Acceso Jerárquico Seguro
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-3 text-xs">
-                    <span className="text-[11px] font-mono text-slate-400 uppercase font-bold block">
-                      Configurar Identidad de tu Local:
-                    </span>
-                    <div>
-                      <label className="text-slate-400 text-[10.5px] block mb-1">Nombre Comercial de la Tienda:</label>
-                      <input
-                        type="text"
-                        value={storeIdentity.name}
-                        onChange={(e) => setStoreIdentity(prev => ({ ...prev, name: e.target.value }))}
-                        className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-slate-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-slate-400 text-[10.5px] block mb-1">Eslogan o Subtítulo del Comercio:</label>
-                      <input
-                        type="text"
-                        value={storeIdentity.slogan}
-                        onChange={(e) => setStoreIdentity(prev => ({ ...prev, slogan: e.target.value }))}
-                        className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-slate-500"
-                      />
-                    </div>
-                    <div className="p-3 bg-slate-950 rounded-lg border border-slate-800/80 text-[11px] text-slate-400">
-                      🖼️ Subí tu archivo de logo (PNG o JPG) y se aplicará automáticamente en los tickets, comprobantes y cabecera del catálogo.
-                    </div>
-                  </div>
-
-                  {/* Live preview */}
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col justify-center items-center text-center space-y-2">
-                    <div className="w-16 h-16 rounded-2xl bg-slate-900 border-2 border-slate-700 flex items-center justify-center text-slate-400 font-bold text-xl shadow">
-                      {storeIdentity.name.charAt(0)}
-                    </div>
-                    <div>
-                      <span className="text-sm font-bold text-white block">{storeIdentity.name}</span>
-                      <span className="text-xs text-slate-400">{storeIdentity.slogan}</span>
-                    </div>
-                    <span className="text-[10px] text-emerald-400 font-mono font-bold">
-                      ● VISTA PREVIA EN TIEMPO REAL
-                    </span>
-                  </div>
-                </div>
-              </div>
-            )}
-
-          </div>
-
-          {/* Bottom Bar with direct phone */}
-          <div className="h-10 bg-[#070b14] border-t border-slate-800 flex items-center justify-between px-4 text-xs text-slate-400">
-            <span>Demostración oficial ROLΦ Studio</span>
-            <div className="flex items-center space-x-2">
-              <span className="text-[11px] text-slate-300 font-medium">Asesoramiento directo: <strong>2241-527357</strong></span>
-            </div>
-          </div>
-
-        </div>
-
       </section>
 
-      {/* 4. TODAS LAS CUALIDADES ENUMERADAS EN DETALLE */}
-      <section className="py-14 bg-[#080d19]/60 border-b border-slate-800/80">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="text-center max-w-3xl mx-auto mb-10">
-            <span className="text-[10.5px] font-mono text-cyan-400 uppercase tracking-widest font-bold block mb-1">
-              INVENTARIO COMPLETO DE CUALIDADES
-            </span>
-            <h2 className="text-xl sm:text-3xl font-extrabold text-white">
-              Todo lo que incluye el programa de gestión enumerado
-            </h2>
-            <p className="mt-2 text-xs sm:text-sm text-slate-400">
-              Un sistema integral diseñado para resolver el 100% de los desafíos cotidianos de un comercio real.
-            </p>
-          </div>
-
-          {/* Enumeration Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
-            
-            {/* 1 */}
-            <div className="bg-slate-900/90 border border-blue-900/50 p-4 rounded-xl space-y-2">
-              <div className="flex items-center space-x-2 text-blue-400 font-bold">
-                <ShoppingCart className="w-4 h-4" />
-                <span>1. Mostrador POS &amp; Ventas</span>
-              </div>
-              <ul className="text-slate-300 space-y-1 text-[11px] list-disc list-inside">
-                <li>Búsqueda por código de barras o texto predictivo</li>
-                <li>Múltiples formas de pago (Efectivo, QR, Cta Cte)</li>
-                <li>Asignación de vendedor en cada operación</li>
-                <li>Emisión de ticket / remito no fiscal con logo</li>
-                <li>Descuento inmediato de stock físico</li>
-              </ul>
-            </div>
-
-            {/* 2 */}
-            <div className="bg-slate-900/90 border border-amber-900/50 p-4 rounded-xl space-y-2">
-              <div className="flex items-center space-x-2 text-amber-400 font-bold">
-                <Package className="w-4 h-4" />
-                <span>2. Stock &amp; Inventario</span>
-              </div>
-              <ul className="text-slate-300 space-y-1 text-[11px] list-disc list-inside">
-                <li>Alertas automáticas de artículos con stock bajo</li>
-                <li>Cálculo de margen y rentabilidad por producto</li>
-                <li>Categorías personalizables (Novedades, Ofertas)</li>
-                <li>Publicación u ocultamiento web en 1 clic</li>
-                <li>Impresión de etiquetas con código de barras</li>
-              </ul>
-            </div>
-
-            {/* 3 */}
-            <div className="bg-slate-900/90 border border-purple-900/50 p-4 rounded-xl space-y-2">
-              <div className="flex items-center space-x-2 text-purple-400 font-bold">
-                <Truck className="w-4 h-4" />
-                <span>3. Compras a Proveedores</span>
-              </div>
-              <ul className="text-slate-300 space-y-1 text-[11px] list-disc list-inside">
-                <li>Agenda y registro de órdenes de compra</li>
-                <li>Control del costo de reposición de mercadería</li>
-                <li>Ingreso masivo al inventario en 1 solo clic</li>
-                <li>Directorio completo con teléfonos y contactos</li>
-                <li>Historial de facturas de compra para auditoría</li>
-              </ul>
-            </div>
-
-            {/* 4 */}
-            <div className="bg-slate-900/90 border border-cyan-900/50 p-4 rounded-xl space-y-2">
-              <div className="flex items-center space-x-2 text-cyan-400 font-bold">
-                <Users className="w-4 h-4" />
-                <span>4. Empleados &amp; Comisiones</span>
-              </div>
-              <ul className="text-slate-300 space-y-1 text-[11px] list-disc list-inside">
-                <li>Creación ilimitada de usuarios y claves propias</li>
-                <li>Roles diferenciados: Vendedor, Encargado, Admin</li>
-                <li>Comisión individual personalizada por ventas</li>
-                <li>Acumulador automático para liquidación mensual</li>
-                <li>Pago de comisiones directo desde caja</li>
-              </ul>
-            </div>
-
-            {/* 5 */}
-            <div className="bg-slate-900/90 border border-emerald-900/50 p-4 rounded-xl space-y-2">
-              <div className="flex items-center space-x-2 text-emerald-400 font-bold">
-                <Wallet className="w-4 h-4" />
-                <span>5. Arqueo &amp; Cierre de Caja</span>
-              </div>
-              <ul className="text-slate-300 space-y-1 text-[11px] list-disc list-inside">
-                <li>Arqueo ciego para evitar diferencias entre turnos</li>
-                <li>Desglose de efectivo, transferencias y tarjetas</li>
-                <li>Registro de retiros y gastos con concepto</li>
-                <li>Rendición de turnos de mañana y tarde</li>
-                <li>Cierre definitivo con balance neto de caja</li>
-              </ul>
-            </div>
-
-            {/* 6 */}
-            <div className="bg-slate-900/90 border border-indigo-900/50 p-4 rounded-xl space-y-2">
-              <div className="flex items-center space-x-2 text-indigo-400 font-bold">
-                <BarChart3 className="w-4 h-4" />
-                <span>6. Informes &amp; Ganancia Real</span>
-              </div>
-              <ul className="text-slate-300 space-y-1 text-[11px] list-disc list-inside">
-                <li>Cálculo de ganancia neta real descontando costo</li>
-                <li>Ranking de los artículos más vendidos</li>
-                <li>Gráficos de facturación por día, semana y mes</li>
-                <li>Rendimiento y ranking por cada vendedor</li>
-                <li>Métricas para toma de decisiones comerciales</li>
-              </ul>
-            </div>
-
-            {/* 7 */}
-            <div className="bg-slate-900/90 border border-teal-900/50 p-4 rounded-xl space-y-2">
-              <div className="flex items-center space-x-2 text-teal-400 font-bold">
-                <BookOpen className="w-4 h-4" />
-                <span>7. Clientes &amp; Cuenta Corriente</span>
-              </div>
-              <ul className="text-slate-300 space-y-1 text-[11px] list-disc list-inside">
-                <li>Ficha de clientes con teléfono y domicilio</li>
-                <li>Control estricto de libreta de fiados</li>
-                <li>Registro de entregas a cuenta y saldos pendientes</li>
-                <li>Envío de resumen de deuda por WhatsApp en 1 clic</li>
-                <li>Historial de compras por cliente</li>
-              </ul>
-            </div>
-
-            {/* 8 */}
-            <div className="bg-slate-900/90 border border-rose-900/50 p-4 rounded-xl space-y-2">
-              <div className="flex items-center space-x-2 text-rose-400 font-bold">
-                <Store className="w-4 h-4" />
-                <span>8. Catálogo Web Conectado</span>
-              </div>
-              <ul className="text-slate-300 space-y-1 text-[11px] list-disc list-inside">
-                <li>Vidriera digital pública optimizada para celular</li>
-                <li>Sincronización automática con el stock de mostrador</li>
-                <li>Los productos agotados se ocultan solos</li>
-                <li>Botón directo para encargar por WhatsApp</li>
-                <li>Cero costo de comisiones por venta online</li>
-              </ul>
-            </div>
-
-            {/* 9 */}
-            <div className="bg-slate-900/90 border border-slate-700/60 p-4 rounded-xl space-y-2">
-              <div className="flex items-center space-x-2 text-slate-300 font-bold">
-                <Settings className="w-4 h-4" />
-                <span>9. SuperAdmin &amp; Marca</span>
-              </div>
-              <ul className="text-slate-300 space-y-1 text-[11px] list-disc list-inside">
-                <li>Carga de tu propio logotipo comercial (PNG/JPG)</li>
-                <li>Nombre de fantasía y eslogan editables</li>
-                <li>Control maestro de accesos y seguridad</li>
-                <li>Sin ataduras a marcas externas</li>
-                <li>Respaldos automáticos en la nube</li>
-              </ul>
-            </div>
-
-          </div>
-
-        </div>
-      </section>
-
-      {/* 5. CALCULADORA INTERACTIVA DE RETORNO Y AHORRO */}
+      {/* 4. CALCULADORA INTERACTIVA DE RENDIMIENTO Y AHORRO */}
       <section className="py-12 bg-slate-900/30 border-b border-slate-800/80">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-2xl mx-auto mb-8">
             <span className="text-[10.5px] font-mono text-cyan-400 uppercase tracking-widest font-bold block mb-1">
-              ESTIMACIÓN FINANCIERA
+              ESTIMACIÓN FINANCIERA DEL COMERCIO
             </span>
             <h3 className="text-lg sm:text-xl font-bold text-white">
               ¿Cuánto tiempo y dinero recuperás con este sistema?
             </h3>
             <p className="text-xs text-slate-400 mt-1">
-              Ajustá los parámetros de tu local para ver la proyección operativa mensual estimada.
+              Ajustá los valores de tu local para ver la proyección operativa mensual estimada.
             </p>
           </div>
 
@@ -1552,7 +1421,7 @@ export default function LandingDemo() {
         </div>
       </section>
 
-      {/* 6. PUBLICIDAD GENERAL & SERVICIOS DE ROLPHI STUDIO (AL FINAL) */}
+      {/* 5. PUBLICIDAD GENERAL & SERVICIOS DE ROLPHI STUDIO (AL FINAL) */}
       <section className="py-16 bg-gradient-to-b from-[#070b14] via-slate-900/40 to-[#070b14] border-b border-slate-800/80 relative">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           
@@ -1645,7 +1514,7 @@ export default function LandingDemo() {
         </div>
       </section>
 
-      {/* 7. RESPALDO, AUTORÍA Y CONTACTO */}
+      {/* 6. RESPALDO, AUTORÍA Y CONTACTO */}
       <section className="py-12 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-slate-800/80">
         <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row items-center gap-5 shadow-sm">
           <img 
@@ -1671,7 +1540,7 @@ export default function LandingDemo() {
         </div>
       </section>
 
-      {/* 8. FOOTER */}
+      {/* 7. FOOTER */}
       <footer className="mt-auto bg-[#070b14] py-8 border-t border-slate-800 text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
           
@@ -1695,7 +1564,7 @@ export default function LandingDemo() {
         </div>
       </footer>
 
-      {/* 9. FLOATING WHATSAPP BUTTON */}
+      {/* 8. FLOATING WHATSAPP BUTTON */}
       <FloatingWhatsApp />
 
     </div>
