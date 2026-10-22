@@ -7,6 +7,7 @@ import Footer from './components/Footer';
 
 import PublicCatalog from './pages/PublicCatalog';
 import Login from './pages/Login';
+import LandingDemo from './pages/LandingDemo';
 import SalesPOS from './pages/SalesPOS';
 import Products from './pages/Products';
 import Customers from './pages/Customers';
@@ -32,7 +33,7 @@ function ProtectedRoute({ children, allowedRoles }) {
 
 export default function App() {
   const location = useLocation();
-  const isPublicPage = location.pathname === '/' || location.pathname === '/login' || location.pathname.startsWith('/catalogo') || location.pathname === '/tour';
+  const isPublicPage = location.pathname === '/' || location.pathname === '/demo' || location.pathname === '/login' || location.pathname.startsWith('/catalogo') || location.pathname === '/tour';
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-100">
@@ -40,11 +41,14 @@ export default function App() {
 
       <div className="flex-1">
         <Routes>
-          {/* 1. Ingreso Directo al Sistema de Gestión del Negocio */}
-          <Route path="/" element={<Login />} />
+          {/* 1. Portada Comercial y Demostración Oficial ROLPHI */}
+          <Route path="/" element={<LandingDemo />} />
+          <Route path="/demo" element={<LandingDemo />} />
+
+          {/* 2. Ingreso Directo al Sistema del Comercio */}
           <Route path="/login" element={<Login />} />
 
-          {/* 2. Catálogo Online Público para Clientes */}
+          {/* 3. Catálogo Online Público para Clientes */}
           <Route path="/catalogo" element={<PublicCatalog />} />
           
           {/* Tour Interactivo */}
