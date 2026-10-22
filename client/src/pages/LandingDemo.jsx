@@ -32,7 +32,8 @@ import {
   ShieldCheck, 
   Layers, 
   TrendingUp, 
-  HelpCircle 
+  HelpCircle,
+  ExternalLink 
 } from 'lucide-react';
 import FloatingWhatsApp from '../components/FloatingWhatsApp';
 
