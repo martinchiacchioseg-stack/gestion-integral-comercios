@@ -40,24 +40,32 @@ import {
   Building2,
   DollarSign,
   Clock,
-  Award
+  Award,
+  UserPlus,
+  BookOpen,
+  Receipt,
+  Eye,
+  Percent,
+  Sliders,
+  Database,
+  Lock,
+  UserCheck
 } from 'lucide-react';
 import FloatingWhatsApp from '../components/FloatingWhatsApp';
 
 export default function LandingDemo() {
   const phoneNumber = '5492241527357';
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
-    '¡Hola ROLΦ! Vi la demostración interactiva en la web y me interesa el sistema para mi comercio o consultar por un desarrollo a medida.'
+    '¡Hola ROLΦ! Estuve viendo en detalle el programa de gestión en la web y me interesa para mi comercio o consultar por un desarrollo a medida.'
   )}`;
 
-  // Store Sector Switcher (Regalería, Indumentaria, Minimarket, Bazar)
+  // Store Sector Switcher (Regalería, Indumentaria, Bazar)
   const [selectedSector, setSelectedSector] = useState('regaleria');
 
-  // Sector Data for high interactivity
   const sectorPresets = {
     regaleria: {
       name: 'Regalería & Deco',
-      tagline: 'Control de cientos de artículos chicos, fragancias, bazar y regalables',
+      tagline: 'Control de cientos de artículos chicos, fragancias, velas y regalables',
       bgImage: 'https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?auto=format&fit=crop&w=1920&q=80',
       products: [
         { id: 1, name: 'Difusor Aromático Varillas 250ml', code: 'REG-101', price: 12500, cost: 5200, stock: 24, inCart: 1 },
@@ -90,25 +98,143 @@ export default function LandingDemo() {
     }
   };
 
-  // Active Screen in Monitor
-  const [activeScreenIndex, setActiveScreenIndex] = useState(0);
+  // 9 Modules of the Software
+  const modules = [
+    {
+      id: 'pos',
+      number: '01',
+      name: 'Mostrador POS',
+      subtitle: 'Cobro de alta velocidad',
+      color: 'blue',
+      badge: 'bg-blue-950 text-blue-300 border-blue-700',
+      activeBorder: 'border-blue-500 bg-blue-950/40 text-blue-300',
+      icon: ShoppingCart
+    },
+    {
+      id: 'stock',
+      number: '02',
+      name: 'Control de Stock',
+      subtitle: 'Inventario & Rentabilidad',
+      color: 'amber',
+      badge: 'bg-amber-950 text-amber-300 border-amber-700',
+      activeBorder: 'border-amber-500 bg-amber-950/40 text-amber-300',
+      icon: Package
+    },
+    {
+      id: 'supplier',
+      number: '03',
+      name: 'Proveedores & Compras',
+      subtitle: 'Costo & Ingreso de Stock',
+      color: 'purple',
+      badge: 'bg-purple-950 text-purple-300 border-purple-700',
+      activeBorder: 'border-purple-500 bg-purple-950/40 text-purple-300',
+      icon: Truck
+    },
+    {
+      id: 'employees',
+      number: '04',
+      name: 'Empleados & Roles',
+      subtitle: 'Vendedores & Comisiones',
+      color: 'cyan',
+      badge: 'bg-cyan-950 text-cyan-300 border-cyan-700',
+      activeBorder: 'border-cyan-500 bg-cyan-950/40 text-cyan-300',
+      icon: Users
+    },
+    {
+      id: 'cash',
+      number: '05',
+      name: 'Arqueo & Cierre de Caja',
+      subtitle: 'Turnos mañana y tarde',
+      color: 'emerald',
+      badge: 'bg-emerald-950 text-emerald-300 border-emerald-700',
+      activeBorder: 'border-emerald-500 bg-emerald-950/40 text-emerald-300',
+      icon: Wallet
+    },
+    {
+      id: 'reports',
+      number: '06',
+      name: 'Informes & Ganancia Real',
+      subtitle: 'Estadísticas ejecutivas',
+      color: 'indigo',
+      badge: 'bg-indigo-950 text-indigo-300 border-indigo-700',
+      activeBorder: 'border-indigo-500 bg-indigo-950/40 text-indigo-300',
+      icon: BarChart3
+    },
+    {
+      id: 'customers',
+      number: '07',
+      name: 'Clientes & Cta. Corriente',
+      subtitle: 'Libreta de fiados & pagos',
+      color: 'teal',
+      badge: 'bg-teal-950 text-teal-300 border-teal-700',
+      activeBorder: 'border-teal-500 bg-teal-950/40 text-teal-300',
+      icon: BookOpen
+    },
+    {
+      id: 'catalog',
+      number: '08',
+      name: 'Catálogo Web Conectado',
+      subtitle: 'Pedidos a WhatsApp',
+      color: 'rose',
+      badge: 'bg-rose-950 text-rose-300 border-rose-700',
+      activeBorder: 'border-rose-500 bg-rose-950/40 text-rose-300',
+      icon: Store
+    },
+    {
+      id: 'admin',
+      number: '09',
+      name: 'SuperAdmin & Identidad',
+      subtitle: 'Logo & Nombre de Tienda',
+      color: 'slate',
+      badge: 'bg-slate-800 text-slate-300 border-slate-600',
+      activeBorder: 'border-slate-400 bg-slate-800/60 text-slate-200',
+      icon: Settings
+    }
+  ];
+
+  const [activeModuleIndex, setActiveModuleIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(false);
 
   // Screen 1: POS state
   const [posProducts, setPosProducts] = useState(sectorPresets.regaleria.products);
   const [searchTerm, setSearchTerm] = useState('');
   const [posPaymentMethod, setPosPaymentMethod] = useState('EFECTIVO');
+  const [posSeller, setPosSeller] = useState('Romina');
   const [posSaleSuccess, setPosSaleSuccess] = useState(false);
 
-  // Whenever user changes sector, update products
-  const handleSelectSector = (sectorKey) => {
-    setSelectedSector(sectorKey);
-    setPosProducts(sectorPresets[sectorKey].products);
-    setPosSaleSuccess(false);
-    setSearchTerm('');
-  };
+  // Screen 2: Stock state
+  const [stockList, setStockList] = useState(sectorPresets.regaleria.products);
 
-  // Screen 2: Mobile catalog preview state
+  // Screen 3: Supplier purchases state
+  const [purchaseReceived, setPurchaseReceived] = useState(false);
+  const [stockCount, setStockCount] = useState(24);
+
+  // Screen 4: Employees state
+  const [employees, setEmployees] = useState([
+    { id: 1, name: 'Romina V.', role: 'VENDEDOR', commission: 4, salesCount: 18, accumulatedCommission: 24600 },
+    { id: 2, name: 'Matías L.', role: 'VENDEDOR', commission: 5, salesCount: 14, accumulatedCommission: 31200 },
+    { id: 3, name: 'Laura G.', role: 'ENCARGADO', commission: 2, salesCount: 9, accumulatedCommission: 14800 }
+  ]);
+  const [selectedEmployee, setSelectedEmployee] = useState(employees[0]);
+  const [newEmployeeName, setNewEmployeeName] = useState('');
+  const [newEmployeeRole, setNewEmployeeRole] = useState('VENDEDOR');
+
+  // Screen 5: Cash register state
+  const [cashBalance, setCashBalance] = useState(142500);
+  const [cashWithdrawn, setCashWithdrawn] = useState(15000);
+  const [cashCommissionPaid, setCashCommissionPaid] = useState(false);
+
+  // Screen 6: Metrics state
+  const [metricsPeriod, setMetricsPeriod] = useState('mes');
+
+  // Screen 7: Customers state
+  const [customers, setCustomers] = useState([
+    { id: 1, name: 'García, Martín', phone: '2241-554433', balance: 18500, lastPayment: '18/10/2026' },
+    { id: 2, name: 'López, Andrea', phone: '2241-667788', balance: 0, lastPayment: '20/10/2026' },
+    { id: 3, name: 'Pérez, Claudia', phone: '2241-991122', balance: 9400, lastPayment: '15/10/2026' }
+  ]);
+
+  // Screen 8: Mobile catalog state
   const [catalogSelectedProduct, setCatalogSelectedProduct] = useState({
     name: 'Vela de Soja Cuenco Madera Nórdico',
     code: 'REG-204',
@@ -117,15 +243,11 @@ export default function LandingDemo() {
   });
   const [catalogSentMessage, setCatalogSentMessage] = useState(false);
 
-  // Screen 3: Supplier purchases state
-  const [purchaseReceived, setPurchaseReceived] = useState(false);
-  const [stockCount, setStockCount] = useState(24);
-
-  // Screen 4: Cash register audit state
-  const [cashCashCount, setCashCashCount] = useState(142500);
-
-  // Screen 5: Metrics period state
-  const [metricsPeriod, setMetricsPeriod] = useState('mes');
+  // Screen 9: SuperAdmin state
+  const [storeIdentity, setStoreIdentity] = useState({
+    name: 'Mi Comercio Integral',
+    slogan: 'Ventas minoristas & Catálogo web'
+  });
 
   // ROI Calculator State
   const [calcDailySales, setCalcDailySales] = useState(25);
@@ -136,23 +258,22 @@ export default function LandingDemo() {
     let interval = null;
     if (isAutoPlaying) {
       interval = setInterval(() => {
-        setActiveScreenIndex(prev => (prev + 1) % 5);
-      }, 5500);
+        setActiveModuleIndex(prev => (prev + 1) % modules.length);
+      }, 6000);
     }
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [isAutoPlaying]);
+  }, [isAutoPlaying, modules.length]);
 
-  const screens = [
-    { id: 'pos', name: '1. Mostrador POS', subtitle: 'Cobro de alta velocidad' },
-    { id: 'catalog', name: '2. Catálogo Web', subtitle: 'Ventas por WhatsApp' },
-    { id: 'supplier', name: '3. Compras & Stock', subtitle: 'Ingreso directo al inventario' },
-    { id: 'cash', name: '4. Arqueo de Caja', subtitle: 'Control ciego de turnos' },
-    { id: 'metrics', name: '5. Ganancia Real', subtitle: 'Métricas de rentabilidad' }
-  ];
+  const handleSelectSector = (sectorKey) => {
+    setSelectedSector(sectorKey);
+    setPosProducts(sectorPresets[sectorKey].products);
+    setStockList(sectorPresets[sectorKey].products);
+    setPosSaleSuccess(false);
+    setSearchTerm('');
+  };
 
-  // Helper for POS Cart calculation
   const filteredPosProducts = posProducts.filter(p => 
     p.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
     p.code.toLowerCase().includes(searchTerm.toLowerCase())
@@ -194,10 +315,37 @@ export default function LandingDemo() {
     setStockCount(24);
   };
 
+  const handleAddEmployee = (e) => {
+    e.preventDefault();
+    if (!newEmployeeName.trim()) return;
+    const newEmp = {
+      id: Date.now(),
+      name: newEmployeeName.trim(),
+      role: newEmployeeRole,
+      commission: newEmployeeRole === 'VENDEDOR' ? 4 : 2,
+      salesCount: 0,
+      accumulatedCommission: 0
+    };
+    setEmployees(prev => [...prev, newEmp]);
+    setSelectedEmployee(newEmp);
+    setNewEmployeeName('');
+  };
+
+  const handlePayCommission = () => {
+    setCashCommissionPaid(true);
+    setCashBalance(prev => prev - selectedEmployee.accumulatedCommission);
+  };
+
+  const handleRestockItem = (id) => {
+    setStockList(prev => prev.map(item => item.id === id ? { ...item, stock: item.stock + 10 } : item));
+  };
+
   // ROI calculations
   const monthlyBillingEst = calcDailySales * calcAverageTicket * 26;
   const hoursSavedEst = Math.round(calcDailySales * 0.08 * 26);
   const recoveredSalesEst = Math.round(monthlyBillingEst * 0.06);
+
+  const currentMod = modules[activeModuleIndex];
 
   return (
     <div className="min-h-screen bg-[#070b14] text-slate-200 flex flex-col font-sans selection:bg-slate-700 selection:text-white">
@@ -258,15 +406,15 @@ export default function LandingDemo() {
         </div>
       </header>
 
-      {/* 2. HERO SECTION CON FOTOS REALISTAS DE FONDO (REGALERÍA / COMERCIO) */}
+      {/* 2. HERO SECTION BASADA EN EL PROGRAMA DE GESTIÓN CON FOTOS DE FONDO */}
       <section className="relative pt-10 pb-16 sm:pt-14 sm:pb-20 overflow-hidden border-b border-slate-800/80">
         
-        {/* Realistic Workplace Photo Background with Deep Executive Gradient */}
+        {/* Realistic Workplace Photo Background with Executive Dark Overlay */}
         <div className="absolute inset-0 z-0">
           <img 
             src={sectorPresets[selectedSector].bgImage} 
             alt="Local comercial de trabajo real" 
-            className="w-full h-full object-cover object-center filter brightness-[0.22] contrast-[1.15] scale-105 transition-all duration-1000 ease-in-out"
+            className="w-full h-full object-cover object-center filter brightness-[0.20] contrast-[1.15] scale-105 transition-all duration-1000 ease-in-out"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-[#070b14]/90 via-[#080d19]/95 to-[#070b14] backdrop-blur-[2px]"></div>
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-800/25 via-transparent to-transparent"></div>
@@ -275,23 +423,23 @@ export default function LandingDemo() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           
           {/* Executive Tag */}
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-slate-900/90 border border-slate-700/80 text-slate-300 text-[11px] font-semibold mb-5 backdrop-blur-md shadow-sm">
-            <Building2 className="w-3.5 h-3.5 text-cyan-400" />
-            <span>SISTEMA DE GESTIÓN INTEGRAL PARA COMERCIOS &amp; CATÁLOGO EN LÍNEA</span>
+          <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-slate-900/90 border border-slate-700/80 text-slate-300 text-[11px] font-semibold mb-5 backdrop-blur-md shadow-sm">
+            <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
+            <span>SISTEMA DE GESTIÓN COMERCIAL INTEGRAL • CERO PLANILLAS MANUALES</span>
           </div>
 
-          {/* Controlled Professional Headline */}
+          {/* Main Focused Title */}
           <h1 className="text-2xl sm:text-4xl lg:text-4xl font-extrabold text-white tracking-tight leading-snug max-w-4xl mx-auto">
-            El sistema operativo confiable para tu mostrador, ventas por catálogo, proveedores y caja diaria.
+            El programa que centraliza la administración completa de tu comercio en una sola plataforma.
           </h1>
 
           <p className="mt-3.5 text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            Diseñado especialmente para regalerías, bazares, indumentaria y comercios minoristas. Eliminá faltantes de inventario y agilizá cada ticket con tecnología modular desarrollada por <strong className="text-white">ROLΦ Studio</strong>.
+            Punto de Venta veloz, stock exacto, compras a proveedores, comisiones de empleados, arqueo ciego de caja, cuentas corrientes de clientes y catálogo web sincronizado en tiempo real.
           </p>
 
-          {/* SECTOR SWITCHER (INTERACTIVE) */}
+          {/* Sector Switcher */}
           <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
-            <span className="text-[11px] text-slate-400 font-semibold mr-1">Rubro del local:</span>
+            <span className="text-[11px] text-slate-400 font-semibold mr-1">Rubro de prueba:</span>
             {Object.keys(sectorPresets).map(secKey => {
               const active = selectedSector === secKey;
               return (
@@ -301,7 +449,7 @@ export default function LandingDemo() {
                   onClick={() => handleSelectSector(secKey)}
                   className={`px-3 py-1 rounded-lg text-xs font-semibold transition border ${
                     active 
-                      ? 'bg-slate-800 text-white border-cyan-500/80 shadow-md shadow-cyan-950/40' 
+                      ? 'bg-slate-800 text-white border-cyan-500/80 shadow-md' 
                       : 'bg-slate-900/80 text-slate-400 border-slate-800 hover:text-slate-200 hover:border-slate-700'
                   }`}
                 >
@@ -311,16 +459,16 @@ export default function LandingDemo() {
             })}
           </div>
 
-          {/* Slogan Badge ROLPHI */}
-          <div className="mt-5 inline-flex items-center space-x-2 bg-slate-900/80 border border-slate-800 px-3.5 py-1.5 rounded-xl text-[11px] text-slate-400 shadow-sm">
-            <Cpu className="w-3.5 h-3.5 text-cyan-400" />
-            <span>
-              <strong className="text-slate-200">ROLΦ Studio:</strong> Pequeñas herramientas para <strong className="text-slate-200 font-bold">grandes ideas</strong> • Desarrollamos todo tipo de aplicaciones a medida.
-            </span>
-          </div>
-
-          {/* CTAs */}
+          {/* Quick CTAs */}
           <div className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-2.5">
+            <a
+              href="#modulos"
+              className="w-full sm:w-auto px-6 py-2.5 bg-slate-850 hover:bg-slate-800 text-white text-xs font-bold rounded-xl transition border border-slate-700 flex items-center justify-center shadow"
+            >
+              <Play className="w-3.5 h-3.5 mr-1.5 text-cyan-400 fill-current" />
+              <span>Ver los 9 Módulos Demostrados en Vivo</span>
+            </a>
+
             <a
               href={whatsappUrl}
               target="_blank"
@@ -328,83 +476,82 @@ export default function LandingDemo() {
               className="w-full sm:w-auto px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl transition shadow-lg shadow-emerald-950/50 flex items-center justify-center border border-emerald-500/60"
             >
               <MessageCircle className="w-4 h-4 mr-2 fill-current" />
-              <span>Solicitar Asesoramiento al 2241-527357</span>
-            </a>
-
-            <a
-              href="#demoviva"
-              className="w-full sm:w-auto px-5 py-2.5 bg-slate-900 hover:bg-slate-850 text-slate-200 text-xs font-semibold rounded-xl transition border border-slate-700 flex items-center justify-center shadow"
-            >
-              <Play className="w-3.5 h-3.5 mr-1.5 text-cyan-400 fill-current" />
-              <span>Probar Simulador Interactivo</span>
+              <span>Coordinar Demostración (2241-527357)</span>
             </a>
           </div>
 
         </div>
       </section>
 
-      {/* 3. SHOWCASE INTERACTIVO: EL MONITOR EN VIVO CON PANTALLAS REALES */}
-      <section id="demoviva" className="py-12 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full border-b border-slate-800/80">
+      {/* 3. EL NÚCLEO DEL PROGRAMA: SOLAPAS DIFERENCIADAS POR COLOR CON DEMOSTRACIÓN EN VIVO */}
+      <section id="modulos" className="py-12 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full border-b border-slate-800/80">
         
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 mb-6">
           <div>
             <span className="text-[10.5px] font-mono font-bold text-cyan-400 uppercase tracking-widest block mb-0.5">
-              ENTORNO INTERACTIVO EN TIEMPO REAL
+              RECORRIDO COMPLETO MÓDULO POR MÓDULO
             </span>
             <h2 className="text-xl sm:text-2xl font-bold text-white">
-              Demostración operativa de funciones clave
+              Todas las solapas y funciones del sistema en vivo
             </h2>
             <p className="text-xs text-slate-400 mt-0.5">
-              Probá los botones, agregá artículos y cambiá de módulos para experimentar la velocidad de trabajo.
+              Cada solapa está identificada por su propio color corporativo y cuenta con una simulación interactiva real.
             </p>
           </div>
 
-          {/* Auto play toggle */}
+          {/* Auto tour button */}
           <button
             type="button"
             onClick={() => setIsAutoPlaying(!isAutoPlaying)}
-            className={`flex items-center px-3.5 py-1.5 rounded-lg text-xs font-semibold transition border ${
+            className={`flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold transition border ${
               isAutoPlaying 
                 ? 'bg-slate-850 text-white border-cyan-400 shadow-sm' 
                 : 'bg-slate-900 hover:bg-slate-850 text-slate-300 border-slate-700'
             }`}
           >
             {isAutoPlaying ? <Pause className="w-3.5 h-3.5 mr-1.5 fill-current text-cyan-400" /> : <Play className="w-3.5 h-3.5 mr-1.5 fill-current text-slate-400" />}
-            <span>{isAutoPlaying ? 'Pausar Tour Automático' : 'Reproducir Recorrido Automático'}</span>
+            <span>{isAutoPlaying ? 'Pausar Tour Automático' : 'Recorrido Automático (9 Módulos)'}</span>
           </button>
         </div>
 
-        {/* Screen Switcher Tabs */}
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 mb-4">
-          {screens.map((scr, idx) => {
-            const isCurrent = activeScreenIndex === idx;
+        {/* 9 Tabs Grid with distinctive Colors */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-4">
+          {modules.map((mod, idx) => {
+            const isCurrent = activeModuleIndex === idx;
+            const Icon = mod.icon;
             return (
               <button
-                key={scr.id}
+                key={mod.id}
                 type="button"
                 onClick={() => {
-                  setActiveScreenIndex(idx);
+                  setActiveModuleIndex(idx);
                   setIsAutoPlaying(false);
                 }}
-                className={`p-2.5 rounded-xl text-left border transition-all duration-150 ${
+                className={`p-2.5 rounded-xl text-left border transition-all duration-150 relative overflow-hidden ${
                   isCurrent 
-                    ? 'bg-slate-850 border-cyan-500 text-white shadow-md' 
+                    ? `${mod.activeBorder} shadow-lg scale-[1.01]` 
                     : 'bg-slate-900/90 border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200'
                 }`}
               >
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[10px] font-mono font-bold opacity-60">
+                    {mod.number}
+                  </span>
+                  <Icon className={`w-3.5 h-3.5 ${isCurrent ? 'text-white' : 'text-slate-500'}`} />
+                </div>
                 <span className={`text-xs font-bold block truncate ${isCurrent ? 'text-white' : 'text-slate-300'}`}>
-                  {scr.name}
+                  {mod.name}
                 </span>
                 <span className="text-[10px] text-slate-400 block truncate mt-0.5">
-                  {scr.subtitle}
+                  {mod.subtitle}
                 </span>
               </button>
             );
           })}
         </div>
 
-        {/* MOCKUP CONTAINER CON MARCO TIPO APLICACIÓN / LAPTOP */}
-        <div className="bg-[#0a0f1d] border border-slate-800 rounded-2xl shadow-xl overflow-hidden relative">
+        {/* MONITOR PRINCIPAL DE EJECUCIÓN DEL MÓDULO */}
+        <div className="bg-[#0a0f1d] border border-slate-800 rounded-2xl shadow-2xl overflow-hidden relative">
           
           {/* Top Window Bar */}
           <div className="h-9 bg-[#070b14] border-b border-slate-800 flex items-center justify-between px-4 text-xs font-mono text-slate-400">
@@ -412,27 +559,33 @@ export default function LandingDemo() {
               <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block"></span>
               <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block"></span>
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block"></span>
-              <span className="ml-2 text-[10.5px] text-slate-400 hidden sm:inline">ROLΦ Studio • Entorno Comercial</span>
+              <span className="ml-2 text-[10.5px] text-slate-400 hidden sm:inline">
+                ROLΦ Studio • Módulo {currentMod.number}: {currentMod.name}
+              </span>
             </div>
             <div className="bg-slate-900 border border-slate-800 px-2.5 py-0.5 rounded text-[10px] text-slate-400 hidden sm:block">
-              sistema.rolphi.com/modulo/{screens[activeScreenIndex].id}
+              app.comercio.local/sistema/{currentMod.id}
             </div>
-            <span className="text-[10px] text-emerald-400 font-bold">● TERMINAL ACTIVA</span>
+            <span className={`text-[10px] font-bold px-2 py-0.5 rounded border ${currentMod.badge}`}>
+              ● MÓDULO EN VIVO
+            </span>
           </div>
 
-          {/* SCREEN CONTENT AREA (Tighter padding & controlled fonts) */}
-          <div className="p-4 sm:p-6 min-h-[420px] flex flex-col justify-center">
+          {/* SCREEN CONTENT AREA */}
+          <div className="p-4 sm:p-6 min-h-[440px] flex flex-col justify-center">
 
-            {/* SCREEN 1: POS MOSTRADOR */}
-            {activeScreenIndex === 0 && (
+            {/* TAB 1: MOSTRADOR POS (AZUL) */}
+            {activeModuleIndex === 0 && (
               <div className="space-y-4 animate-fade-in">
                 <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-slate-800/80 pb-2.5">
                   <div>
                     <h3 className="text-sm sm:text-base font-bold text-white flex items-center">
-                      <ShoppingCart className="w-4 h-4 mr-1.5 text-cyan-400" />
-                      Punto de Venta de Mostrador ({sectorPresets[selectedSector].name})
+                      <ShoppingCart className="w-4 h-4 mr-1.5 text-blue-400" />
+                      Punto de Venta de Alta Velocidad (Mostrador)
                     </h3>
-                    <p className="text-[11px] text-slate-400">Modificá cantidades o buscá artículos por nombre/código para liquidar la venta.</p>
+                    <p className="text-[11px] text-slate-400">
+                      Buscá por nombre o código de barras, asigná al vendedor para su comisión y emití el ticket en segundos.
+                    </p>
                   </div>
                   <div className="flex items-center space-x-2">
                     <button
@@ -443,22 +596,36 @@ export default function LandingDemo() {
                       <RotateCcw className="w-3 h-3 mr-1" />
                       Reiniciar
                     </button>
-                    <span className="px-2 py-0.5 text-[10.5px] bg-slate-850 text-slate-300 border border-slate-700 rounded font-semibold">
+                    <span className="px-2 py-0.5 text-[10.5px] bg-blue-950 text-blue-300 border border-blue-700 rounded font-semibold">
                       Caja #01 Operativa
                     </span>
                   </div>
                 </div>
 
-                {/* POS Search Bar */}
-                <div className="relative">
-                  <Search className="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-400" />
-                  <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Filtrar por nombre de artículo o código..."
-                    className="w-full bg-slate-900 border border-slate-800 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-cyan-500"
-                  />
+                {/* Filter and Seller Selector */}
+                <div className="grid grid-cols-1 sm:grid-cols-12 gap-2">
+                  <div className="sm:col-span-8 relative">
+                    <Search className="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-400" />
+                    <input
+                      type="text"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      placeholder="Buscar por artículo o código de barras..."
+                      className="w-full bg-slate-900 border border-slate-800 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
+                  <div className="sm:col-span-4 flex items-center bg-slate-900 border border-slate-800 rounded-lg px-2 text-xs">
+                    <span className="text-[10px] text-slate-400 mr-2 font-mono">Vendedor:</span>
+                    <select
+                      value={posSeller}
+                      onChange={(e) => setPosSeller(e.target.value)}
+                      className="bg-transparent text-white text-xs focus:outline-none w-full font-semibold"
+                    >
+                      <option value="Romina" className="bg-slate-900 text-white">Romina V. (Comisión 4%)</option>
+                      <option value="Matías" className="bg-slate-900 text-white">Matías L. (Comisión 5%)</option>
+                      <option value="Laura" className="bg-slate-900 text-white">Laura G. (Encargada 2%)</option>
+                    </select>
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
@@ -469,7 +636,7 @@ export default function LandingDemo() {
                         <div>
                           <span className="font-semibold text-white block">{p.name}</span>
                           <span className="text-[10px] text-slate-400 font-mono">
-                            Cód: {p.code} • Stock: <strong className={p.stock < 10 ? 'text-amber-400' : 'text-slate-300'}>{p.stock} u.</strong>
+                            Cód: {p.code} • Stock disponible: <strong className={p.stock < 10 ? 'text-amber-400' : 'text-slate-300'}>{p.stock} u.</strong>
                           </span>
                         </div>
                         <div className="flex items-center space-x-3">
@@ -494,17 +661,12 @@ export default function LandingDemo() {
                         </div>
                       </div>
                     ))}
-                    {filteredPosProducts.length === 0 && (
-                      <div className="p-4 text-center text-xs text-slate-500 bg-slate-900/50 rounded-xl">
-                        No se encontraron productos con ese filtro.
-                      </div>
-                    )}
                   </div>
 
                   {/* Summary & Checkout */}
                   <div className="lg:col-span-5 bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex flex-col justify-between">
                     <div className="space-y-2.5">
-                      <span className="text-[11px] uppercase font-mono text-slate-400 font-bold block pb-1 border-b border-slate-800">
+                      <span className="text-[11px] uppercase font-mono text-blue-400 font-bold block pb-1 border-b border-slate-800">
                         Liquidación de Venta
                       </span>
 
@@ -517,7 +679,7 @@ export default function LandingDemo() {
                             onClick={() => setPosPaymentMethod(m)}
                             className={`py-1.5 rounded border transition ${
                               posPaymentMethod === m 
-                                ? 'bg-slate-800 text-white border-cyan-500/80 font-bold' 
+                                ? 'bg-blue-600 text-white border-blue-500 font-bold' 
                                 : 'bg-slate-900 text-slate-400 border-slate-800'
                             }`}
                           >
@@ -528,23 +690,25 @@ export default function LandingDemo() {
 
                       <div className="flex justify-between items-baseline pt-2 border-t border-slate-800">
                         <span className="text-xs text-slate-400">Total a Cobrar:</span>
-                        <span className="text-xl font-extrabold text-emerald-400">${posTotal.toLocaleString('es-AR')}</span>
+                        <span className="text-xl font-extrabold text-blue-400">${posTotal.toLocaleString('es-AR')}</span>
                       </div>
 
                       {posSaleSuccess ? (
-                        <div className="p-2.5 bg-emerald-950/80 border border-emerald-500/60 rounded-lg text-center space-y-1 animate-fade-in">
-                          <Check className="w-4 h-4 text-emerald-400 mx-auto" />
-                          <span className="text-xs font-bold text-emerald-200 block">Venta Asentada Correctamente</span>
-                          <span className="text-[10px] text-slate-400 block">Stock descontado en base de datos. Comprobante generado.</span>
+                        <div className="p-2.5 bg-blue-950/80 border border-blue-500/60 rounded-lg text-center space-y-1 animate-fade-in">
+                          <Check className="w-4 h-4 text-blue-400 mx-auto" />
+                          <span className="text-xs font-bold text-blue-200 block">Venta Asentada Correctamente</span>
+                          <span className="text-[10px] text-slate-400 block">
+                            Stock descontado y comisión acreditada a {posSeller}.
+                          </span>
                         </div>
                       ) : (
                         <button
                           type="button"
                           onClick={handlePosCheckout}
                           disabled={posTotal === 0}
-                          className="w-full py-2.5 bg-slate-800 hover:bg-slate-750 border border-slate-600 text-white font-bold rounded-lg text-xs uppercase tracking-wider transition shadow disabled:opacity-40"
+                          className="w-full py-2.5 bg-blue-600 hover:bg-blue-500 border border-blue-400 text-white font-bold rounded-lg text-xs uppercase tracking-wider transition shadow disabled:opacity-40"
                         >
-                          Confirmar Venta en Mostrador
+                          Confirmar Cobro en Mostrador
                         </button>
                       )}
                     </div>
@@ -553,106 +717,97 @@ export default function LandingDemo() {
               </div>
             )}
 
-            {/* SCREEN 2: CATÁLOGO WEB INTERACTIVO EN CELULAR */}
-            {activeScreenIndex === 1 && (
-              <div className="space-y-3.5 animate-fade-in">
+            {/* TAB 2: INVENTARIO & CONTROL DE STOCK (ÁMBAR) */}
+            {activeModuleIndex === 1 && (
+              <div className="space-y-4 animate-fade-in">
                 <div className="flex justify-between items-center border-b border-slate-800/80 pb-2.5">
                   <div>
                     <h3 className="text-sm sm:text-base font-bold text-white flex items-center">
-                      <Smartphone className="w-4 h-4 mr-1.5 text-cyan-400" />
-                      Catálogo Web Móvil con Pedidos a WhatsApp
+                      <Package className="w-4 h-4 mr-1.5 text-amber-400" />
+                      Inventario Físico, Costo de Reposición &amp; Rentabilidad Bruta
                     </h3>
-                    <p className="text-[11px] text-slate-400">Tus clientes eligen productos y te llega el pedido detallado sin errores.</p>
+                    <p className="text-[11px] text-slate-400">
+                      Controlá el margen de ganancia de cada artículo, alertas de stock mínimo y visibilidad en catálogo online.
+                    </p>
                   </div>
-                  <Link
-                    to="/catalogo"
-                    target="_blank"
-                    className="px-2.5 py-1 bg-slate-850 hover:bg-slate-800 text-slate-300 border border-slate-700 text-[11px] font-semibold rounded-lg flex items-center transition"
-                  >
-                    <span>Abrir Catálogo Real</span>
-                    <ExternalLink className="w-3 h-3 ml-1" />
-                  </Link>
+                  <span className="px-2 py-0.5 text-[10.5px] bg-amber-950 text-amber-300 border border-amber-700 rounded font-semibold">
+                    {stockList.length} Artículos Registrados
+                  </span>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-                  {/* Smartphone View Mockup */}
-                  <div className="max-w-[260px] mx-auto bg-black border-2 border-slate-800 rounded-[28px] p-2.5 shadow-xl space-y-2">
-                    <div className="w-16 h-3 bg-slate-800 rounded-full mx-auto"></div>
-                    
-                    <div className="bg-slate-900 rounded-xl p-2.5 border border-slate-800 space-y-2">
-                      <div className="h-28 bg-slate-800 rounded-lg flex items-center justify-center text-slate-400 text-xs font-semibold relative overflow-hidden">
-                        <ShoppingBag className="w-8 h-8 opacity-40 text-slate-400" />
-                        <span className="absolute bottom-1.5 right-1.5 bg-slate-800 text-emerald-400 text-[9px] font-bold px-1.5 py-0.5 rounded border border-emerald-500/40">
-                          EN STOCK
-                        </span>
-                      </div>
-                      <div>
-                        <span className="text-[10px] text-slate-400 font-mono block">{catalogSelectedProduct.code}</span>
-                        <span className="text-xs font-semibold text-white block">{catalogSelectedProduct.name}</span>
-                        <span className="text-xs font-extrabold text-emerald-400">${catalogSelectedProduct.price.toLocaleString('es-AR')}</span>
-                      </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead>
+                      <tr className="border-b border-slate-800 text-[10px] font-mono uppercase text-slate-400">
+                        <th className="pb-2">Artículo &amp; Código</th>
+                        <th className="pb-2">Costo Proveedor</th>
+                        <th className="pb-2">PVP Venta</th>
+                        <th className="pb-2">Margen</th>
+                        <th className="pb-2">Stock Actual</th>
+                        <th className="pb-2 text-right">Acción Rápida</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-800/60">
+                      {stockList.map(item => {
+                        const marginPercent = Math.round(((item.price - item.cost) / item.price) * 100);
+                        return (
+                          <tr key={item.id} className="hover:bg-slate-900/60 transition">
+                            <td className="py-2.5">
+                              <span className="font-semibold text-white block">{item.name}</span>
+                              <span className="text-[10px] text-amber-400/80 font-mono">{item.code}</span>
+                            </td>
+                            <td className="py-2.5 font-mono text-slate-300">${item.cost.toLocaleString('es-AR')}</td>
+                            <td className="py-2.5 font-mono font-bold text-white">${item.price.toLocaleString('es-AR')}</td>
+                            <td className="py-2.5">
+                              <span className="px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 text-[10px] font-bold">
+                                +{marginPercent}%
+                              </span>
+                            </td>
+                            <td className="py-2.5">
+                              <span className={`px-2 py-0.5 rounded text-[10.5px] font-bold font-mono ${
+                                item.stock < 12 
+                                  ? 'bg-amber-950 text-amber-300 border border-amber-700' 
+                                  : 'bg-slate-900 text-slate-300 border border-slate-700'
+                              }`}>
+                                {item.stock} u.
+                              </span>
+                            </td>
+                            <td className="py-2.5 text-right">
+                              <button
+                                type="button"
+                                onClick={() => handleRestockItem(item.id)}
+                                className="px-2 py-1 bg-amber-900/40 hover:bg-amber-800/60 text-amber-300 border border-amber-700/60 text-[10px] font-bold rounded transition"
+                              >
+                                +10 u. Stock
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
 
-                      {/* Options */}
-                      <div>
-                        <span className="text-[9px] text-slate-400 block mb-1">Variante / Opción:</span>
-                        <div className="flex gap-1 text-[10px]">
-                          {['Opción A', 'Opción B', 'Opción C'].map((op, i) => (
-                            <button
-                              key={op}
-                              type="button"
-                              onClick={() => setCatalogSelectedProduct(prev => ({ ...prev, option: op }))}
-                              className={`px-1.5 py-0.5 rounded border text-[10px] transition ${
-                                catalogSelectedProduct.option === op 
-                                  ? 'bg-slate-800 text-white border-cyan-400' 
-                                  : 'bg-slate-855 text-slate-400 border-slate-700'
-                              }`}
-                            >
-                              Var #{i+1}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={() => setCatalogSentMessage(true)}
-                        className="w-full py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-[11px] font-semibold flex items-center justify-center shadow transition"
-                      >
-                        <MessageCircle className="w-3 h-3 mr-1" />
-                        Consultar por WhatsApp
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* WhatsApp Message Preview */}
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2.5">
-                    <span className="text-[11px] uppercase font-mono text-slate-400 font-bold block">
-                      Mensaje directo recibido en tu teléfono
-                    </span>
-                    <div className="bg-slate-900 border border-slate-800 p-3 rounded-lg text-xs text-slate-300 leading-relaxed font-mono">
-                      "Hola, quería consultar por <strong className="text-white">"{catalogSelectedProduct.name}"</strong> (Cód: {catalogSelectedProduct.code}) de ${catalogSelectedProduct.price.toLocaleString('es-AR')}. ¿Tienen disponibilidad para entrega?"
-                    </div>
-                    {catalogSentMessage && (
-                      <div className="p-2 bg-slate-900 border border-slate-700 text-slate-300 rounded-lg text-[11px] font-semibold text-center">
-                        ✓ El cliente no pierde tiempo buscando y el comercio recibe la consulta lista para cerrar.
-                      </div>
-                    )}
-                  </div>
+                <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-2 text-xs">
+                  <span className="text-slate-400">
+                    💡 Si un producto llega a 0 unidades, podés configurarlo para que se oculte automáticamente del catálogo web.
+                  </span>
+                  <span className="text-[11px] font-mono text-amber-400 font-bold">● SIN FALTANTES NI QUIEBRES</span>
                 </div>
               </div>
             )}
 
-            {/* SCREEN 3: COMPRAS A PROVEEDORES E INGRESO DE STOCK */}
-            {activeScreenIndex === 2 && (
-              <div className="space-y-3.5 animate-fade-in">
+            {/* TAB 3: PROVEEDORES & COMPRAS (PÚRPURA / VIOLETA) */}
+            {activeModuleIndex === 2 && (
+              <div className="space-y-4 animate-fade-in">
                 <div className="flex justify-between items-center border-b border-slate-800/80 pb-2.5">
                   <div>
                     <h3 className="text-sm sm:text-base font-bold text-white flex items-center">
-                      <Truck className="w-4 h-4 mr-1.5 text-cyan-400" />
-                      Compras a Proveedores &amp; Valor de la Mercadería
+                      <Truck className="w-4 h-4 mr-1.5 text-purple-400" />
+                      Compras a Proveedores, Inversión &amp; Acreditación de Mercadería
                     </h3>
                     <p className="text-[11px] text-slate-400">
-                      Cargá el costo de la mercadería y acreditá las cantidades al inventario en 1 solo clic.
+                      Planificá pedidos mayoristas, calculá el costo de la compra y cargá las unidades al inventario en 1 clic.
                     </p>
                   </div>
                   <button
@@ -670,121 +825,246 @@ export default function LandingDemo() {
                   <div className="md:col-span-7 bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 space-y-2.5">
                     <div className="flex justify-between items-center pb-2 border-b border-slate-800 text-xs">
                       <div>
-                        <span className="font-semibold text-white block">Orden de Compra: #COM-00892</span>
-                        <span className="text-[10px] text-slate-400 font-mono">Proveedor: Mayorista Central de Bazar &amp; Deco</span>
+                        <span className="font-semibold text-white block">Orden de Compra: #COM-00912</span>
+                        <span className="text-[10px] text-purple-300 font-mono">Proveedor: Mayorista Central Textil &amp; Deco</span>
                       </div>
                       <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                         purchaseReceived 
-                          ? 'bg-slate-800 text-emerald-400 border border-emerald-600' 
-                          : 'bg-slate-850 text-amber-400 border border-amber-700'
+                          ? 'bg-purple-950 text-purple-300 border border-purple-600' 
+                          : 'bg-amber-950 text-amber-400 border border-amber-700'
                       }`}>
-                        {purchaseReceived ? 'INGRESADO EN STOCK' : 'PENDIENTE DE RECEPCIÓN'}
+                        {purchaseReceived ? 'RECIBIDO EN STOCK' : 'PENDIENTE DE ENTREGA'}
                       </span>
                     </div>
 
                     <div className="space-y-1.5 text-xs">
                       <div className="bg-slate-850 p-2 rounded-lg border border-slate-700/80 flex justify-between items-center">
                         <div>
-                          <span className="font-semibold text-white block">Difusores Aromáticos 250ml</span>
-                          <span className="text-[10px] text-slate-400 font-mono">50 unidades • Costo mayorista: $5.200 c/u</span>
+                          <span className="font-semibold text-white block">Mercadería Mayorista Surtida</span>
+                          <span className="text-[10px] text-slate-400 font-mono">50 unidades compradas • Costo pactado: $5.200 c/u</span>
                         </div>
                         <span className="font-bold text-slate-200">$260.000</span>
                       </div>
                     </div>
 
                     <div className="bg-slate-950 p-2.5 rounded-lg border border-slate-800 flex justify-between items-center text-xs">
-                      <span className="font-semibold text-slate-400">Total de Factura de Compra:</span>
-                      <span className="text-sm font-bold text-slate-200">$260.000</span>
+                      <span className="font-semibold text-slate-400">Total de Factura a Pagar:</span>
+                      <span className="text-sm font-bold text-purple-300">$260.000</span>
                     </div>
 
                     {!purchaseReceived ? (
                       <button
                         type="button"
                         onClick={handleReceivePurchase}
-                        className="w-full py-2 bg-slate-800 hover:bg-slate-750 border border-slate-600 text-white font-bold rounded-lg text-xs uppercase tracking-wider transition"
+                        className="w-full py-2 bg-purple-700 hover:bg-purple-600 border border-purple-500 text-white font-bold rounded-lg text-xs uppercase tracking-wider transition"
                       >
-                        Confirmar Ingreso al Stock Físico
+                        Confirmar Recepción e Ingresar al Stock Físico
                       </button>
                     ) : (
-                      <div className="p-2 bg-slate-900 border border-slate-700 rounded-lg text-center text-emerald-400 text-xs font-semibold">
-                        ✓ Mercadería acreditada. Se sumaron 50 unidades al stock disponible.
+                      <div className="p-2 bg-purple-950/80 border border-purple-600 rounded-lg text-center text-purple-200 text-xs font-semibold">
+                        ✓ Compra asentada. Se sumaron 50 unidades al stock disponible sin cargarlas una a una.
                       </div>
                     )}
                   </div>
 
                   {/* Stock impact widget */}
                   <div className="md:col-span-5 bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex flex-col justify-center text-center space-y-2">
-                    <span className="text-[10.5px] uppercase font-mono text-slate-400 font-bold">
-                      Control Inmediato de Inventario
+                    <span className="text-[10.5px] uppercase font-mono text-purple-400 font-bold">
+                      Impacto Automático en Inventario
                     </span>
                     <div className="p-3 bg-slate-900 rounded-xl border border-slate-800">
-                      <span className="text-xs text-slate-400 block mb-0.5">Stock de "Difusor Aromático"</span>
+                      <span className="text-xs text-slate-400 block mb-0.5">Stock de "Artículos Recibidos"</span>
                       <span className="text-3xl sm:text-4xl font-extrabold text-white font-mono tracking-tight transition-all duration-300">
                         {stockCount} <span className="text-xs text-slate-400 font-sans">u.</span>
                       </span>
                       {purchaseReceived && (
-                        <span className="inline-block mt-1 text-[10px] bg-slate-800 text-emerald-300 font-bold px-2 py-0.5 rounded border border-emerald-600">
-                          +50 ingresadas recién
+                        <span className="inline-block mt-1 text-[10px] bg-purple-950 text-purple-300 font-bold px-2 py-0.5 rounded border border-purple-700">
+                          +50 unidades acreditadas recién
                         </span>
                       )}
                     </div>
                     <p className="text-[10.5px] text-slate-400">
-                      Evitá cargar artículo por artículo a mano. Todo el pedido impacta en stock al instante.
+                      Mantenés actualizado el precio de reposición para que el sistema calcule siempre tu rentabilidad real.
                     </p>
                   </div>
                 </div>
               </div>
             )}
 
-            {/* SCREEN 4: ARQUEO DE CAJA DIARIA */}
-            {activeScreenIndex === 3 && (
-              <div className="space-y-3.5 animate-fade-in">
-                <div className="border-b border-slate-800/80 pb-2.5">
-                  <h3 className="text-sm sm:text-base font-bold text-white flex items-center">
-                    <Wallet className="w-4 h-4 mr-1.5 text-cyan-400" />
-                    Caja Diaria &amp; Rendición de Turnos
-                  </h3>
-                  <p className="text-[11px] text-slate-400">Auditoría clara de entradas, salidas, retiros y medios de pago.</p>
+            {/* TAB 4: EMPLEADOS, VENDEDORES & COMISIONES (CIAN / CELESTE) */}
+            {activeModuleIndex === 3 && (
+              <div className="space-y-4 animate-fade-in">
+                <div className="flex justify-between items-center border-b border-slate-800/80 pb-2.5">
+                  <div>
+                    <h3 className="text-sm sm:text-base font-bold text-white flex items-center">
+                      <Users className="w-4 h-4 mr-1.5 text-cyan-400" />
+                      Creación de Empleados, Roles &amp; Liquidación de Comisiones
+                    </h3>
+                    <p className="text-[11px] text-slate-400">
+                      Asigná claves individuales, definí roles de acceso (Vendedor, Encargado, Administrador) y comisiones automáticas.
+                    </p>
+                  </div>
+                  <span className="px-2 py-0.5 text-[10.5px] bg-cyan-950 text-cyan-300 border border-cyan-700 rounded font-semibold">
+                    {employees.length} Empleados Activos
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+                  {/* Employee list */}
+                  <div className="md:col-span-7 space-y-2">
+                    <span className="text-[10px] font-mono text-slate-400 uppercase font-bold block">
+                      Equipo de Trabajo del Comercio:
+                    </span>
+                    {employees.map(emp => {
+                      const isSel = selectedEmployee.id === emp.id;
+                      return (
+                        <div
+                          key={emp.id}
+                          onClick={() => { setSelectedEmployee(emp); setCashCommissionPaid(false); }}
+                          className={`p-3 rounded-xl border cursor-pointer transition flex items-center justify-between ${
+                            isSel 
+                              ? 'bg-cyan-950/40 border-cyan-500 text-white' 
+                              : 'bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-700'
+                          }`}
+                        >
+                          <div>
+                            <span className="font-bold text-xs block">{emp.name}</span>
+                            <span className="text-[10px] text-slate-400 font-mono">
+                              Rol: <strong className="text-cyan-300">{emp.role}</strong> • Comisión: {emp.commission}%
+                            </span>
+                          </div>
+                          <div className="text-right">
+                            <span className="text-xs font-bold text-emerald-400 block font-mono">
+                              ${emp.accumulatedCommission.toLocaleString('es-AR')}
+                            </span>
+                            <span className="text-[9.5px] text-slate-400">{emp.salesCount} ventas liquidadas</span>
+                          </div>
+                        </div>
+                      );
+                    })}
+
+                    {/* New employee form */}
+                    <form onSubmit={handleAddEmployee} className="pt-2 flex gap-2">
+                      <input
+                        type="text"
+                        value={newEmployeeName}
+                        onChange={(e) => setNewEmployeeName(e.target.value)}
+                        placeholder="Nombre de nuevo empleado..."
+                        className="flex-1 bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500"
+                      />
+                      <select
+                        value={newEmployeeRole}
+                        onChange={(e) => setNewEmployeeRole(e.target.value)}
+                        className="bg-slate-900 border border-slate-800 rounded-lg px-2 text-xs text-slate-300 focus:outline-none"
+                      >
+                        <option value="VENDEDOR">Vendedor</option>
+                        <option value="ENCARGADO">Encargado</option>
+                        <option value="ADMIN">Administrador</option>
+                      </select>
+                      <button
+                        type="submit"
+                        className="px-3 py-1.5 bg-cyan-700 hover:bg-cyan-600 text-white text-xs font-bold rounded-lg transition"
+                      >
+                        + Crear
+                      </button>
+                    </form>
+                  </div>
+
+                  {/* Selected employee card & payout */}
+                  <div className="md:col-span-5 bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2.5 flex flex-col justify-between">
+                    <div className="space-y-2">
+                      <span className="text-[11px] uppercase font-mono text-cyan-400 font-bold block border-b border-slate-800 pb-1">
+                        Ficha de Rendimiento Individual
+                      </span>
+                      <div className="text-xs space-y-1">
+                        <div className="flex justify-between"><span className="text-slate-400">Personal:</span> <strong className="text-white">{selectedEmployee.name}</strong></div>
+                        <div className="flex justify-between"><span className="text-slate-400">Jerarquía:</span> <strong className="text-cyan-300 font-mono">{selectedEmployee.role}</strong></div>
+                        <div className="flex justify-between"><span className="text-slate-400">Porcentaje pactado:</span> <strong className="text-slate-200 font-mono">{selectedEmployee.commission}% por venta</strong></div>
+                        <div className="flex justify-between items-baseline pt-2 border-t border-slate-800">
+                          <span className="text-slate-300">Comisión Acumulada:</span>
+                          <span className="text-lg font-bold text-emerald-400 font-mono">${selectedEmployee.accumulatedCommission.toLocaleString('es-AR')}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {!cashCommissionPaid ? (
+                      <button
+                        type="button"
+                        onClick={handlePayCommission}
+                        className="w-full py-2 bg-emerald-700 hover:bg-emerald-600 border border-emerald-500 text-white font-bold rounded-lg text-xs uppercase transition shadow"
+                      >
+                        Pagar Comisión desde Caja
+                      </button>
+                    ) : (
+                      <div className="p-2 bg-emerald-950/80 border border-emerald-500/60 rounded-lg text-center text-emerald-300 text-xs font-semibold">
+                        ✓ Comisión liquidada y descontada de la caja en turno.
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* TAB 5: ARQUEO & CIERRE DE CAJA (VERDE ESMERALDA) */}
+            {activeModuleIndex === 4 && (
+              <div className="space-y-4 animate-fade-in">
+                <div className="flex justify-between items-center border-b border-slate-800/80 pb-2.5">
+                  <div>
+                    <h3 className="text-sm sm:text-base font-bold text-white flex items-center">
+                      <Wallet className="w-4 h-4 mr-1.5 text-emerald-400" />
+                      Arqueo de Turnos, Retiros de Gastos &amp; Cierre de Caja Ciego
+                    </h3>
+                    <p className="text-[11px] text-slate-400">
+                      Evitá diferencias entre turnos mañana y tarde. Control exacto de efectivo, transferencias y comprobantes.
+                    </p>
+                  </div>
+                  <span className="px-2 py-0.5 text-[10.5px] bg-emerald-950 text-emerald-300 border border-emerald-700 rounded font-semibold">
+                    Turno Tarde Activo
+                  </span>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-xs">
                   <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800 space-y-1">
-                    <span className="text-slate-400 text-[10.5px]">Efectivo en Cajón:</span>
-                    <span className="text-xl font-bold text-white block">${cashCashCount.toLocaleString('es-AR')}</span>
-                    <span className="text-[10px] text-emerald-400">● Cuadrado según ventas</span>
+                    <span className="text-slate-400 text-[10.5px]">Efectivo Físico en Cajón:</span>
+                    <span className="text-xl font-bold text-white block">${cashBalance.toLocaleString('es-AR')}</span>
+                    <span className="text-[10px] text-emerald-400">● Cuadrado al centavo con tickets</span>
                   </div>
                   <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800 space-y-1">
-                    <span className="text-slate-400 text-[10.5px]">Transferencias / QR:</span>
+                    <span className="text-slate-400 text-[10.5px]">Cobros Virtuales / QR:</span>
                     <span className="text-xl font-bold text-slate-200 block">$98.600</span>
-                    <span className="text-[10px] text-slate-400">14 cobros bancarios</span>
+                    <span className="text-[10px] text-slate-400">14 transferencias verificadas</span>
                   </div>
                   <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800 space-y-1">
-                    <span className="text-slate-400 text-[10.5px]">Retiros / Gastos:</span>
-                    <span className="text-xl font-bold text-slate-400 block">-$15.000</span>
-                    <span className="text-[10px] text-slate-500">Comprobante de flete</span>
+                    <span className="text-slate-400 text-[10.5px]">Gastos / Retiros Asentados:</span>
+                    <span className="text-xl font-bold text-rose-400 block">-${cashWithdrawn.toLocaleString('es-AR')}</span>
+                    <span className="text-[10px] text-slate-400">Pago flete y bolsas con comprobante</span>
                   </div>
                 </div>
 
                 <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between items-center text-xs">
                   <div>
-                    <span className="text-xs font-bold text-white block">Total Neto Turno Tarde</span>
-                    <span className="text-[10px] text-slate-400">Sin diferencias ni faltantes ocultos</span>
+                    <span className="text-xs font-bold text-white block">Balance Neto Consolidado del Turno</span>
+                    <span className="text-[10px] text-slate-400">Auditoría con firma del encargado y registro horario</span>
                   </div>
-                  <span className="text-xl font-extrabold text-emerald-400">${(cashCashCount + 98600 - 15000).toLocaleString('es-AR')}</span>
+                  <span className="text-xl font-extrabold text-emerald-400">
+                    ${(cashBalance + 98600 - cashWithdrawn).toLocaleString('es-AR')}
+                  </span>
                 </div>
               </div>
             )}
 
-            {/* SCREEN 5: GANANCIA REAL & MÉTRICAS */}
-            {activeScreenIndex === 4 && (
-              <div className="space-y-3.5 animate-fade-in">
+            {/* TAB 6: INFORMES & GANANCIA REAL (ÍNDIGO) */}
+            {activeModuleIndex === 5 && (
+              <div className="space-y-4 animate-fade-in">
                 <div className="flex justify-between items-center border-b border-slate-800/80 pb-2.5">
                   <div>
                     <h3 className="text-sm sm:text-base font-bold text-white flex items-center">
-                      <BarChart3 className="w-4 h-4 mr-1.5 text-cyan-400" />
-                      Rentabilidad &amp; Ganancia Neta Real
+                      <BarChart3 className="w-4 h-4 mr-1.5 text-indigo-400" />
+                      Métricas Financieras, Ranking de Artículos &amp; Ganancia Real
                     </h3>
-                    <p className="text-[11px] text-slate-400">Filtrá por período para conocer el rendimiento comercial neto.</p>
+                    <p className="text-[11px] text-slate-400">
+                      Conocé cuánto dinero queda libre en tu bolsillo una vez descontado el costo mayorista de los proveedores.
+                    </p>
                   </div>
                   <div className="flex bg-slate-900 p-0.5 rounded-lg border border-slate-800 text-[10.5px] font-semibold">
                     {['hoy', 'semana', 'mes'].map(p => (
@@ -793,7 +1073,7 @@ export default function LandingDemo() {
                         type="button"
                         onClick={() => setMetricsPeriod(p)}
                         className={`px-2.5 py-1 rounded uppercase transition ${
-                          metricsPeriod === p ? 'bg-slate-800 text-white font-bold' : 'text-slate-400'
+                          metricsPeriod === p ? 'bg-indigo-600 text-white font-bold' : 'text-slate-400'
                         }`}
                       >
                         {p}
@@ -804,38 +1084,222 @@ export default function LandingDemo() {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
                   <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800 space-y-1">
-                    <span className="text-slate-400 text-[10.5px]">Ventas Facturadas:</span>
+                    <span className="text-slate-400 text-[10.5px]">Ventas Totales Brutas:</span>
                     <span className="text-lg font-bold text-white block">
                       {metricsPeriod === 'hoy' ? '$185.000' : metricsPeriod === 'semana' ? '$1.420.000' : '$5.850.000'}
                     </span>
                   </div>
                   <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800 space-y-1">
-                    <span className="text-slate-400 text-[10.5px]">Costo de Reposición:</span>
+                    <span className="text-slate-400 text-[10.5px]">Costo Mayorista Reposición:</span>
                     <span className="text-lg font-mono text-slate-400 block">
                       {metricsPeriod === 'hoy' ? '-$92.000' : metricsPeriod === 'semana' ? '-$710.000' : '-$2.920.000'}
                     </span>
                   </div>
-                  <div className="bg-slate-850 p-3 rounded-xl border border-slate-700 space-y-1">
-                    <span className="text-emerald-400 font-bold text-[10.5px]">Ganancia Limpia:</span>
-                    <span className="text-lg font-bold text-emerald-400 block">
+                  <div className="bg-indigo-950/70 p-3 rounded-xl border border-indigo-700/80 space-y-1">
+                    <span className="text-indigo-300 font-bold text-[10.5px]">Ganancia Neta Limpia:</span>
+                    <span className="text-lg font-bold text-indigo-300 block">
                       {metricsPeriod === 'hoy' ? '+$93.000' : metricsPeriod === 'semana' ? '+$710.000' : '+$2.930.000'}
                     </span>
                   </div>
                 </div>
 
-                <div className="p-2.5 bg-slate-950 rounded-lg border border-slate-800 text-center text-xs text-slate-400">
-                  El sistema descuenta automáticamente el costo cargado en cada proveedor para darte números reales.
+                <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 text-xs text-slate-400 flex justify-between items-center">
+                  <span>📊 Artículos más vendidos del período: 1) Difusores (142 u.) • 2) Velas de soja (98 u.) • 3) Sets de regalo (45 u.)</span>
+                  <span className="font-mono text-indigo-400 font-bold hidden sm:inline">REPORTES AUDITABLES</span>
+                </div>
+              </div>
+            )}
+
+            {/* TAB 7: CLIENTES & CUENTAS CORRIENTES (TEAL) */}
+            {activeModuleIndex === 6 && (
+              <div className="space-y-4 animate-fade-in">
+                <div className="flex justify-between items-center border-b border-slate-800/80 pb-2.5">
+                  <div>
+                    <h3 className="text-sm sm:text-base font-bold text-white flex items-center">
+                      <BookOpen className="w-4 h-4 mr-1.5 text-teal-400" />
+                      Directorio de Clientes, Libreta de Fiados &amp; Pagos a Cuenta
+                    </h3>
+                    <p className="text-[11px] text-slate-400">
+                      Llevá la cuenta corriente de tus clientes habituales sin cuadernos que se pierden o confunden.
+                    </p>
+                  </div>
+                  <span className="px-2 py-0.5 text-[10.5px] bg-teal-950 text-teal-300 border border-teal-700 rounded font-semibold">
+                    {customers.length} Clientes con Ficha
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                  {customers.map(c => (
+                    <div key={c.id} className="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 space-y-2">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <span className="font-bold text-white block">{c.name}</span>
+                          <span className="text-[10px] text-slate-400 font-mono">Tel: {c.phone}</span>
+                        </div>
+                        <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
+                          c.balance > 0 ? 'bg-amber-950 text-amber-300 border border-amber-700' : 'bg-emerald-950 text-emerald-300 border border-emerald-700'
+                        }`}>
+                          {c.balance > 0 ? 'CON SALDO' : 'AL DÍA'}
+                        </span>
+                      </div>
+                      <div className="pt-1 border-t border-slate-800 flex justify-between items-baseline">
+                        <span className="text-slate-400 text-[10.5px]">Saldo Deudor:</span>
+                        <span className={`text-sm font-bold font-mono ${c.balance > 0 ? 'text-amber-400' : 'text-emerald-400'}`}>
+                          ${c.balance.toLocaleString('es-AR')}
+                        </span>
+                      </div>
+                      <div className="text-[9.5px] text-slate-500">Último movimiento registrado: {c.lastPayment}</div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 text-xs text-slate-400 flex flex-col sm:flex-row justify-between items-center gap-2">
+                  <span>📱 Podés enviarle a tu cliente el estado de su cuenta corriente directamente por WhatsApp con 1 solo clic.</span>
+                  <span className="text-teal-400 font-mono font-bold">● CERO COBROS OLVIDADOS</span>
+                </div>
+              </div>
+            )}
+
+            {/* TAB 8: CATÁLOGO WEB SINCRONIZADO (ROSA / MAGENTA) */}
+            {activeModuleIndex === 7 && (
+              <div className="space-y-4 animate-fade-in">
+                <div className="flex justify-between items-center border-b border-slate-800/80 pb-2.5">
+                  <div>
+                    <h3 className="text-sm sm:text-base font-bold text-white flex items-center">
+                      <Store className="w-4 h-4 mr-1.5 text-rose-400" />
+                      Catálogo Online Público para Clientes con Pedidos a WhatsApp
+                    </h3>
+                    <p className="text-[11px] text-slate-400">
+                      Tus clientes ven la vidriera web desde su celular. Al comprar, te llega el pedido ordenado y listo para cobrar.
+                    </p>
+                  </div>
+                  <Link
+                    to="/catalogo"
+                    target="_blank"
+                    className="px-2.5 py-1 bg-rose-950 hover:bg-rose-900 text-rose-300 border border-rose-800 text-[11px] font-semibold rounded-lg flex items-center transition"
+                  >
+                    <span>Abrir Catálogo Web Real</span>
+                    <ExternalLink className="w-3 h-3 ml-1" />
+                  </Link>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                  {/* Smartphone View Mockup */}
+                  <div className="max-w-[260px] mx-auto bg-black border-2 border-slate-800 rounded-[28px] p-2.5 shadow-xl space-y-2">
+                    <div className="w-16 h-3 bg-slate-800 rounded-full mx-auto"></div>
+                    
+                    <div className="bg-slate-900 rounded-xl p-2.5 border border-slate-800 space-y-2">
+                      <div className="h-28 bg-slate-800 rounded-lg flex items-center justify-center text-slate-400 text-xs font-semibold relative overflow-hidden">
+                        <ShoppingBag className="w-8 h-8 opacity-40 text-rose-400" />
+                        <span className="absolute bottom-1.5 right-1.5 bg-rose-950 text-rose-300 text-[9px] font-bold px-1.5 py-0.5 rounded border border-rose-700">
+                          EN STOCK
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-slate-400 font-mono block">{catalogSelectedProduct.code}</span>
+                        <span className="text-xs font-semibold text-white block">{catalogSelectedProduct.name}</span>
+                        <span className="text-xs font-extrabold text-rose-400">${catalogSelectedProduct.price.toLocaleString('es-AR')}</span>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => setCatalogSentMessage(true)}
+                        className="w-full py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-[11px] font-semibold flex items-center justify-center shadow transition"
+                      >
+                        <MessageCircle className="w-3 h-3 mr-1" />
+                        Enviar Pedido a WhatsApp
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* WhatsApp Message Preview */}
+                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2.5">
+                    <span className="text-[11px] uppercase font-mono text-rose-400 font-bold block">
+                      Mensaje recibido listo para preparar
+                    </span>
+                    <div className="bg-slate-900 border border-slate-800 p-3 rounded-lg text-xs text-slate-300 leading-relaxed font-mono">
+                      "¡Hola! Quiero encargar <strong className="text-white">"{catalogSelectedProduct.name}"</strong> (Cód: {catalogSelectedProduct.code}) de ${catalogSelectedProduct.price.toLocaleString('es-AR')}. ¿Cómo coordinamos el pago y retiro?"
+                    </div>
+                    {catalogSentMessage && (
+                      <div className="p-2 bg-slate-900 border border-slate-700 text-slate-300 rounded-lg text-[11px] font-semibold text-center">
+                        ✓ Venta cerrada sin intermediarios ni comisiones abusivas por cada operación.
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* TAB 9: SUPERADMIN & IDENTIDAD DE MARCA (SLATE / PLATINO) */}
+            {activeModuleIndex === 8 && (
+              <div className="space-y-4 animate-fade-in">
+                <div className="flex justify-between items-center border-b border-slate-800/80 pb-2.5">
+                  <div>
+                    <h3 className="text-sm sm:text-base font-bold text-white flex items-center">
+                      <Settings className="w-4 h-4 mr-1.5 text-slate-400" />
+                      Panel SuperAdmin &amp; Personalización de Identidad de Marca
+                    </h3>
+                    <p className="text-[11px] text-slate-400">
+                      Cargá el logo de tu comercio, cambiá el nombre de fantasía y gestioná claves maestras sin tocar código.
+                    </p>
+                  </div>
+                  <span className="px-2 py-0.5 text-[10.5px] bg-slate-800 text-slate-300 border border-slate-600 rounded font-semibold">
+                    Acceso Jerárquico Seguro
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-3 text-xs">
+                    <span className="text-[11px] font-mono text-slate-400 uppercase font-bold block">
+                      Configurar Identidad de tu Local:
+                    </span>
+                    <div>
+                      <label className="text-slate-400 text-[10.5px] block mb-1">Nombre Comercial de la Tienda:</label>
+                      <input
+                        type="text"
+                        value={storeIdentity.name}
+                        onChange={(e) => setStoreIdentity(prev => ({ ...prev, name: e.target.value }))}
+                        className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-slate-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-slate-400 text-[10.5px] block mb-1">Eslogan o Subtítulo del Comercio:</label>
+                      <input
+                        type="text"
+                        value={storeIdentity.slogan}
+                        onChange={(e) => setStoreIdentity(prev => ({ ...prev, slogan: e.target.value }))}
+                        className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-slate-500"
+                      />
+                    </div>
+                    <div className="p-3 bg-slate-950 rounded-lg border border-slate-800/80 text-[11px] text-slate-400">
+                      🖼️ Subí tu archivo de logo (PNG o JPG) y se aplicará automáticamente en los tickets, comprobantes y cabecera del catálogo.
+                    </div>
+                  </div>
+
+                  {/* Live preview */}
+                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col justify-center items-center text-center space-y-2">
+                    <div className="w-16 h-16 rounded-2xl bg-slate-900 border-2 border-slate-700 flex items-center justify-center text-slate-400 font-bold text-xl shadow">
+                      {storeIdentity.name.charAt(0)}
+                    </div>
+                    <div>
+                      <span className="text-sm font-bold text-white block">{storeIdentity.name}</span>
+                      <span className="text-xs text-slate-400">{storeIdentity.slogan}</span>
+                    </div>
+                    <span className="text-[10px] text-emerald-400 font-mono font-bold">
+                      ● VISTA PREVIA EN TIEMPO REAL
+                    </span>
+                  </div>
                 </div>
               </div>
             )}
 
           </div>
 
-          {/* Bottom Control Bar */}
+          {/* Bottom Bar with direct phone */}
           <div className="h-10 bg-[#070b14] border-t border-slate-800 flex items-center justify-between px-4 text-xs text-slate-400">
             <span>Demostración oficial ROLΦ Studio</span>
             <div className="flex items-center space-x-2">
-              <span className="text-[11px] text-slate-300 font-medium">Consultas comerciales: <strong>2241-527357</strong></span>
+              <span className="text-[11px] text-slate-300 font-medium">Asesoramiento directo: <strong>2241-527357</strong></span>
             </div>
           </div>
 
@@ -843,8 +1307,167 @@ export default function LandingDemo() {
 
       </section>
 
-      {/* 4. SECCIÓN INTERACTIVA ADICIONAL: CALCULADORA DE TIEMPO Y GANANCIA */}
-      <section className="py-12 bg-slate-900/40 border-b border-slate-800/80">
+      {/* 4. TODAS LAS CUALIDADES ENUMERADAS EN DETALLE */}
+      <section className="py-14 bg-[#080d19]/60 border-b border-slate-800/80">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div className="text-center max-w-3xl mx-auto mb-10">
+            <span className="text-[10.5px] font-mono text-cyan-400 uppercase tracking-widest font-bold block mb-1">
+              INVENTARIO COMPLETO DE CUALIDADES
+            </span>
+            <h2 className="text-xl sm:text-3xl font-extrabold text-white">
+              Todo lo que incluye el programa de gestión enumerado
+            </h2>
+            <p className="mt-2 text-xs sm:text-sm text-slate-400">
+              Un sistema integral diseñado para resolver el 100% de los desafíos cotidianos de un comercio real.
+            </p>
+          </div>
+
+          {/* Enumeration Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
+            
+            {/* 1 */}
+            <div className="bg-slate-900/90 border border-blue-900/50 p-4 rounded-xl space-y-2">
+              <div className="flex items-center space-x-2 text-blue-400 font-bold">
+                <ShoppingCart className="w-4 h-4" />
+                <span>1. Mostrador POS &amp; Ventas</span>
+              </div>
+              <ul className="text-slate-300 space-y-1 text-[11px] list-disc list-inside">
+                <li>Búsqueda por código de barras o texto predictivo</li>
+                <li>Múltiples formas de pago (Efectivo, QR, Cta Cte)</li>
+                <li>Asignación de vendedor en cada operación</li>
+                <li>Emisión de ticket / remito no fiscal con logo</li>
+                <li>Descuento inmediato de stock físico</li>
+              </ul>
+            </div>
+
+            {/* 2 */}
+            <div className="bg-slate-900/90 border border-amber-900/50 p-4 rounded-xl space-y-2">
+              <div className="flex items-center space-x-2 text-amber-400 font-bold">
+                <Package className="w-4 h-4" />
+                <span>2. Stock &amp; Inventario</span>
+              </div>
+              <ul className="text-slate-300 space-y-1 text-[11px] list-disc list-inside">
+                <li>Alertas automáticas de artículos con stock bajo</li>
+                <li>Cálculo de margen y rentabilidad por producto</li>
+                <li>Categorías personalizables (Novedades, Ofertas)</li>
+                <li>Publicación u ocultamiento web en 1 clic</li>
+                <li>Impresión de etiquetas con código de barras</li>
+              </ul>
+            </div>
+
+            {/* 3 */}
+            <div className="bg-slate-900/90 border border-purple-900/50 p-4 rounded-xl space-y-2">
+              <div className="flex items-center space-x-2 text-purple-400 font-bold">
+                <Truck className="w-4 h-4" />
+                <span>3. Compras a Proveedores</span>
+              </div>
+              <ul className="text-slate-300 space-y-1 text-[11px] list-disc list-inside">
+                <li>Agenda y registro de órdenes de compra</li>
+                <li>Control del costo de reposición de mercadería</li>
+                <li>Ingreso masivo al inventario en 1 solo clic</li>
+                <li>Directorio completo con teléfonos y contactos</li>
+                <li>Historial de facturas de compra para auditoría</li>
+              </ul>
+            </div>
+
+            {/* 4 */}
+            <div className="bg-slate-900/90 border border-cyan-900/50 p-4 rounded-xl space-y-2">
+              <div className="flex items-center space-x-2 text-cyan-400 font-bold">
+                <Users className="w-4 h-4" />
+                <span>4. Empleados &amp; Comisiones</span>
+              </div>
+              <ul className="text-slate-300 space-y-1 text-[11px] list-disc list-inside">
+                <li>Creación ilimitada de usuarios y claves propias</li>
+                <li>Roles diferenciados: Vendedor, Encargado, Admin</li>
+                <li>Comisión individual personalizada por ventas</li>
+                <li>Acumulador automático para liquidación mensual</li>
+                <li>Pago de comisiones directo desde caja</li>
+              </ul>
+            </div>
+
+            {/* 5 */}
+            <div className="bg-slate-900/90 border border-emerald-900/50 p-4 rounded-xl space-y-2">
+              <div className="flex items-center space-x-2 text-emerald-400 font-bold">
+                <Wallet className="w-4 h-4" />
+                <span>5. Arqueo &amp; Cierre de Caja</span>
+              </div>
+              <ul className="text-slate-300 space-y-1 text-[11px] list-disc list-inside">
+                <li>Arqueo ciego para evitar diferencias entre turnos</li>
+                <li>Desglose de efectivo, transferencias y tarjetas</li>
+                <li>Registro de retiros y gastos con concepto</li>
+                <li>Rendición de turnos de mañana y tarde</li>
+                <li>Cierre definitivo con balance neto de caja</li>
+              </ul>
+            </div>
+
+            {/* 6 */}
+            <div className="bg-slate-900/90 border border-indigo-900/50 p-4 rounded-xl space-y-2">
+              <div className="flex items-center space-x-2 text-indigo-400 font-bold">
+                <BarChart3 className="w-4 h-4" />
+                <span>6. Informes &amp; Ganancia Real</span>
+              </div>
+              <ul className="text-slate-300 space-y-1 text-[11px] list-disc list-inside">
+                <li>Cálculo de ganancia neta real descontando costo</li>
+                <li>Ranking de los artículos más vendidos</li>
+                <li>Gráficos de facturación por día, semana y mes</li>
+                <li>Rendimiento y ranking por cada vendedor</li>
+                <li>Métricas para toma de decisiones comerciales</li>
+              </ul>
+            </div>
+
+            {/* 7 */}
+            <div className="bg-slate-900/90 border border-teal-900/50 p-4 rounded-xl space-y-2">
+              <div className="flex items-center space-x-2 text-teal-400 font-bold">
+                <BookOpen className="w-4 h-4" />
+                <span>7. Clientes &amp; Cuenta Corriente</span>
+              </div>
+              <ul className="text-slate-300 space-y-1 text-[11px] list-disc list-inside">
+                <li>Ficha de clientes con teléfono y domicilio</li>
+                <li>Control estricto de libreta de fiados</li>
+                <li>Registro de entregas a cuenta y saldos pendientes</li>
+                <li>Envío de resumen de deuda por WhatsApp en 1 clic</li>
+                <li>Historial de compras por cliente</li>
+              </ul>
+            </div>
+
+            {/* 8 */}
+            <div className="bg-slate-900/90 border border-rose-900/50 p-4 rounded-xl space-y-2">
+              <div className="flex items-center space-x-2 text-rose-400 font-bold">
+                <Store className="w-4 h-4" />
+                <span>8. Catálogo Web Conectado</span>
+              </div>
+              <ul className="text-slate-300 space-y-1 text-[11px] list-disc list-inside">
+                <li>Vidriera digital pública optimizada para celular</li>
+                <li>Sincronización automática con el stock de mostrador</li>
+                <li>Los productos agotados se ocultan solos</li>
+                <li>Botón directo para encargar por WhatsApp</li>
+                <li>Cero costo de comisiones por venta online</li>
+              </ul>
+            </div>
+
+            {/* 9 */}
+            <div className="bg-slate-900/90 border border-slate-700/60 p-4 rounded-xl space-y-2">
+              <div className="flex items-center space-x-2 text-slate-300 font-bold">
+                <Settings className="w-4 h-4" />
+                <span>9. SuperAdmin &amp; Marca</span>
+              </div>
+              <ul className="text-slate-300 space-y-1 text-[11px] list-disc list-inside">
+                <li>Carga de tu propio logotipo comercial (PNG/JPG)</li>
+                <li>Nombre de fantasía y eslogan editables</li>
+                <li>Control maestro de accesos y seguridad</li>
+                <li>Sin ataduras a marcas externas</li>
+                <li>Respaldos automáticos en la nube</li>
+              </ul>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      {/* 5. CALCULADORA INTERACTIVA DE RETORNO Y AHORRO */}
+      <section className="py-12 bg-slate-900/30 border-b border-slate-800/80">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-2xl mx-auto mb-8">
@@ -852,10 +1475,10 @@ export default function LandingDemo() {
               ESTIMACIÓN FINANCIERA
             </span>
             <h3 className="text-lg sm:text-xl font-bold text-white">
-              ¿Cuánto tiempo y dinero recuperás con un sistema ordenado?
+              ¿Cuánto tiempo y dinero recuperás con este sistema?
             </h3>
             <p className="text-xs text-slate-400 mt-1">
-              Ajustá los valores de tu local para ver la proyección mensual estimada.
+              Ajustá los parámetros de tu local para ver la proyección operativa mensual estimada.
             </p>
           </div>
 
@@ -896,7 +1519,7 @@ export default function LandingDemo() {
               </div>
 
               <p className="text-[11px] text-slate-500 leading-normal">
-                Cálculo basado en 26 días operativos mensuales y reducción de errores de cobranza/stock.
+                Cálculo basado en 26 días operativos mensuales y reducción de errores en caja y stock.
               </p>
             </div>
 
@@ -929,8 +1552,8 @@ export default function LandingDemo() {
         </div>
       </section>
 
-      {/* 5. ROLPHI: DESARROLLO DE TODO TIPO DE APLICACIONES A MEDIDA */}
-      <section className="py-14 bg-gradient-to-b from-[#070b14] via-slate-900/40 to-[#070b14] border-b border-slate-800/80 relative">
+      {/* 6. PUBLICIDAD GENERAL & SERVICIOS DE ROLPHI STUDIO (AL FINAL) */}
+      <section className="py-16 bg-gradient-to-b from-[#070b14] via-slate-900/40 to-[#070b14] border-b border-slate-800/80 relative">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-2xl mx-auto mb-10">
@@ -942,7 +1565,7 @@ export default function LandingDemo() {
               Desarrollamos todo tipo de aplicaciones a medida
             </h2>
             <p className="mt-2.5 text-xs sm:text-sm text-slate-300 leading-relaxed">
-              En <strong className="text-white font-semibold">ROLΦ Studio</strong> diseñamos y programamos soluciones exclusivas. No nos limitamos a un solo rubro: adaptamos software a los procesos y requerimientos particulares de cada negocio.
+              En <strong className="text-white font-semibold">ROLΦ Studio</strong> somos los creadores de este sistema y diseñamos soluciones tecnológicas a tu medida. Desarrollamos herramientas digitales para empresas que buscan automatizar y crecer.
             </p>
           </div>
 
@@ -952,7 +1575,7 @@ export default function LandingDemo() {
               {
                 icon: Smartphone,
                 title: 'Aplicaciones Móviles (Android & iOS)',
-                desc: 'Apps a medida para clientes, preventistas o logística de entregas vinculadas a tu base de datos.'
+                desc: 'Apps a medida para clientes, preventistas o logística de repartidores conectadas a tu base central.'
               },
               {
                 icon: Laptop,
@@ -1001,12 +1624,12 @@ export default function LandingDemo() {
           </div>
 
           {/* Banner ROLPHI */}
-          <div className="mt-8 p-5 sm:p-6 rounded-2xl bg-slate-900/90 border border-slate-800 text-center max-w-3xl mx-auto shadow-md">
+          <div className="mt-8 p-6 rounded-2xl bg-slate-900/90 border border-slate-800 text-center max-w-3xl mx-auto shadow-md">
             <h3 className="text-base font-bold text-white mb-1.5">
-              ¿Tenés un proyecto o una necesidad técnica particular?
+              ¿Tenés una idea o un proceso que querés sistematizar?
             </h3>
             <p className="text-xs text-slate-300 max-w-xl mx-auto mb-4">
-              En <strong className="text-slate-100">ROLΦ Studio</strong> aplicamos nuestro principio de <em>"pequeñas herramientas para grandes ideas"</em>. Te asesoramos con seriedad para evaluar la mejor arquitectura técnica.
+              En <strong className="text-slate-100">ROLΦ Studio</strong> aplicamos nuestro principio de <em>"pequeñas herramientas para grandes ideas"</em>. Analizamos tu requerimiento y te ofrecemos una propuesta técnica seria y escalable.
             </p>
             <a
               href={whatsappUrl}
@@ -1022,7 +1645,7 @@ export default function LandingDemo() {
         </div>
       </section>
 
-      {/* 6. RESPALDO Y AUTORÍA DIRECTA */}
+      {/* 7. RESPALDO, AUTORÍA Y CONTACTO */}
       <section className="py-12 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-slate-800/80">
         <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row items-center gap-5 shadow-sm">
           <img 
@@ -1032,50 +1655,19 @@ export default function LandingDemo() {
           />
           <div className="space-y-1.5 text-center sm:text-left">
             <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest font-bold">
-              AUTORÍA DIRECTA &amp; SOPORTE
+              AUTORÍA DIRECTA &amp; SOPORTE CONTINUO
             </span>
             <h3 className="text-base sm:text-lg font-bold text-white">
-              ROLΦ Studio • Software con Acompañamiento Profesional
+              ROLΦ Studio • Software con Respaldo Real
             </h3>
             <p className="text-xs text-slate-300 leading-relaxed">
-              Trato directo con los desarrolladores del sistema. Asistencia técnica, capacitaciones y ampliaciones según los requerimientos de tu negocio.
+              Trato directo con los desarrolladores del sistema. Asistencia técnica, capacitaciones para tu personal y ampliaciones modulares a medida.
             </p>
             <div className="pt-1 flex flex-wrap gap-4 justify-center sm:justify-start text-xs text-slate-400 font-mono">
               <span>● WhatsApp: <strong>2241-527357</strong></span>
               <span>● Email: <strong>martinchiacchio.seg@gmail.com</strong></span>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* 7. LLAMADO FINAL */}
-      <section className="py-14 text-center max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-xl sm:text-3xl font-extrabold text-white leading-tight">
-          Ordená la administración de tu local hoy mismo
-        </h2>
-        <p className="mt-2.5 text-xs sm:text-sm text-slate-400 max-w-lg mx-auto">
-          Coordiná una demostración práctica para comprobar cómo se adapta a tus productos y tu dinámica diaria.
-        </p>
-
-        <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
-          <a
-            href={whatsappUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="w-full sm:w-auto px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl transition shadow-md shadow-emerald-950/40 flex items-center justify-center border border-emerald-500/60"
-          >
-            <MessageCircle className="w-4 h-4 mr-2 fill-current" />
-            <span>Chatear por WhatsApp (2241-527357)</span>
-          </a>
-
-          <Link
-            to="/catalogo"
-            target="_blank"
-            className="w-full sm:w-auto px-5 py-2.5 bg-slate-900 hover:bg-slate-850 text-slate-300 text-xs font-semibold rounded-xl transition border border-slate-700 flex items-center justify-center"
-          >
-            <Store className="w-3.5 h-3.5 mr-1.5 text-cyan-400" />
-            <span>Ver Catálogo Web de Demostración</span>
-          </Link>
         </div>
       </section>
 
