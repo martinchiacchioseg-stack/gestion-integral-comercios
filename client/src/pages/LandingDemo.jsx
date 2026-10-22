@@ -36,7 +36,7 @@ import FloatingWhatsApp from '../components/FloatingWhatsApp';
 export default function LandingDemo() {
   const [activeTab, setActiveTab] = useState(0);
 
-  const phoneNumber = '5492241527180';
+  const phoneNumber = '5492241527357';
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
     '¡Hola ROLΦ! Estoy interesado en el Sistema de Gestión Integral con Catálogo Web. Me gustaría coordinar una demostración personalizada para mi comercio.'
   )}`;
@@ -602,7 +602,7 @@ export default function LandingDemo() {
               className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 text-sm font-extrabold rounded-2xl transition shadow-xl shadow-emerald-500/25 flex items-center justify-center"
             >
               <MessageCircle className="w-4 h-4 mr-2 fill-current" />
-              <span>Coordinar Demo al 2241-527180</span>
+              <span>Coordinar Demo al 2241-527357</span>
             </a>
 
             <a
@@ -796,7 +796,7 @@ export default function LandingDemo() {
               Sin revendedores, intermediarios ni licencias de terceros que se caen. Tenés línea directa con nosotros para soporte, capacitaciones de tu personal y actualizaciones continuas de seguridad y rendimiento en la nube.
             </p>
             <div className="pt-2 flex flex-wrap gap-4 justify-center sm:justify-start text-xs text-slate-400 font-mono">
-              <span>● Tel: <strong>2241-527180</strong></span>
+              <span>● Tel: <strong>2241-527357</strong></span>
               <span>● Email: <strong>martinchiacchio.seg@gmail.com</strong></span>
             </div>
           </div>
@@ -820,7 +820,7 @@ export default function LandingDemo() {
             className="w-full sm:w-auto px-8 py-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-sm font-black rounded-2xl transition shadow-xl shadow-emerald-500/30 flex items-center justify-center"
           >
             <MessageCircle className="w-4 h-4 mr-2 fill-current" />
-            <span>Chatear por WhatsApp (2241-527180)</span>
+            <span>Chatear por WhatsApp (2241-527357)</span>
           </a>
 
           <Link
