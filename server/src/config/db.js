@@ -187,6 +187,35 @@ export async function initDb() {
     )
   `);
 
+  // 11. Purchases (Compras a Proveedores & Ingreso de Stock)
+  await client.execute(`
+    CREATE TABLE IF NOT EXISTS purchases (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      purchase_number TEXT UNIQUE NOT NULL,
+      supplier_id INTEGER REFERENCES suppliers(id) ON DELETE SET NULL,
+      status TEXT CHECK(status IN ('PENDING', 'RECEIVED', 'CANCELLED')) NOT NULL DEFAULT 'PENDING',
+      payment_status TEXT CHECK(payment_status IN ('PAID', 'PENDING')) NOT NULL DEFAULT 'PAID',
+      payment_method TEXT CHECK(payment_method IN ('CASH', 'TRANSFER', 'QR', 'CREDIT')) NOT NULL DEFAULT 'TRANSFER',
+      total_cost REAL NOT NULL DEFAULT 0.0,
+      scheduled_date DATE,
+      received_date DATE,
+      notes TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  // 12. Purchase Items table
+  await client.execute(`
+    CREATE TABLE IF NOT EXISTS purchase_items (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      purchase_id INTEGER NOT NULL REFERENCES purchases(id) ON DELETE CASCADE,
+      product_id INTEGER NOT NULL REFERENCES products(id),
+      quantity INTEGER NOT NULL,
+      unit_cost REAL NOT NULL,
+      subtotal REAL NOT NULL
+    )
+  `);
+
   // Seed default Admin user with user keys
   const adminRes = await client.execute({
     sql: 'SELECT id FROM users WHERE email = ?',

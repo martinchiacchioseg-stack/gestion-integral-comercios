@@ -172,6 +172,56 @@ export default function LandingDemo() {
       )
     },
     {
+      id: 'purchases',
+      title: '4. Agenda de Compras a Proveedores & Ingreso de Stock',
+      shortTitle: 'Compras Proveedores',
+      icon: Truck,
+      badge: 'Reposición & Inversión',
+      description: 'Agendá los pedidos a tus distribuidores, registrá el valor de costo de la mercadería y acreditá automáticamente las cantidades a tu inventario cuando recibís el pedido.',
+      highlights: [
+        'Agenda compras con fecha estimada de entrega y control de pedidos pendientes.',
+        'Registro del valor total de la compra y costo unitario de reposición.',
+        'Ingreso de stock en 1 clic: las cantidades se suman solas al inventario sin cargarlas a mano una por una.'
+      ],
+      mockup: (
+        <div className="bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-2xl text-white text-xs">
+          <div className="flex justify-between items-center pb-2.5 border-b border-slate-800 mb-3">
+            <div>
+              <span className="font-bold text-cyan-400 text-[11px] uppercase block">ORDEN DE COMPRA #COM-00412</span>
+              <span className="text-[10px] text-slate-300">Proveedor: Distribuidora Central Textil</span>
+            </div>
+            <span className="bg-amber-950 text-amber-300 border border-amber-700/60 px-2 py-0.5 rounded-full text-[10px] font-bold">
+              ⏳ Entrega: 24/10/2026
+            </span>
+          </div>
+          <div className="space-y-2 mb-3">
+            <div className="bg-slate-850 p-2 rounded-xl border border-slate-700/70 flex justify-between items-center text-[11px]">
+              <div>
+                <span className="font-bold text-white block">Remeras Lisas Cuello Redondo</span>
+                <span className="text-[10px] text-slate-400 font-mono">50 unidades x $8.000 (Costo u.)</span>
+              </div>
+              <span className="font-bold text-cyan-300">$400.000</span>
+            </div>
+            <div className="bg-slate-850 p-2 rounded-xl border border-slate-700/70 flex justify-between items-center text-[11px]">
+              <div>
+                <span className="font-bold text-white block">Camperas Abrigo Bomber</span>
+                <span className="text-[10px] text-slate-400 font-mono">20 unidades x $25.000 (Costo u.)</span>
+              </div>
+              <span className="font-bold text-cyan-300">$500.000</span>
+            </div>
+          </div>
+          <div className="bg-slate-950 p-2.5 rounded-xl border border-slate-800 flex justify-between items-center mb-2.5">
+            <span className="text-slate-300 text-[11px] font-bold">Valor Total de la Compra:</span>
+            <span className="text-base font-black text-cyan-400">$900.000</span>
+          </div>
+          <div className="p-2 bg-emerald-950/60 border border-emerald-500/50 rounded-xl text-center text-emerald-300 font-bold text-[10px] flex items-center justify-center">
+            <CheckCircle2 className="w-3.5 h-3.5 mr-1.5 text-emerald-400" />
+            Al recibir mercadería: Suma 70 unidades al stock automáticamente
+          </div>
+        </div>
+      )
+    },
+    {
       id: 'customers',
       title: '4. Cuentas Corrientes & Clientes (Fiado Seguro)',
       shortTitle: 'Cta Corriente',
@@ -421,8 +471,8 @@ export default function LandingDemo() {
     },
     {
       icon: FileSpreadsheet,
-      title: 'Facturación Electrónica AFIP',
-      desc: 'Emisión automática de Facturas A, B y C con CAE oficial y código QR fiscal reglamentario.'
+      title: 'Auditoría & Control de Mermas',
+      desc: 'Herramientas de inventario ciego y control de diferencias de caja y mercadería para máxima seguridad.'
     },
     {
       icon: Printer,
@@ -559,7 +609,7 @@ export default function LandingDemo() {
               href="#modulos"
               className="w-full sm:w-auto px-7 py-4 bg-slate-900 hover:bg-slate-850 text-white text-sm font-bold rounded-2xl transition border border-slate-700 flex items-center justify-center"
             >
-              <span>Explorar los 9 Módulos</span>
+              <span>Explorar los Módulos Comerciales</span>
               <ArrowRight className="w-4 h-4 ml-2 text-cyan-400" />
             </a>
           </div>

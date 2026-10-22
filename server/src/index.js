@@ -17,6 +17,7 @@ import cashRouter from './routes/cash.js';
 import reportsRouter from './routes/reports.js';
 import superadminRouter from './routes/superadmin.js';
 import settingsRouter from './routes/settings.js';
+import purchasesRouter from './routes/purchases.js';
 
 dotenv.config();
 
@@ -77,6 +78,7 @@ app.use('/api/cash', cashRouter);
 app.use('/api/reports', reportsRouter);
 app.use('/api/superadmin', superadminRouter);
 app.use('/api/settings', settingsRouter);
+app.use('/api/purchases', purchasesRouter);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', app: 'Sistema de Gestión Integral API', producer: 'RolΦ Studio' });
