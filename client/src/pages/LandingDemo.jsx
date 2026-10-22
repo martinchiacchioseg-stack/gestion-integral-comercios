@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   ShoppingCart, 
@@ -7,500 +7,139 @@ import {
   Users, 
   Wallet, 
   BarChart3, 
-  Award, 
   FileText, 
   Settings, 
   CheckCircle2, 
   ArrowRight, 
   MessageCircle, 
-  ExternalLink, 
-  ShieldCheck, 
   Sparkles, 
   Cpu, 
-  Layers, 
   Smartphone, 
   Laptop, 
   Zap, 
+  ChevronRight, 
+  Truck, 
+  Printer, 
+  Boxes, 
+  Code2, 
+  Play, 
+  Pause, 
+  RotateCcw, 
+  Plus, 
+  Minus, 
+  Check, 
+  ShoppingBag, 
+  ShieldCheck, 
+  Layers, 
   TrendingUp, 
-  PhoneCall, 
-  ChevronRight,
-  Database,
-  QrCode,
-  FileSpreadsheet,
-  Truck,
-  Printer,
-  Boxes
+  HelpCircle 
 } from 'lucide-react';
 import FloatingWhatsApp from '../components/FloatingWhatsApp';
 
 export default function LandingDemo() {
-  const [activeTab, setActiveTab] = useState(0);
-
   const phoneNumber = '5492241527357';
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
-    '¡Hola ROLΦ! Estoy interesado en el Sistema de Gestión Integral con Catálogo Web. Me gustaría coordinar una demostración personalizada para mi comercio.'
+    '¡Hola ROLΦ! Vi la demostración interactiva en la web y me interesa el sistema para mi comercio o consultar por un desarrollo a medida.'
   )}`;
 
-  const modules = [
-    {
-      id: 'pos',
-      title: '1. Punto de Venta Ultra Rápido (POS)',
-      shortTitle: 'Punto de Venta',
-      icon: ShoppingCart,
-      badge: 'Mostrador Ágil',
-      description: 'Facturación optimizada para no hacer esperar al cliente. Buscador inteligente por código o nombre, múltiples medios de pago combinables y emisión inmediata de tickets.',
-      highlights: [
-        'Cobro en efectivo, transferencias bancarias, QR y Cuenta Corriente.',
-        'Cálculo automático de vueltos y descuentos en el acto.',
-        'Descuento automático e instantáneo del inventario general.'
-      ],
-      mockup: (
-        <div className="bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-2xl text-white">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
-            <span className="text-xs font-mono text-cyan-400 font-bold">● CAJA ABIERTA - MOSTRADOR #01</span>
-            <span className="text-xs text-slate-400">Ticket: #TK-008492</span>
-          </div>
-          <div className="space-y-2 mb-4">
-            <div className="flex justify-between items-center bg-slate-800/80 p-2.5 rounded-xl border border-slate-700/60 text-xs">
-              <div>
-                <span className="font-bold text-white block">Remera Básica Algodón Peinado</span>
-                <span className="text-[10px] text-slate-400 font-mono">ART-1049 • Cantidad: 2</span>
-              </div>
-              <span className="font-extrabold text-cyan-300 text-sm">$32.000</span>
-            </div>
-            <div className="flex justify-between items-center bg-slate-800/80 p-2.5 rounded-xl border border-slate-700/60 text-xs">
-              <div>
-                <span className="font-bold text-white block">Pantalón Denim Clásico Talle 42</span>
-                <span className="text-[10px] text-slate-400 font-mono">ART-2015 • Cantidad: 1</span>
-              </div>
-              <span className="font-extrabold text-cyan-300 text-sm">$48.500</span>
-            </div>
-          </div>
-          <div className="bg-gradient-to-r from-slate-950 to-slate-900 p-3.5 rounded-xl border border-cyan-500/30 flex justify-between items-center mb-3">
-            <span className="text-xs uppercase text-slate-300 font-bold">Total a Cobrar:</span>
-            <span className="text-2xl font-black text-cyan-400">$80.500</span>
-          </div>
-          <div className="grid grid-cols-3 gap-2 text-center text-[11px] font-bold">
-            <div className="bg-cyan-600/30 border border-cyan-500/50 py-2 rounded-lg text-cyan-200">EFECTIVO</div>
-            <div className="bg-slate-800 border border-slate-700 py-2 rounded-lg text-slate-300">QR / TRANSF</div>
-            <div className="bg-slate-800 border border-slate-700 py-2 rounded-lg text-slate-300">CTA CTE</div>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 'catalog',
-      title: '2. Catálogo Web Online Sincronizado',
-      shortTitle: 'Catálogo Web',
-      icon: Store,
-      badge: 'Vidriera 24 Horas',
-      description: 'Tus clientes navegan tus artículos desde cualquier teléfono celular o computadora. Los pedidos llegan listos a tu WhatsApp con código, fotos, talles y precio.',
-      highlights: [
-        'Conectado al stock real: si te quedás sin producto, se oculta solo.',
-        'Tus clientes no tienen que instalar nada ni registrarse.',
-        'Botón directo a tu número de WhatsApp comercial.'
-      ],
-      mockup: (
-        <div className="bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-2xl text-white">
-          <div className="text-center pb-3 border-b border-slate-800 mb-3">
-            <span className="text-xs font-bold text-cyan-400 uppercase tracking-widest block">CATÁLOGO WEB CLIENTES</span>
-            <span className="text-[10px] text-slate-400">Optimizado para celulares y tablets</span>
-          </div>
-          <div className="bg-slate-950 p-3.5 rounded-xl border border-slate-800 mb-3 flex items-center space-x-3">
-            <div className="w-16 h-16 bg-slate-800 rounded-lg flex items-center justify-center text-slate-500 border border-slate-700 text-xs font-bold">
-              FOTO
-            </div>
-            <div className="flex-1">
-              <span className="text-[10px] text-cyan-400 font-bold block uppercase">Nueva Temporada</span>
-              <span className="text-xs font-bold text-white block">Chaqueta Abrigada Urban</span>
-              <span className="text-sm font-black text-emerald-400">$64.000</span>
-            </div>
-          </div>
-          <div className="p-3 bg-emerald-950/60 border border-emerald-500/40 rounded-xl text-center space-y-1">
-            <span className="text-xs font-bold text-emerald-300 flex items-center justify-center">
-              <MessageCircle className="w-3.5 h-3.5 mr-1 text-emerald-400" />
-              Pedido Automático por WhatsApp
-            </span>
-            <p className="text-[10px] text-slate-300 font-mono">
-              "¡Hola! Quiero consultar por Chaqueta Urban (ART-901) en talle M"
-            </p>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 'stock',
-      title: '3. Control de Stock & Alertas de Reposición',
-      shortTitle: 'Stock & Alertas',
-      icon: Package,
-      badge: 'Inventario Inteligente',
-      description: 'Seguimiento exacto de cada unidad. Control de precios de costo, cálculo de margen de ganancia automático y aviso visual cuando el producto está por agotarse.',
-      highlights: [
-        'Alerta roja inmediata cuando el stock baja del límite mínimo definido.',
-        'Cálculo automático del precio de venta sugerido según tu ganancia deseada.',
-        'Interruptor para publicar o despublicar de la web con un solo clic.'
-      ],
-      mockup: (
-        <div className="bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-2xl text-white text-xs">
-          <div className="flex justify-between items-center mb-3">
-            <span className="font-bold text-white uppercase text-[11px]">Monitoreo de Existencias</span>
-            <span className="bg-rose-950 text-rose-300 border border-rose-700/60 px-2 py-0.5 rounded-full text-[10px] font-bold">
-              ⚠ 2 Alertas Críticas
-            </span>
-          </div>
-          <div className="space-y-2">
-            <div className="p-2.5 bg-slate-850 rounded-xl border border-slate-700/80 flex justify-between items-center">
-              <div>
-                <span className="font-bold text-white block">Buzo Capucha Oversize</span>
-                <span className="text-[10px] text-slate-400 font-mono">Costo: $20.000 | Venta: $38.000 (90%)</span>
-              </div>
-              <span className="text-xs font-bold text-emerald-400 bg-emerald-950/60 px-2 py-1 rounded-lg border border-emerald-700/40">
-                18 unidades
-              </span>
-            </div>
-            <div className="p-2.5 bg-rose-950/30 rounded-xl border border-rose-800/60 flex justify-between items-center">
-              <div>
-                <span className="font-bold text-rose-200 block">Camisa Lino Premium Blanca</span>
-                <span className="text-[10px] text-rose-300 font-mono">Límite mínimo: 5 unidades</span>
-              </div>
-              <span className="text-xs font-bold text-rose-300 bg-rose-900/60 px-2 py-1 rounded-lg border border-rose-700">
-                ¡Quedan 2!
-              </span>
-            </div>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 'purchases',
-      title: '4. Agenda de Compras a Proveedores & Ingreso de Stock',
-      shortTitle: 'Compras Proveedores',
-      icon: Truck,
-      badge: 'Reposición & Inversión',
-      description: 'Agendá los pedidos a tus distribuidores, registrá el valor de costo de la mercadería y acreditá automáticamente las cantidades a tu inventario cuando recibís el pedido.',
-      highlights: [
-        'Agenda compras con fecha estimada de entrega y control de pedidos pendientes.',
-        'Registro del valor total de la compra y costo unitario de reposición.',
-        'Ingreso de stock en 1 clic: las cantidades se suman solas al inventario sin cargarlas a mano una por una.'
-      ],
-      mockup: (
-        <div className="bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-2xl text-white text-xs">
-          <div className="flex justify-between items-center pb-2.5 border-b border-slate-800 mb-3">
-            <div>
-              <span className="font-bold text-cyan-400 text-[11px] uppercase block">ORDEN DE COMPRA #COM-00412</span>
-              <span className="text-[10px] text-slate-300">Proveedor: Distribuidora Central Textil</span>
-            </div>
-            <span className="bg-amber-950 text-amber-300 border border-amber-700/60 px-2 py-0.5 rounded-full text-[10px] font-bold">
-              ⏳ Entrega: 24/10/2026
-            </span>
-          </div>
-          <div className="space-y-2 mb-3">
-            <div className="bg-slate-850 p-2 rounded-xl border border-slate-700/70 flex justify-between items-center text-[11px]">
-              <div>
-                <span className="font-bold text-white block">Remeras Lisas Cuello Redondo</span>
-                <span className="text-[10px] text-slate-400 font-mono">50 unidades x $8.000 (Costo u.)</span>
-              </div>
-              <span className="font-bold text-cyan-300">$400.000</span>
-            </div>
-            <div className="bg-slate-850 p-2 rounded-xl border border-slate-700/70 flex justify-between items-center text-[11px]">
-              <div>
-                <span className="font-bold text-white block">Camperas Abrigo Bomber</span>
-                <span className="text-[10px] text-slate-400 font-mono">20 unidades x $25.000 (Costo u.)</span>
-              </div>
-              <span className="font-bold text-cyan-300">$500.000</span>
-            </div>
-          </div>
-          <div className="bg-slate-950 p-2.5 rounded-xl border border-slate-800 flex justify-between items-center mb-2.5">
-            <span className="text-slate-300 text-[11px] font-bold">Valor Total de la Compra:</span>
-            <span className="text-base font-black text-cyan-400">$900.000</span>
-          </div>
-          <div className="p-2 bg-emerald-950/60 border border-emerald-500/50 rounded-xl text-center text-emerald-300 font-bold text-[10px] flex items-center justify-center">
-            <CheckCircle2 className="w-3.5 h-3.5 mr-1.5 text-emerald-400" />
-            Al recibir mercadería: Suma 70 unidades al stock automáticamente
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 'customers',
-      title: '4. Cuentas Corrientes & Clientes (Fiado Seguro)',
-      shortTitle: 'Cta Corriente',
-      icon: Users,
-      badge: 'Cobranza Segura',
-      description: 'Llevá el control de tus clientes frecuentes sin cuadernos. Asigná límites de crédito, registrá entregas a cuenta y consultá saldos deudores en un clic.',
-      highlights: [
-        'Tope de crédito para evitar fiar de más sin autorización.',
-        'Historial cronológico de compras, pagos parciales y saldos pendientes.',
-        'Envío directo del estado de deuda del cliente a su WhatsApp.'
-      ],
-      mockup: (
-        <div className="bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-2xl text-white text-xs">
-          <div className="flex justify-between items-center pb-3 border-b border-slate-800 mb-3">
-            <div>
-              <span className="font-bold text-white block">García, Marcelo Alberto</span>
-              <span className="text-[10px] text-slate-400">Cliente #482 • Cel: 2241-XXXXXX</span>
-            </div>
-            <span className="bg-rose-900/50 text-rose-300 border border-rose-700 px-2.5 py-1 rounded-lg text-xs font-extrabold">
-              Debe: $34.500
-            </span>
-          </div>
-          <div className="bg-black/30 p-3 rounded-xl border border-slate-800 space-y-1.5 mb-3 text-[11px]">
-            <div className="flex justify-between text-slate-300">
-              <span>Límite de Crédito Otorgado:</span>
-              <span className="font-bold text-white">$60.000</span>
-            </div>
-            <div className="flex justify-between text-slate-300">
-              <span>Crédito Disponible:</span>
-              <span className="font-bold text-emerald-400">$25.500</span>
-            </div>
-            <div className="flex justify-between text-slate-300">
-              <span>Último Pago a Cuenta:</span>
-              <span className="font-mono text-cyan-300">$15.000 (18/10/2026)</span>
-            </div>
-          </div>
-          <div className="text-center text-[10px] text-cyan-300 font-semibold bg-cyan-950/40 py-1.5 rounded-lg border border-cyan-800/40">
-            ✓ Registro instantáneo de pagos parciales en mostrador
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 'cash',
-      title: '5. Caja Diaria & Rendición de Turnos',
-      shortTitle: 'Caja Diaria',
-      icon: Wallet,
-      badge: 'Cero Fugas',
-      description: 'Apertura y cierre de caja con arqueo ciego. Sabé con exactitud cuánto dinero entró en efectivo, cuánto por transferencia y cuánto por cobros con QR.',
-      highlights: [
-        'Registro de gastos imprevistos, retiros de dinero y pagos a proveedores.',
-        'Desglose exacto para saber cuánto dinero físico debe haber en el cajón.',
-        'Cierre de turno con balance neto para auditorías sin sorpresas.'
-      ],
-      mockup: (
-        <div className="bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-2xl text-white text-xs">
-          <div className="flex justify-between items-center pb-2 border-b border-slate-800 mb-3">
-            <span className="font-bold text-cyan-400 text-[11px] uppercase">Arqueo de Caja - Turno Tarde</span>
-            <span className="text-[10px] text-slate-400 font-mono">14:00 - 20:30 hs</span>
-          </div>
-          <div className="grid grid-cols-2 gap-2 mb-3 text-[11px]">
-            <div className="bg-slate-800/90 p-2.5 rounded-xl border border-slate-700">
-              <span className="text-slate-400 block text-[10px]">Efectivo Físico:</span>
-              <span className="font-extrabold text-white text-sm">$142.300</span>
-            </div>
-            <div className="bg-slate-800/90 p-2.5 rounded-xl border border-slate-700">
-              <span className="text-slate-400 block text-[10px]">Transferencias / QR:</span>
-              <span className="font-extrabold text-cyan-300 text-sm">$98.600</span>
-            </div>
-          </div>
-          <div className="bg-emerald-950/50 border border-emerald-500/30 p-2.5 rounded-xl flex justify-between items-center">
-            <span className="font-bold text-emerald-200">Total Neto en Caja:</span>
-            <span className="text-base font-black text-emerald-400">$240.900</span>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 'reports',
-      title: '6. Métricas Ejecutivas & Ganancia Neta',
-      shortTitle: 'Estadísticas',
-      icon: BarChart3,
-      badge: 'Números Reales',
-      description: 'Visualizá el crecimiento real de tu negocio con gráficos interactivos. Calculá de forma automática el costo de reposición y la ganancia neta de cada período.',
-      highlights: [
-        'Ranking de los 10 productos que más rotan y más rentabilidad dejan.',
-        'Facturación comparativa diaria, semanal y mensual.',
-        'Margen de ganancia limpio después de descontar el costo de compra.'
-      ],
-      mockup: (
-        <div className="bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-2xl text-white text-xs">
-          <div className="flex justify-between items-center pb-2 border-b border-slate-800 mb-3">
-            <span className="font-bold text-white text-[11px] uppercase">Rentabilidad Mensual</span>
-            <span className="text-emerald-400 text-[10px] font-bold">▲ +24% vs mes anterior</span>
-          </div>
-          <div className="space-y-2 mb-3">
-            <div className="flex justify-between text-[11px]">
-              <span className="text-slate-400">Ventas Brutas:</span>
-              <span className="font-bold text-white">$4.850.000</span>
-            </div>
-            <div className="flex justify-between text-[11px]">
-              <span className="text-slate-400">Costo de Mercadería:</span>
-              <span className="font-mono text-slate-300">-$2.620.000</span>
-            </div>
-            <div className="flex justify-between text-[11px] pt-1.5 border-t border-slate-800">
-              <span className="font-bold text-emerald-300">Ganancia Neta Real:</span>
-              <span className="text-base font-black text-emerald-400">$2.230.000</span>
-            </div>
-          </div>
-          <div className="bg-slate-950 p-2 rounded-lg text-center text-[10px] text-slate-400 border border-slate-800">
-            Gráficos interactivos de facturación integrados
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 'sellers',
-      title: '7. Vendedores & Liquidación de Comisiones',
-      shortTitle: 'Vendedores',
-      icon: Users,
-      badge: 'Equipo Comercial',
-      description: 'Definí comisiones fijas o porcentuales por cada venta. Cada vendedor tiene su propio usuario seguro para cobrar y consultar sus ventas acumuladas.',
-      highlights: [
-        'Cálculo automático de comisiones sin errores humanos al final del mes.',
-        'Control de permisos: los vendedores solo ven lo necesario para cobrar.',
-        'Auditoría completa de quién realizó cada venta en el sistema.'
-      ],
-      mockup: (
-        <div className="bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-2xl text-white text-xs">
-          <div className="flex justify-between items-center pb-2 border-b border-slate-800 mb-3">
-            <span className="font-bold text-white text-[11px] uppercase">Rendimiento Vendedoras</span>
-            <span className="text-[10px] text-cyan-400 font-mono">Comisión: 10% s/Venta</span>
-          </div>
-          <div className="space-y-2">
-            <div className="bg-slate-800/80 p-2.5 rounded-xl border border-slate-700 flex justify-between items-center">
-              <div>
-                <span className="font-bold text-white block">Carla Rodríguez</span>
-                <span className="text-[10px] text-slate-400">32 ventas en el período</span>
-              </div>
-              <div className="text-right">
-                <span className="text-[10px] text-slate-400 block">A liquidar:</span>
-                <span className="font-extrabold text-emerald-400 text-xs">$84.500</span>
-              </div>
-            </div>
-            <div className="bg-slate-800/80 p-2.5 rounded-xl border border-slate-700 flex justify-between items-center">
-              <div>
-                <span className="font-bold text-white block">Lucía Martínez</span>
-                <span className="text-[10px] text-slate-400">28 ventas en el período</span>
-              </div>
-              <div className="text-right">
-                <span className="text-[10px] text-slate-400 block">A liquidar:</span>
-                <span className="font-extrabold text-emerald-400 text-xs">$71.200</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 'pdf',
-      title: '8. Emisión de Tickets y Catálogos en PDF',
-      shortTitle: 'Tickets & PDF',
-      icon: FileText,
-      badge: 'Documentación Oficial',
-      description: 'Generación instantánea de comprobantes de venta, recibos de entrega a cuenta y catálogos completos en formato PDF listos para descargar o imprimir.',
-      highlights: [
-        'Diseño corporativo con el logotipo y datos fiscales de tu comercio.',
-        'Envío directo del recibo digital por WhatsApp al cliente.',
-        'Generador de catálogo de productos en PDF con fotos para mayoristas.'
-      ],
-      mockup: (
-        <div className="bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-2xl text-white text-xs">
-          <div className="bg-white text-slate-900 p-4 rounded-xl shadow-inner font-mono text-[11px] space-y-1.5 border border-slate-300">
-            <div className="text-center pb-2 border-b border-dashed border-slate-400">
-              <span className="font-extrabold text-sm block">MI COMERCIO</span>
-              <span className="text-[9px] text-slate-500">Comprobante No Válido como Factura</span>
-            </div>
-            <div className="flex justify-between text-[10px]">
-              <span>Ticket: #002914</span>
-              <span>21/10/2026 19:40 hs</span>
-            </div>
-            <div className="border-b border-dashed border-slate-300 py-1 space-y-1 text-[10px]">
-              <div className="flex justify-between">
-                <span>1x Buzo Oversize</span>
-                <span>$38.000</span>
-              </div>
-              <div className="flex justify-between">
-                <span>1x Remera Clásica</span>
-                <span>$16.000</span>
-              </div>
-            </div>
-            <div className="flex justify-between font-bold text-xs pt-1">
-              <span>TOTAL ABONADO:</span>
-              <span className="text-emerald-700 font-extrabold">$54.000</span>
-            </div>
-            <div className="text-center text-[9px] text-slate-400 pt-1">
-              ¡Muchas gracias por su compra!
-            </div>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 'superadmin',
-      title: '9. Marca Blanca & Supervisión RolΦ',
-      shortTitle: 'Personalización',
-      icon: Settings,
-      badge: 'Multi-Negocio',
-      description: 'Adaptable a cualquier comercio en segundos. Carga el logotipo de tu cliente, define nombre, teléfonos y moneda sin tocar una sola línea de código.',
-      highlights: [
-        'Carga directa del logotipo oficial desde el panel de SuperAdmin.',
-        'Supervisión técnica, diagnóstico de integridad de base de datos y licencias.',
-        'Sello de calidad y respaldo de desarrollo por RolΦ Studio.'
-      ],
-      mockup: (
-        <div className="bg-slate-900 border border-cyan-500/50 rounded-2xl p-5 shadow-2xl text-white text-xs">
-          <div className="flex items-center space-x-3 pb-3 border-b border-slate-800 mb-3">
-            <img src="/assets/rolphi.jpg" alt="RolΦ Studio" className="h-10 w-auto rounded-lg border border-cyan-500/40" />
-            <div>
-              <span className="font-extrabold text-white text-xs block">Portal SuperAdministrador</span>
-              <span className="text-[10px] text-cyan-400">Supervisión Técnica RolΦ Studio</span>
-            </div>
-          </div>
-          <div className="space-y-2 mb-3">
-            <div className="bg-slate-800 p-2.5 rounded-xl border border-slate-700 flex justify-between items-center text-[11px]">
-              <span className="text-slate-300">Identidad Comercial:</span>
-              <span className="font-bold text-cyan-300">Personalizable 100%</span>
-            </div>
-            <div className="bg-slate-800 p-2.5 rounded-xl border border-slate-700 flex justify-between items-center text-[11px]">
-              <span className="text-slate-300">Carga de Logotipo:</span>
-              <span className="font-bold text-emerald-400">PNG / JPG / SVG</span>
-            </div>
-          </div>
-          <div className="p-2.5 bg-emerald-950/60 border border-emerald-500/40 rounded-xl text-center text-[10px] text-emerald-300 font-bold">
-            ✓ Certificado Oficial de Licencia emitido por RolΦ Studio
-          </div>
-        </div>
-      )
+  // Auto-tour state
+  const [activeScreenIndex, setActiveScreenIndex] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(false);
+
+  // Screen 1: Interactive POS State
+  const [posProducts, setPosProducts] = useState([
+    { id: 1, name: 'Buzo Oversize Premium', code: 'ART-101', price: 38000, stock: 14, inCart: 1 },
+    { id: 2, name: 'Remera Algodón Peinado', code: 'ART-205', price: 16500, stock: 25, inCart: 1 },
+    { id: 3, name: 'Gorra Urban Snapback', code: 'ART-312', price: 12000, stock: 8, inCart: 0 }
+  ]);
+  const [posPaymentMethod, setPosPaymentMethod] = useState('EFECTIVO');
+  const [posSaleSuccess, setPosSaleSuccess] = useState(false);
+
+  // Screen 2: Interactive Mobile Catalog State
+  const [catalogSelectedProduct, setCatalogSelectedProduct] = useState({
+    name: 'Chaqueta Abrigada Urban',
+    code: 'ART-901',
+    price: 64000,
+    size: 'M'
+  });
+  const [catalogSentMessage, setCatalogSentMessage] = useState(false);
+
+  // Screen 3: Interactive Supplier Purchase State
+  const [purchaseReceived, setPurchaseReceived] = useState(false);
+  const [stockCount, setStockCount] = useState(15);
+
+  // Screen 4: Interactive Metrics Period State
+  const [metricsPeriod, setMetricsPeriod] = useState('mes');
+
+  // Auto-tour timer
+  useEffect(() => {
+    let interval = null;
+    if (isAutoPlaying) {
+      interval = setInterval(() => {
+        setActiveScreenIndex(prev => (prev + 1) % 5);
+      }, 5000);
     }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isAutoPlaying]);
+
+  const screens = [
+    { id: 'pos', name: '1. Mostrador POS', subtitle: 'Cobro de alta velocidad' },
+    { id: 'catalog', name: '2. Catálogo Web', subtitle: 'Pedidos a WhatsApp' },
+    { id: 'supplier', name: '3. Compras & Stock', subtitle: 'Ingreso automático' },
+    { id: 'cash', name: '4. Arqueo de Caja', subtitle: 'Cero faltantes' },
+    { id: 'metrics', name: '5. Ganancia Real', subtitle: 'Métricas de rentabilidad' }
   ];
 
-  const modularExtensions = [
-    {
-      icon: QrCode,
-      title: 'Cobros QR & Mercado Pago',
-      desc: 'Integración directa con pasarelas de pago digitales para confirmación automática de cobro en mostrador.'
-    },
-    {
-      icon: FileSpreadsheet,
-      title: 'Auditoría & Control de Mermas',
-      desc: 'Herramientas de inventario ciego y control de diferencias de caja y mercadería para máxima seguridad.'
-    },
-    {
-      icon: Printer,
-      title: 'Lectores Láser & Comanderas',
-      desc: 'Compatibilidad con pistolas de código de barras USB/Bluetooth e impresoras térmicas de 58mm y 80mm.'
-    },
-    {
-      icon: Boxes,
-      title: 'Multi-Sucursal & Depósitos',
-      desc: 'Administración de varios locales comerciales con control de stock centralizado y transferencias entre depósitos.'
-    },
-    {
-      icon: Truck,
-      title: 'Logística & Cotizador de Envíos',
-      desc: 'Cálculo de costos de entrega por código postal o zona, con seguimiento de despachos para el cliente.'
-    },
-    {
-      icon: MessageCircle,
-      title: 'Chatbot Automatizado de WhatsApp',
-      desc: 'Respuestas automáticas inteligentes a consultas de catálogo y confirmación de pedidos 24/7.'
-    }
-  ];
+  // Helper for POS Cart calculation
+  const posCartItems = posProducts.filter(p => p.inCart > 0);
+  const posTotal = posCartItems.reduce((acc, p) => acc + p.price * p.inCart, 0);
+
+  const handlePosAdd = (id) => {
+    setPosProducts(prev => prev.map(p => p.id === id ? { ...p, inCart: p.inCart + 1 } : p));
+    setPosSaleSuccess(false);
+  };
+
+  const handlePosRemove = (id) => {
+    setPosProducts(prev => prev.map(p => p.id === id ? { ...p, inCart: Math.max(0, p.inCart - 1) } : p));
+    setPosSaleSuccess(false);
+  };
+
+  const handlePosCheckout = () => {
+    setPosSaleSuccess(true);
+    // Decrease stock dynamically
+    setPosProducts(prev => prev.map(p => ({
+      ...p,
+      stock: Math.max(0, p.stock - p.inCart),
+      inCart: 0
+    })));
+  };
+
+  const handlePosReset = () => {
+    setPosProducts([
+      { id: 1, name: 'Buzo Oversize Premium', code: 'ART-101', price: 38000, stock: 14, inCart: 1 },
+      { id: 2, name: 'Remera Algodón Peinado', code: 'ART-205', price: 16500, stock: 25, inCart: 1 },
+      { id: 3, name: 'Gorra Urban Snapback', code: 'ART-312', price: 12000, stock: 8, inCart: 0 }
+    ]);
+    setPosSaleSuccess(false);
+  };
+
+  const handleReceivePurchase = () => {
+    setPurchaseReceived(true);
+    setStockCount(prev => prev + 50);
+  };
+
+  const handleResetPurchase = () => {
+    setPurchaseReceived(false);
+    setStockCount(15);
+  };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-cyan-500 selection:text-black">
+    <div className="min-h-screen bg-[#060911] text-slate-100 flex flex-col font-sans selection:bg-cyan-500 selection:text-black">
       
       {/* 1. TOP CORPORATE HEADER */}
-      <header className="sticky top-0 z-40 bg-slate-950/90 backdrop-blur-md border-b border-slate-800">
+      <header className="sticky top-0 z-40 bg-[#060911]/90 backdrop-blur-md border-b border-slate-800/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           
           {/* ROLPHI Brand */}
@@ -508,17 +147,17 @@ export default function LandingDemo() {
             <img 
               src="/assets/rolphi.jpg" 
               alt="RolΦ Studio" 
-              className="h-12 w-auto object-contain rounded-xl border border-slate-700/80 shadow-lg"
+              className="h-12 w-auto object-contain rounded-xl border border-cyan-500/40 shadow-lg shadow-cyan-950/60"
             />
             <div>
               <div className="flex items-center space-x-2">
-                <span className="text-lg font-black tracking-wider text-white">ROL<span className="text-cyan-400">Φ</span></span>
+                <span className="text-xl font-black tracking-wider text-white">ROL<span className="text-cyan-400">Φ</span></span>
                 <span className="text-[10px] font-bold uppercase tracking-widest bg-cyan-950 text-cyan-300 border border-cyan-800/80 px-2 py-0.5 rounded-full">
                   STUDIO
                 </span>
               </div>
-              <p className="text-[10px] text-slate-400 font-medium">
-                Hacemos pequeñas herramientas para <strong className="text-cyan-400 font-semibold">grandes soluciones</strong>
+              <p className="text-[10.5px] text-slate-400 font-medium tracking-tight">
+                Pequeñas herramientas para <strong className="text-cyan-400 font-bold">grandes ideas</strong>
               </p>
             </div>
           </div>
@@ -528,7 +167,7 @@ export default function LandingDemo() {
             <Link
               to="/catalogo"
               target="_blank"
-              className="hidden sm:inline-flex items-center px-3.5 py-2 text-xs font-bold text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-xl transition"
+              className="hidden sm:inline-flex items-center px-3.5 py-2 text-xs font-bold text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-700/80 rounded-xl transition shadow"
             >
               <Store className="w-3.5 h-3.5 mr-1.5 text-cyan-400" />
               Ver Catálogo Demo
@@ -536,178 +175,552 @@ export default function LandingDemo() {
 
             <Link
               to="/login"
-              className="hidden md:inline-flex items-center px-4 py-2 text-xs font-bold text-white bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl transition shadow"
+              className="hidden md:inline-flex items-center px-4 py-2 text-xs font-bold text-white bg-slate-850 hover:bg-slate-800 border border-slate-700/80 rounded-xl transition shadow"
             >
-              Acceso Clientes
+              Ingreso Clientes
             </Link>
 
             <a
               href={whatsappUrl}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center px-4 py-2 text-xs font-bold text-slate-950 bg-gradient-to-r from-cyan-400 to-teal-400 hover:from-cyan-300 hover:to-teal-300 rounded-xl transition shadow-lg shadow-cyan-500/20"
+              className="inline-flex items-center px-4 py-2 text-xs font-bold text-slate-950 bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 hover:opacity-95 rounded-xl transition shadow-lg shadow-cyan-500/25"
             >
               <MessageCircle className="w-3.5 h-3.5 mr-1.5 fill-current" />
-              <span>Pedir Demostración</span>
+              <span>Contactar a ROLΦ</span>
             </a>
           </div>
 
         </div>
       </header>
 
-      {/* 2. HERO SECTION */}
-      <section className="relative pt-12 pb-20 overflow-hidden border-b border-slate-800">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(6,182,212,0.15),rgba(255,255,255,0))] pointer-events-none"></div>
+      {/* 2. HERO SECTION CON EFECTOS MODERNOS */}
+      <section className="relative pt-12 pb-16 overflow-hidden border-b border-slate-800/80">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_50%_at_50%_-10%,rgba(6,182,212,0.18),rgba(255,255,255,0))] pointer-events-none"></div>
 
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           
-          <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-cyan-950/70 border border-cyan-500/40 text-cyan-300 text-xs font-bold mb-6 backdrop-blur-sm">
-            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-            <span>SISTEMA DE GESTIÓN COMERCIAL &amp; CATÁLOGO DIGITAL EN LA NUBE</span>
+          <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 text-xs font-bold mb-6 backdrop-blur-md shadow-sm">
+            <Sparkles className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
+            <span>PLATAFORMA COMERCIAL &amp; CATÁLOGO DIGITAL • DESARROLLADO POR ROLΦ</span>
           </div>
 
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight sm:leading-none">
-            El control total de tu mostrador con{' '}
+            El software que acelera tu negocio con{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400">
-              catálogo web conectado a tu stock.
+              pantallas vivas en tiempo real.
             </span>
           </h1>
 
-          <p className="mt-6 text-sm sm:text-lg text-slate-300 max-w-3xl mx-auto leading-relaxed">
-            Desarrollado por <strong className="text-white font-bold">ROLΦ</strong> para negocios que necesitan facturar en segundos, erradicar errores de inventario y abrir una vidriera online para vender por WhatsApp las 24 horas sin pagar comisiones.
+          <p className="mt-5 text-sm sm:text-lg text-slate-300 max-w-3xl mx-auto leading-relaxed">
+            Sin planillas manuales ni pérdidas de stock. Controlá mostrador, ventas por WhatsApp, compras a proveedores y caja diaria desde una interfaz fluida e intuitiva.
           </p>
 
-          {/* Key Value Badges */}
-          <div className="mt-8 flex flex-wrap justify-center gap-3 text-xs font-bold">
-            <span className="bg-slate-900 border border-slate-800 px-3.5 py-2 rounded-xl text-slate-300 flex items-center shadow-sm">
-              <CheckCircle2 className="w-4 h-4 text-emerald-400 mr-2 flex-shrink-0" />
-              0% Comisiones por Venta
-            </span>
-            <span className="bg-slate-900 border border-slate-800 px-3.5 py-2 rounded-xl text-slate-300 flex items-center shadow-sm">
-              <CheckCircle2 className="w-4 h-4 text-emerald-400 mr-2 flex-shrink-0" />
-              100% en la Nube (PC, Tablet y Celular)
-            </span>
-            <span className="bg-slate-900 border border-slate-800 px-3.5 py-2 rounded-xl text-slate-300 flex items-center shadow-sm">
-              <CheckCircle2 className="w-4 h-4 text-emerald-400 mr-2 flex-shrink-0" />
-              Arquitectura 100% Modular y Ampliable
+          {/* Slogan Badge ROLPHI */}
+          <div className="mt-6 inline-flex items-center space-x-2 bg-slate-900/90 border border-cyan-500/30 px-4 py-2 rounded-2xl text-xs text-slate-300 shadow-md">
+            <Cpu className="w-4 h-4 text-cyan-400" />
+            <span>
+              <strong className="text-white">ROLΦ Studio:</strong> Pequeñas herramientas para <strong className="text-cyan-300 font-bold">grandes ideas</strong> • Desarrollamos todo tipo de aplicaciones a medida.
             </span>
           </div>
 
-          {/* CTA Buttons */}
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+          {/* Quick CTA */}
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
             <a
               href={whatsappUrl}
               target="_blank"
               rel="noreferrer"
-              className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 text-sm font-extrabold rounded-2xl transition shadow-xl shadow-emerald-500/25 flex items-center justify-center"
+              className="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 text-sm font-extrabold rounded-2xl transition shadow-xl shadow-emerald-500/25 flex items-center justify-center"
             >
               <MessageCircle className="w-4 h-4 mr-2 fill-current" />
               <span>Coordinar Demo al 2241-527357</span>
             </a>
 
             <a
-              href="#modulos"
-              className="w-full sm:w-auto px-7 py-4 bg-slate-900 hover:bg-slate-850 text-white text-sm font-bold rounded-2xl transition border border-slate-700 flex items-center justify-center"
+              href="#demoviva"
+              className="w-full sm:w-auto px-7 py-3.5 bg-slate-900 hover:bg-slate-850 text-white text-sm font-bold rounded-2xl transition border border-slate-700/80 flex items-center justify-center shadow"
             >
-              <span>Explorar los Módulos Comerciales</span>
-              <ArrowRight className="w-4 h-4 ml-2 text-cyan-400" />
+              <Play className="w-4 h-4 mr-2 text-cyan-400 fill-current" />
+              <span>Ver Pantallas en Vivo</span>
             </a>
           </div>
 
         </div>
       </section>
 
-      {/* 3. INTERACTIVE 9-MODULE DEMO SHOWCASE */}
-      <section id="modulos" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full border-b border-slate-800">
+      {/* 3. SHOWCASE ULTRA INTERACTIVO: EL MONITOR EN VIVO CON PANTALLAS REALES */}
+      <section id="demoviva" className="py-16 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full border-b border-slate-800/80">
         
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <span className="text-xs font-bold uppercase tracking-widest text-cyan-400 block mb-2">
-            RECORRIDO EN PANTALLA
-          </span>
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-white">
-            Todo lo que hace el sistema, en detalle
-          </h2>
-          <p className="mt-3 text-sm text-slate-400">
-            Hacé clic en cualquiera de los módulos para ver cómo funciona y qué beneficios aporta a tu comercio.
-          </p>
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
+          <div>
+            <span className="text-xs font-mono font-bold text-cyan-400 uppercase tracking-widest block mb-1">
+              DEMOSTRACIÓN INTERACTIVA EN VIVO
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-black text-white">
+              Tocá y probá el software directamente en pantalla
+            </h2>
+          </div>
+
+          {/* Auto play toggle */}
+          <button
+            type="button"
+            onClick={() => setIsAutoPlaying(!isAutoPlaying)}
+            className={`flex items-center px-4 py-2 rounded-xl text-xs font-bold transition shadow ${
+              isAutoPlaying 
+                ? 'bg-cyan-500 text-slate-950 shadow-cyan-500/30' 
+                : 'bg-slate-850 hover:bg-slate-800 text-slate-300 border border-slate-700'
+            }`}
+          >
+            {isAutoPlaying ? <Pause className="w-3.5 h-3.5 mr-1.5 fill-current" /> : <Play className="w-3.5 h-3.5 mr-1.5 fill-current" />}
+            <span>{isAutoPlaying ? 'Pausar Tour Automático' : 'Reproducir Tour Automático'}</span>
+          </button>
         </div>
 
-        {/* Tab Selector Buttons */}
-        <div className="flex flex-wrap gap-2 justify-center mb-10">
-          {modules.map((m, idx) => {
-            const Icon = m.icon;
-            const isSelected = activeTab === idx;
+        {/* Screen Switcher Tabs */}
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 mb-6">
+          {screens.map((scr, idx) => {
+            const isCurrent = activeScreenIndex === idx;
             return (
               <button
-                key={m.id}
-                onClick={() => setActiveTab(idx)}
-                className={`flex items-center px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${
-                  isSelected 
-                    ? 'bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/30 scale-105' 
-                    : 'bg-slate-900 text-slate-300 hover:bg-slate-850 border border-slate-800'
+                key={scr.id}
+                type="button"
+                onClick={() => {
+                  setActiveScreenIndex(idx);
+                  setIsAutoPlaying(false);
+                }}
+                className={`p-3 rounded-2xl text-left border transition-all duration-200 ${
+                  isCurrent 
+                    ? 'bg-gradient-to-r from-cyan-950 to-slate-900 border-cyan-400 text-white shadow-lg shadow-cyan-950 scale-[1.02]' 
+                    : 'bg-slate-900/80 border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200'
                 }`}
               >
-                <Icon className={`w-3.5 h-3.5 mr-1.5 ${isSelected ? 'text-slate-950' : 'text-cyan-400'}`} />
-                <span>{m.shortTitle}</span>
+                <span className={`text-xs font-extrabold block truncate ${isCurrent ? 'text-cyan-300' : 'text-slate-200'}`}>
+                  {scr.name}
+                </span>
+                <span className="text-[10px] text-slate-400 block truncate mt-0.5">
+                  {scr.subtitle}
+                </span>
               </button>
             );
           })}
         </div>
 
-        {/* Active Module Showcase Card */}
-        <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl backdrop-blur-sm grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        {/* MOCKUP CONTAINER CON MARCO TIPO APLICACIÓN / LAPTOP */}
+        <div className="bg-[#0b101c] border-2 border-slate-800 rounded-3xl shadow-2xl overflow-hidden relative">
           
-          {/* Left Description Column */}
-          <div className="lg:col-span-6 space-y-5">
-            <div className="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold bg-cyan-950 text-cyan-300 border border-cyan-800/80">
-              {modules[activeTab].badge}
+          {/* Top Window Bar */}
+          <div className="h-10 bg-[#080d17] border-b border-slate-800 flex items-center justify-between px-4 text-xs font-mono text-slate-400">
+            <div className="flex items-center space-x-2">
+              <span className="w-3 h-3 rounded-full bg-rose-500/80 inline-block"></span>
+              <span className="w-3 h-3 rounded-full bg-amber-500/80 inline-block"></span>
+              <span className="w-3 h-3 rounded-full bg-emerald-500/80 inline-block"></span>
+              <span className="ml-2 text-[11px] text-slate-400 hidden sm:inline">ROLΦ Studio • Entorno Oficial</span>
             </div>
-
-            <h3 className="text-2xl sm:text-3xl font-extrabold text-white leading-tight">
-              {modules[activeTab].title}
-            </h3>
-
-            <p className="text-sm text-slate-300 leading-relaxed">
-              {modules[activeTab].description}
-            </p>
-
-            <div className="space-y-2.5 pt-2">
-              {modules[activeTab].highlights.map((h, i) => (
-                <div key={i} className="flex items-start space-x-2.5 text-xs text-slate-300">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
-                  <span>{h}</span>
-                </div>
-              ))}
+            <div className="bg-slate-900 border border-slate-800 px-3 py-0.5 rounded-lg text-[10px] text-cyan-400 font-bold hidden sm:block">
+              https://app.rolphi.com/sistema/{screens[activeScreenIndex].id}
             </div>
-
-            <div className="pt-4 flex flex-wrap gap-3">
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition shadow-md shadow-emerald-600/30"
-              >
-                <MessageCircle className="w-3.5 h-3.5 mr-1.5" />
-                <span>Consultar por este módulo</span>
-              </a>
-
-              <Link
-                to="/login"
-                className="inline-flex items-center px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold transition border border-slate-700"
-              >
-                <span>Probar en el sistema</span>
-                <ChevronRight className="w-3.5 h-3.5 ml-1" />
-              </Link>
-            </div>
+            <span className="text-[10px] text-emerald-400 font-bold">● SISTEMA ONLINE</span>
           </div>
 
-          {/* Right Mockup Column */}
-          <div className="lg:col-span-6">
-            <div className="relative">
-              <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500/20 to-teal-500/20 rounded-3xl blur-xl"></div>
-              <div className="relative">
-                {modules[activeTab].mockup}
+          {/* SCREEN CONTENT AREA */}
+          <div className="p-5 sm:p-8 min-h-[440px] flex flex-col justify-center">
+
+            {/* SCREEN 1: POS MOSTRADOR */}
+            {activeScreenIndex === 0 && (
+              <div className="space-y-5 animate-fade-in">
+                <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-slate-800 pb-3">
+                  <div>
+                    <h3 className="text-lg font-black text-white flex items-center">
+                      <ShoppingCart className="w-5 h-5 mr-2 text-cyan-400" />
+                      Punto de Venta en Mostrador
+                    </h3>
+                    <p className="text-xs text-slate-400">Agregá o quitá artículos con los botones + y - para ver el cobro en vivo.</p>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <button
+                      type="button"
+                      onClick={handlePosReset}
+                      className="px-2.5 py-1 text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg flex items-center transition"
+                    >
+                      <RotateCcw className="w-3 h-3 mr-1" />
+                      Restablecer
+                    </button>
+                    <span className="px-2.5 py-1 text-[11px] bg-emerald-950 text-emerald-300 border border-emerald-800 rounded-lg font-bold">
+                      Caja #01 Lista
+                    </span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                  {/* Product list */}
+                  <div className="lg:col-span-7 space-y-2.5">
+                    {posProducts.map(p => (
+                      <div key={p.id} className="bg-slate-900 p-3 rounded-2xl border border-slate-800 flex items-center justify-between text-xs">
+                        <div>
+                          <span className="font-bold text-white block">{p.name}</span>
+                          <span className="text-[10px] text-slate-400 font-mono">
+                            Cód: {p.code} • Stock actual: <strong className={p.stock < 10 ? 'text-rose-400' : 'text-emerald-400'}>{p.stock} u.</strong>
+                          </span>
+                        </div>
+                        <div className="flex items-center space-x-3">
+                          <span className="font-black text-cyan-300">${p.price.toLocaleString('es-AR')}</span>
+                          <div className="flex items-center bg-slate-950 border border-slate-800 rounded-xl p-0.5">
+                            <button
+                              type="button"
+                              onClick={() => handlePosRemove(p.id)}
+                              className="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-white rounded"
+                            >
+                              <Minus className="w-3 h-3" />
+                            </button>
+                            <span className="w-6 text-center font-bold text-white text-xs">{p.inCart}</span>
+                            <button
+                              type="button"
+                              onClick={() => handlePosAdd(p.id)}
+                              className="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-white rounded"
+                            >
+                              <Plus className="w-3 h-3" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Summary & Checkout */}
+                  <div className="lg:col-span-5 bg-slate-950 p-4 rounded-2xl border border-slate-800 flex flex-col justify-between">
+                    <div className="space-y-3">
+                      <span className="text-xs uppercase font-mono text-cyan-400 font-bold block pb-1 border-b border-slate-800">
+                        Liquidación de Venta
+                      </span>
+
+                      {/* Payment buttons */}
+                      <div className="grid grid-cols-3 gap-1.5 text-[10px] font-bold">
+                        {['EFECTIVO', 'QR / TRANSF', 'CTA CTE'].map(m => (
+                          <button
+                            key={m}
+                            type="button"
+                            onClick={() => setPosPaymentMethod(m)}
+                            className={`py-1.5 rounded-lg border transition ${
+                              posPaymentMethod === m 
+                                ? 'bg-cyan-500 text-slate-950 border-cyan-400 font-black' 
+                                : 'bg-slate-900 text-slate-400 border-slate-800'
+                            }`}
+                          >
+                            {m}
+                          </button>
+                        ))}
+                      </div>
+
+                      <div className="flex justify-between items-baseline pt-2 border-t border-slate-800">
+                        <span className="text-xs text-slate-400">Total a Cobrar:</span>
+                        <span className="text-2xl font-black text-emerald-400">${posTotal.toLocaleString('es-AR')}</span>
+                      </div>
+
+                      {posSaleSuccess ? (
+                        <div className="p-3 bg-emerald-950/80 border border-emerald-500/60 rounded-xl text-center space-y-1 animate-fade-in">
+                          <Check className="w-5 h-5 text-emerald-400 mx-auto" />
+                          <span className="text-xs font-bold text-emerald-200 block">¡Venta Registrada Exitosamente!</span>
+                          <span className="text-[10px] text-slate-300 block">Stock descontado y ticket #008492 emitido.</span>
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={handlePosCheckout}
+                          disabled={posTotal === 0}
+                          className="w-full py-3 bg-gradient-to-r from-cyan-400 to-teal-400 hover:from-cyan-300 hover:to-teal-300 text-slate-950 font-black rounded-xl text-xs uppercase tracking-wider transition shadow-lg shadow-cyan-500/20 disabled:opacity-40"
+                        >
+                          Confirmar Venta en Mostrador
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
+            )}
+
+            {/* SCREEN 2: CATÁLOGO WEB INTERACTIVO EN CELULAR */}
+            {activeScreenIndex === 1 && (
+              <div className="space-y-4 animate-fade-in">
+                <div className="flex justify-between items-center border-b border-slate-800 pb-3">
+                  <div>
+                    <h3 className="text-lg font-black text-white flex items-center">
+                      <Smartphone className="w-5 h-5 mr-2 text-cyan-400" />
+                      Catálogo Web Móvil con Pedidos a WhatsApp
+                    </h3>
+                    <p className="text-xs text-slate-400">Así lo ve tu cliente en su teléfono celular. Hacé clic para elegir un talle y simular el pedido.</p>
+                  </div>
+                  <Link
+                    to="/catalogo"
+                    target="_blank"
+                    className="px-3 py-1.5 bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-800 text-xs font-bold rounded-xl flex items-center transition"
+                  >
+                    <span>Abrir en Pestaña Nueva</span>
+                    <ExternalLink className="w-3.5 h-3.5 ml-1.5" />
+                  </Link>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                  {/* Smartphone View Mockup */}
+                  <div className="max-w-[280px] mx-auto bg-black border-4 border-slate-800 rounded-[36px] p-3 shadow-2xl space-y-3">
+                    <div className="w-20 h-4 bg-slate-800 rounded-full mx-auto"></div>
+                    
+                    <div className="bg-slate-900 rounded-2xl p-3 border border-slate-800 space-y-2">
+                      <div className="h-32 bg-slate-800 rounded-xl flex items-center justify-center text-slate-500 text-xs font-bold relative overflow-hidden">
+                        <ShoppingBag className="w-10 h-10 opacity-30 text-cyan-400" />
+                        <span className="absolute bottom-2 right-2 bg-emerald-500 text-slate-950 text-[9px] font-black px-2 py-0.5 rounded-full">
+                          DISPONIBLE
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-cyan-400 font-mono font-bold block">{catalogSelectedProduct.code}</span>
+                        <span className="text-xs font-bold text-white block">{catalogSelectedProduct.name}</span>
+                        <span className="text-sm font-black text-emerald-400">${catalogSelectedProduct.price.toLocaleString('es-AR')}</span>
+                      </div>
+
+                      {/* Sizes */}
+                      <div>
+                        <span className="text-[9px] text-slate-400 block mb-1">Elegí tu talle:</span>
+                        <div className="flex gap-1">
+                          {['S', 'M', 'L', 'XL'].map(sz => (
+                            <button
+                              key={sz}
+                              type="button"
+                              onClick={() => setCatalogSelectedProduct(prev => ({ ...prev, size: sz }))}
+                              className={`w-7 h-7 rounded-lg text-xs font-bold border transition ${
+                                catalogSelectedProduct.size === sz 
+                                  ? 'bg-cyan-500 text-slate-950 border-cyan-400' 
+                                  : 'bg-slate-800 text-slate-300 border-slate-700'
+                              }`}
+                            >
+                              {sz}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => setCatalogSentMessage(true)}
+                        className="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold flex items-center justify-center shadow transition"
+                      >
+                        <MessageCircle className="w-3.5 h-3.5 mr-1" />
+                        Consultar por WhatsApp
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* WhatsApp Message Preview */}
+                  <div className="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-3">
+                    <span className="text-xs uppercase font-mono text-emerald-400 font-bold block">
+                      Mensaje recibido en tu WhatsApp
+                    </span>
+                    <div className="bg-emerald-950/40 border border-emerald-500/40 p-4 rounded-xl text-xs text-slate-200 leading-relaxed font-mono">
+                      "¡Hola! Quería consultar por el producto <strong className="text-white">"{catalogSelectedProduct.name}"</strong> (Código: {catalogSelectedProduct.code}) en talle <strong className="text-emerald-300">{catalogSelectedProduct.size}</strong> de ${catalogSelectedProduct.price.toLocaleString('es-AR')}. ¿Tienen stock disponible?"
+                    </div>
+                    {catalogSentMessage && (
+                      <div className="p-2.5 bg-emerald-900/40 border border-emerald-600 text-emerald-300 rounded-xl text-xs font-bold text-center">
+                        ✓ El cliente no pierde tiempo buscando y vos recibís la venta servida.
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* SCREEN 3: COMPRAS A PROVEEDORES E INGRESO DE STOCK */}
+            {activeScreenIndex === 2 && (
+              <div className="space-y-4 animate-fade-in">
+                <div className="flex justify-between items-center border-b border-slate-800 pb-3">
+                  <div>
+                    <h3 className="text-lg font-black text-white flex items-center">
+                      <Truck className="w-5 h-5 mr-2 text-cyan-400" />
+                      Agenda de Compras &amp; Ingreso Automático de Stock
+                    </h3>
+                    <p className="text-xs text-slate-400">
+                      Cargá el costo de la mercadería y acreditá las cantidades al inventario en 1 solo clic al recibir la entrega.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleResetPurchase}
+                    className="px-2.5 py-1 text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg flex items-center transition"
+                  >
+                    <RotateCcw className="w-3 h-3 mr-1" />
+                    Reiniciar Demo
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+                  {/* Purchase order */}
+                  <div className="md:col-span-7 bg-slate-900 p-4 rounded-2xl border border-slate-800 space-y-3">
+                    <div className="flex justify-between items-center pb-2 border-b border-slate-800 text-xs">
+                      <div>
+                        <span className="font-bold text-white block">Orden de Compra: #COM-00941</span>
+                        <span className="text-[10px] text-cyan-400 font-mono">Proveedor: Distribuidora Central Textil</span>
+                      </div>
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                        purchaseReceived 
+                          ? 'bg-emerald-950 text-emerald-300 border border-emerald-700' 
+                          : 'bg-amber-950 text-amber-300 border border-amber-700'
+                      }`}>
+                        {purchaseReceived ? 'RECIBIDO EN STOCK' : 'PENDIENTE DE ENTREGA'}
+                      </span>
+                    </div>
+
+                    <div className="space-y-2 text-xs">
+                      <div className="bg-slate-850 p-2.5 rounded-xl border border-slate-700 flex justify-between items-center">
+                        <div>
+                          <span className="font-bold text-white block">Buzo Oversize Premium</span>
+                          <span className="text-[10px] text-slate-400 font-mono">50 unidades compradas • Costo: $18.000 c/u</span>
+                        </div>
+                        <span className="font-bold text-cyan-300">$900.000</span>
+                      </div>
+                    </div>
+
+                    <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between items-center text-xs">
+                      <span className="font-bold text-slate-300">Valor Total de Inversión / Compra:</span>
+                      <span className="text-base font-black text-cyan-400">$900.000</span>
+                    </div>
+
+                    {!purchaseReceived ? (
+                      <button
+                        type="button"
+                        onClick={handleReceivePurchase}
+                        className="w-full py-3 bg-gradient-to-r from-cyan-500 to-teal-400 hover:from-cyan-400 text-slate-950 font-black rounded-xl text-xs uppercase tracking-wider transition shadow-lg shadow-cyan-500/20"
+                      >
+                        Confirmar Recepción de Mercadería
+                      </button>
+                    ) : (
+                      <div className="p-3 bg-emerald-950/70 border border-emerald-500/60 rounded-xl text-center text-emerald-300 text-xs font-bold">
+                        ✓ Compra confirmada. Se sumaron 50 unidades al stock automáticamente.
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Stock impact widget */}
+                  <div className="md:col-span-5 bg-slate-950 p-4 rounded-2xl border border-slate-800 flex flex-col justify-center text-center space-y-3">
+                    <span className="text-xs uppercase font-mono text-slate-400 font-bold">
+                      Impacto Directo en Inventario
+                    </span>
+                    <div className="p-4 bg-slate-900 rounded-2xl border border-slate-800">
+                      <span className="text-xs text-slate-400 block mb-1">Stock de "Buzo Oversize"</span>
+                      <span className="text-4xl sm:text-5xl font-black text-emerald-400 font-mono tracking-tight transition-all duration-500">
+                        {stockCount} <span className="text-xs text-slate-400 font-sans">unidades</span>
+                      </span>
+                      {purchaseReceived && (
+                        <span className="inline-block mt-2 text-[10px] bg-emerald-950 text-emerald-300 font-bold px-2 py-0.5 rounded-full border border-emerald-700 animate-bounce">
+                          +50 ingresadas recién
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-[11px] text-slate-400">
+                      Sin cargar artículo por artículo a mano. Toda la compra ingresa al inventario en un instante.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* SCREEN 4: ARQUEO DE CAJA DIARIA */}
+            {activeScreenIndex === 3 && (
+              <div className="space-y-4 animate-fade-in">
+                <div className="border-b border-slate-800 pb-3">
+                  <h3 className="text-lg font-black text-white flex items-center">
+                    <Wallet className="w-5 h-5 mr-2 text-cyan-400" />
+                    Caja Diaria &amp; Rendición de Turnos
+                  </h3>
+                  <p className="text-xs text-slate-400">Arqueo ciego para evitar diferencias entre turnos de mañana y tarde.</p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                  <div className="bg-slate-900 p-4 rounded-2xl border border-slate-800 space-y-1">
+                    <span className="text-slate-400 text-[11px]">Efectivo en Cajón:</span>
+                    <span className="text-2xl font-black text-white block">$142.300</span>
+                    <span className="text-[10px] text-emerald-400">● Cuadrado al centavo</span>
+                  </div>
+                  <div className="bg-slate-900 p-4 rounded-2xl border border-slate-800 space-y-1">
+                    <span className="text-slate-400 text-[11px]">Transferencias / QR:</span>
+                    <span className="text-2xl font-black text-cyan-300 block">$98.600</span>
+                    <span className="text-[10px] text-slate-400">14 cobros digitales</span>
+                  </div>
+                  <div className="bg-slate-900 p-4 rounded-2xl border border-slate-800 space-y-1">
+                    <span className="text-slate-400 text-[11px]">Gastos / Retiros:</span>
+                    <span className="text-2xl font-black text-rose-400 block">-$15.000</span>
+                    <span className="text-[10px] text-slate-400">Pago flete insumos</span>
+                  </div>
+                </div>
+
+                <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800 flex justify-between items-center text-xs">
+                  <div>
+                    <span className="text-sm font-bold text-white block">Balance Neto del Turno</span>
+                    <span className="text-[10px] text-slate-400">Auditoría con firma de encargado</span>
+                  </div>
+                  <span className="text-2xl font-black text-emerald-400">$225.900</span>
+                </div>
+              </div>
+            )}
+
+            {/* SCREEN 5: GANANCIA REAL & MÉTRICAS */}
+            {activeScreenIndex === 4 && (
+              <div className="space-y-4 animate-fade-in">
+                <div className="flex justify-between items-center border-b border-slate-800 pb-3">
+                  <div>
+                    <h3 className="text-lg font-black text-white flex items-center">
+                      <BarChart3 className="w-5 h-5 mr-2 text-cyan-400" />
+                      Métricas Ejecutivas &amp; Rentabilidad Real
+                    </h3>
+                    <p className="text-xs text-slate-400">Seleccioná el período para ver cómo cambian los números de tu negocio.</p>
+                  </div>
+                  <div className="flex bg-slate-900 p-1 rounded-xl border border-slate-800 text-[11px] font-bold">
+                    {['hoy', 'semana', 'mes'].map(p => (
+                      <button
+                        key={p}
+                        type="button"
+                        onClick={() => setMetricsPeriod(p)}
+                        className={`px-3 py-1 rounded-lg uppercase transition ${
+                          metricsPeriod === p ? 'bg-cyan-500 text-slate-950 font-black' : 'text-slate-400'
+                        }`}
+                      >
+                        {p}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                  <div className="bg-slate-900 p-4 rounded-2xl border border-slate-800 space-y-1">
+                    <span className="text-slate-400">Ventas Brutas:</span>
+                    <span className="text-xl sm:text-2xl font-black text-white block">
+                      {metricsPeriod === 'hoy' ? '$185.000' : metricsPeriod === 'semana' ? '$1.420.000' : '$5.850.000'}
+                    </span>
+                  </div>
+                  <div className="bg-slate-900 p-4 rounded-2xl border border-slate-800 space-y-1">
+                    <span className="text-slate-400">Costo de Mercadería:</span>
+                    <span className="text-xl sm:text-2xl font-mono text-slate-300 block">
+                      {metricsPeriod === 'hoy' ? '-$92.000' : metricsPeriod === 'semana' ? '-$710.000' : '-$2.920.000'}
+                    </span>
+                  </div>
+                  <div className="bg-emerald-950/60 p-4 rounded-2xl border border-emerald-500/40 space-y-1">
+                    <span className="text-emerald-300 font-bold">Ganancia Neta Limpia:</span>
+                    <span className="text-xl sm:text-2xl font-black text-emerald-400 block">
+                      {metricsPeriod === 'hoy' ? '+$93.000' : metricsPeriod === 'semana' ? '+$710.000' : '+$2.930.000'}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 text-center text-xs text-slate-400">
+                  Sabés exactamente cuánta plata ganás todos los días sin esperar al balance de fin de mes.
+                </div>
+              </div>
+            )}
+
+          </div>
+
+          {/* Bottom Control Pill */}
+          <div className="h-12 bg-[#080d17] border-t border-slate-800 flex items-center justify-between px-6 text-xs text-slate-400">
+            <span>Demostración oficial ROLΦ Studio</span>
+            <div className="flex items-center space-x-2">
+              <span className="text-[11px] text-cyan-400 font-bold">Llamanos o chateá: 2241-527357</span>
             </div>
           </div>
 
@@ -715,62 +728,93 @@ export default function LandingDemo() {
 
       </section>
 
-      {/* 4. MODULAR EXPANSION HIGHLIGHT (SPECIAL REQUIREMENT) */}
-      <section className="py-20 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 border-b border-slate-800 relative">
+      {/* 4. ROLPHI: DESARROLLO DE TODO TIPO DE APLICACIONES A MEDIDA */}
+      <section className="py-20 bg-gradient-to-b from-[#060911] via-slate-900/60 to-[#060911] border-b border-slate-800/80 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-3xl mx-auto mb-14">
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-cyan-950 text-cyan-300 border border-cyan-800 text-xs font-bold mb-3">
-              <Cpu className="w-3.5 h-3.5 text-cyan-400" />
-              <span>ARQUITECTURA MODULAR A MEDIDA</span>
+              <Code2 className="w-3.5 h-3.5 text-cyan-400" />
+              <span>INGENIERÍA DE SOFTWARE &amp; DESARROLLO A MEDIDA</span>
             </div>
             <h2 className="text-2xl sm:text-4xl font-extrabold text-white">
-              Ampliá tu sistema a lo que tu comercio necesite
+              Desarrollamos todo tipo de aplicaciones a medida
             </h2>
             <p className="mt-4 text-sm sm:text-base text-slate-300 leading-relaxed">
-              En <strong className="text-white">ROLΦ</strong> no vendemos programas cerrados ni enlatados rígidos. Diseñamos este software con una estructura desacoplada para que podamos agregarle cualquier función específica que requiera tu operativa diaria.
+              En <strong className="text-white font-bold">ROLΦ Studio</strong> diseñamos y programamos soluciones exclusivas. No nos limitamos a un solo rubro: creamos herramientas digitales adaptadas a las ideas y procesos específicos de tu empresa.
             </p>
           </div>
 
-          {/* Grid of extensions */}
+          {/* Grid of Custom Capabilities */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {modularExtensions.map((ext, i) => {
-              const Icon = ext.icon;
+            {[
+              {
+                icon: Smartphone,
+                title: 'Aplicaciones Móviles (Android & iOS)',
+                desc: 'Apps nativas e híbridas para clientes, repartidores o personal de campo, conectadas a tu base de datos central.'
+              },
+              {
+                icon: Laptop,
+                title: 'Sistemas Web & Plataformas a Medida',
+                desc: 'Portales de autogestión, intranets corporativas, sistemas de reservas y tableros de control diseñados desde cero.'
+              },
+              {
+                icon: QrCode,
+                title: 'Integración con Pasarelas de Pago & QR',
+                desc: 'Conexión con Mercado Pago, billeteras virtuales y lectores de tarjetas para cobro sin fricción.'
+              },
+              {
+                icon: Boxes,
+                title: 'Sistemas Multi-Sucursal & Logística',
+                desc: 'Interconexión de locales físicos, transferencias entre depósitos y seguimiento de stock en tiempo real.'
+              },
+              {
+                icon: Printer,
+                title: 'Hardware & Control de Mostrador',
+                desc: 'Integración con impresoras térmicas de comandas, lectores láser de código de barras y periféricos.'
+              },
+              {
+                icon: Zap,
+                title: 'Automatizaciones & Bots de Comunicación',
+                desc: 'Bots de WhatsApp y notificaciones automáticas para confirmación de pedidos, alertas de cobro y presupuestos.'
+              }
+            ].map((cap, i) => {
+              const Icon = cap.icon;
               return (
                 <div 
                   key={i} 
-                  className="bg-slate-900/80 border border-slate-800 hover:border-cyan-500/50 p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1 group shadow-lg"
+                  className="bg-slate-900/90 border border-slate-800 hover:border-cyan-500/50 p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1 group shadow-lg"
                 >
                   <div className="w-12 h-12 rounded-xl bg-cyan-950/80 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mb-4 group-hover:scale-110 transition-transform">
                     <Icon className="w-6 h-6" />
                   </div>
                   <h4 className="text-base font-bold text-white mb-2 group-hover:text-cyan-300 transition-colors">
-                    {ext.title}
+                    {cap.title}
                   </h4>
                   <p className="text-xs text-slate-400 leading-relaxed">
-                    {ext.desc}
+                    {cap.desc}
                   </p>
                 </div>
               );
             })}
           </div>
 
-          {/* Custom module banner */}
-          <div className="mt-12 p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-slate-900 via-cyan-950/40 to-slate-900 border border-cyan-500/40 text-center max-w-4xl mx-auto">
-            <h3 className="text-lg sm:text-xl font-extrabold text-white mb-2">
-              ¿Tu negocio tiene un requerimiento único o especial?
+          {/* Special Custom Development Banner */}
+          <div className="mt-14 p-8 rounded-3xl bg-gradient-to-r from-slate-900 via-cyan-950/40 to-slate-900 border border-cyan-500/40 text-center max-w-4xl mx-auto shadow-2xl">
+            <h3 className="text-xl font-extrabold text-white mb-2">
+              ¿Tenés una idea o proceso que querés sistematizar?
             </h3>
-            <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto mb-5">
-              Desde control de números de serie, órdenes de reparación técnica, talles y colores especiales, hasta integración con balanzas o sistemas contables. El equipo de <strong className="text-cyan-300">ROLΦ</strong> lo desarrolla a medida para vos.
+            <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto mb-6">
+              En <strong className="text-cyan-300">ROLΦ Studio</strong> hacemos <em>"pequeñas herramientas para grandes ideas"</em>. Analizamos tu proyecto y te presupuestamos una solución profesional, rápida y con soporte garantizado.
             </p>
             <a
               href={whatsappUrl}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center px-6 py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-black rounded-xl transition shadow-lg shadow-cyan-500/30"
+              className="inline-flex items-center px-6 py-3.5 bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 hover:opacity-95 text-slate-950 text-xs font-black rounded-xl transition shadow-lg shadow-cyan-500/30"
             >
               <MessageCircle className="w-4 h-4 mr-2 fill-current" />
-              <span>Consultar por un Módulo a Medida</span>
+              <span>Cotizar un Desarrollo a Medida con ROLΦ</span>
             </a>
           </div>
 
@@ -778,38 +822,38 @@ export default function LandingDemo() {
       </section>
 
       {/* 5. ABOUT ROLPHI STUDIO & GUARANTEE */}
-      <section className="py-16 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-slate-800">
-        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-10 flex flex-col sm:flex-row items-center gap-6">
+      <section className="py-16 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-slate-800/80">
+        <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-10 flex flex-col sm:flex-row items-center gap-6 shadow-xl">
           <img 
             src="/assets/rolphi.jpg" 
             alt="RolΦ Studio" 
-            className="w-24 sm:w-32 h-auto object-contain rounded-2xl border border-slate-700 shadow-xl flex-shrink-0"
+            className="w-24 sm:w-32 h-auto object-contain rounded-2xl border border-cyan-500/30 shadow-xl flex-shrink-0"
           />
           <div className="space-y-2 text-center sm:text-left">
             <span className="text-[11px] font-mono text-cyan-400 uppercase tracking-widest font-bold">
-              GARANTÍA DE AUTOR &amp; DESARROLLO DIRECTO
+              AUTORÍA DIRECTA &amp; SUPERVISIÓN TÉCNICA
             </span>
             <h3 className="text-xl sm:text-2xl font-black text-white">
-              Creado y respaldado directamente por ROLΦ Studio
+              ROLΦ Studio • Software con Respaldo Real
             </h3>
             <p className="text-xs text-slate-300 leading-relaxed">
-              Sin revendedores, intermediarios ni licencias de terceros que se caen. Tenés línea directa con nosotros para soporte, capacitaciones de tu personal y actualizaciones continuas de seguridad y rendimiento en la nube.
+              Sin intermediarios ni licencias de terceros. Tenés contacto directo con quienes diseñamos y programamos el software para resolver dudas, capacitar a tu personal o incorporar nuevas funciones a medida.
             </p>
             <div className="pt-2 flex flex-wrap gap-4 justify-center sm:justify-start text-xs text-slate-400 font-mono">
-              <span>● Tel: <strong>2241-527357</strong></span>
+              <span>● WhatsApp: <strong>2241-527357</strong></span>
               <span>● Email: <strong>martinchiacchio.seg@gmail.com</strong></span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 6. FINAL CALL TO ACTION (CTA) */}
+      {/* 6. FINAL CALL TO ACTION */}
       <section className="py-20 text-center max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl sm:text-5xl font-black text-white leading-tight">
-          Llevá tu comercio al siguiente nivel de orden y ventas
+          Llevá tu negocio al estándar de gestión que merece
         </h2>
-        <p className="mt-4 text-sm sm:text-base text-slate-400 max-w-xl mx-auto">
-          Contactanos hoy mismo para coordinar una prueba guiada en tu computadora o celular sin compromiso.
+        <p className="mt-4 text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">
+          Contactanos hoy mismo para coordinar una prueba guiada sin costo ni compromiso en tu computadora o celular.
         </p>
 
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -835,14 +879,14 @@ export default function LandingDemo() {
       </section>
 
       {/* 7. FOOTER */}
-      <footer className="mt-auto bg-slate-950 py-10 border-t border-slate-800 text-xs text-slate-500">
+      <footer className="mt-auto bg-[#060911] py-10 border-t border-slate-800 text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
           
           <div className="flex items-center space-x-3">
             <img src="/assets/rolphi.jpg" alt="RolΦ" className="h-8 w-auto rounded border border-slate-800" />
             <div>
               <span className="font-bold text-white block">ROLΦ Studio</span>
-              <span className="text-[10px]">Hacemos pequeñas herramientas para grandes soluciones</span>
+              <span className="text-[10px]">Pequeñas herramientas para grandes ideas</span>
             </div>
           </div>
 
