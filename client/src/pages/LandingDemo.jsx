@@ -451,6 +451,16 @@ export default function LandingDemo() {
 
           {/* Quick Actions */}
           <div className="flex items-center space-x-2 sm:space-x-3">
+            <a
+              href="/Dossier-Comercial-ROLPHI-Gestion-Integral.pdf"
+              download="Dossier-Comercial-ROLPHI-Gestion-Integral.pdf"
+              className="inline-flex items-center px-3 py-1.5 text-xs font-semibold text-slate-200 hover:text-white bg-slate-900 hover:bg-slate-850 border border-cyan-500/40 rounded-lg transition shadow-sm"
+              title="Descargar Dossier Comercial en PDF"
+            >
+              <FileText className="w-3.5 h-3.5 mr-1.5 text-cyan-400" />
+              <span>Dossier PDF</span>
+            </a>
+
             <Link
               to="/catalogo"
               target="_blank"
@@ -530,6 +540,18 @@ export default function LandingDemo() {
                 </button>
               );
             })}
+          </div>
+
+          {/* Quick Dossier & CTA Action */}
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+            <a
+              href="/Dossier-Comercial-ROLPHI-Gestion-Integral.pdf"
+              download="Dossier-Comercial-ROLPHI-Gestion-Integral.pdf"
+              className="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-slate-900 to-slate-850 hover:bg-slate-800 text-white text-xs font-bold rounded-xl border border-cyan-500/50 shadow-lg shadow-cyan-950/40 transition hover:scale-[1.02]"
+            >
+              <FileText className="w-4 h-4 mr-2 text-cyan-400" />
+              <span>Descargar Dossier Comercial Completo (PDF)</span>
+            </a>
           </div>
 
         </div>
@@ -1553,6 +1575,7 @@ export default function LandingDemo() {
           </div>
 
           <div className="space-x-4">
+            <a href="/Dossier-Comercial-ROLPHI-Gestion-Integral.pdf" download="Dossier-Comercial-ROLPHI-Gestion-Integral.pdf" className="text-cyan-400 hover:text-cyan-300 font-semibold transition">Descargar Dossier (PDF)</a>
             <Link to="/login" className="hover:text-slate-300 transition">Ingreso al Sistema</Link>
             <Link to="/catalogo" className="hover:text-slate-300 transition">Catálogo Web</Link>
             <a href={whatsappUrl} target="_blank" rel="noreferrer" className="hover:text-emerald-400 transition">Soporte WhatsApp</a>
